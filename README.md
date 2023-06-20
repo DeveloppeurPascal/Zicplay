@@ -19,6 +19,7 @@ To download this project you better should use "git" command but you also can do
 This project depends on :
 
 * [AboutDialog-Delphi-Component](https://github.com/DeveloppeurPascal/AboutDialog-Delphi-Component) is needed in ./lib-externes/AboutDialog-Delphi-Component
+* [librairies](https://github.com/DeveloppeurPascal/librairies) is needed in ./lib-externes/librairies
 
 ## How to ask a new feature, report a bug or a security issue ?
 
