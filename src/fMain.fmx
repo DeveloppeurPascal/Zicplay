@@ -16,6 +16,18 @@ object Form1: TForm1
     Size.Height = 22.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 1
+    object lblSongPlayed: TLabel
+      Align = Client
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Size.Width = 630.000000000000000000
+      Size.Height = 12.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'lblSongPlayed'
+      TabOrder = 1
+    end
   end
   object ToolBar1: TToolBar
     Size.Width = 640.000000000000000000

@@ -47,6 +47,7 @@ type
     btnOptions: TSpeedButton;
     btnLoadMP3List: TButton;
     ListView1: TListView;
+    lblSongPlayed: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure actAboutExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
@@ -56,6 +57,7 @@ type
       const AItem: TListItem; const AObject: TListItemSimpleControl);
   private
     FPlayedSong: TSong;
+    FDefaultCaption: string;
     procedure SetPlayedSong(const Value: TSong);
     { Déclarations privées }
   public
@@ -72,7 +74,11 @@ implementation
 
 uses
   System.IOUtils,
+  System.Messaging,
   Gamolf.FMX.MusicLoop;
+
+Type
+  TZicPlayerMessage = TMessage<TSong>;
 
 procedure TForm1.actAboutExecute(Sender: TObject);
 begin
@@ -98,6 +104,7 @@ var
   item: TListViewItem;
   song: TSong;
 begin
+  btnLoadMP3List.Visible := false;
   ListView1.Items.Clear;
   files := tdirectory.GetFiles(tpath.GetMusicPath);
   for i := 0 to length(files) - 1 do
@@ -120,6 +127,8 @@ begin
       item.Detail := song.FileName;
       item.TagObject := song;
       item.ButtonText := 'Play';
+      item.Tag := 0;
+      // 0 = not playing, other = playing (value is subcription id to rtl messaging)
     end;
 end;
 
@@ -136,17 +145,74 @@ begin
 {$ELSE}
   MacSystemMenu.Visible := false;
 {$ENDIF}
+  //
   caption := AboutDialog.Titre + ' ' + AboutDialog.VersionNumero;
 {$IFDEF DEBUG}
   caption := caption + ' [DEBUG MODE]';
 {$ENDIF}
+  FDefaultCaption := caption;
+  //
+  TMessageManager.DefaultManager.SubscribeToMessage(TZicPlayerMessage,
+    procedure(const Sender: TObject; const M: TMessage)
+    var
+      msg: TZicPlayerMessage;
+    begin
+      if (M is TZicPlayerMessage) then
+      begin
+        msg := M as TZicPlayerMessage;
+        if assigned(msg.Value) then
+        begin
+          lblSongPlayed.Text := 'Playing : ' + msg.Value.Title;
+          caption := FDefaultCaption + ' - ' + msg.Value.Title;
+        end
+        else
+        begin
+          lblSongPlayed.Text := '';
+          caption := FDefaultCaption;
+        end;
+      end;
+    end);
 end;
 
 procedure TForm1.ListView1ButtonClick(const Sender: TObject;
-  const AItem: TListItem; const AObject: TListItemSimpleControl);
+const AItem: TListItem; const AObject: TListItemSimpleControl);
+var
+  isPlaying: boolean;
 begin
   if assigned(AItem.TagObject) and (AItem.TagObject is TSong) then
-    PlayedSong := AItem.TagObject as TSong;
+  begin
+    isPlaying := (AItem as TListViewItem).Tag <> 0;
+     (AItem as TListViewItem).Tag :=
+    TMessageManager.DefaultManager.SubscribeToMessage(TZicPlayerMessage,
+      procedure(const Sender: TObject; const M: TMessage)
+      var
+        msg: TZicPlayerMessage;
+      begin
+        if (M is TZicPlayerMessage) then
+        begin
+          msg := M as TZicPlayerMessage;
+          if msg.Value = AItem.TagObject then
+            (AItem as TListViewItem).ButtonText := 'Pause'
+          else
+          begin
+            (AItem as TListViewItem).ButtonText := 'Play';
+            // access violation on Mac after Unsubscribe
+            // => using ForceQueue may fix the bug
+            tthread.ForceQueue(nil,
+              procedure
+              begin
+                TMessageManager.DefaultManager.Unsubscribe(TZicPlayerMessage,
+                  (AItem as TListViewItem).Tag, true);
+                (AItem as TListViewItem).Tag := 0;
+              end);
+          end;
+        end;
+      end);
+    if (not isPlaying) then
+      PlayedSong := AItem.TagObject as TSong
+    else
+      PlayedSong := nil;
+  end;
 end;
 
 procedure TForm1.SetPlayedSong(const Value: TSong);
@@ -163,6 +229,8 @@ begin
       FPlayedSong := Value;
       MusicLoop.Play(FPlayedSong.FileName);
     end;
+    TMessageManager.DefaultManager.SendMessage(self,
+      TZicPlayerMessage.Create(FPlayedSong));
   end;
 end;
 
