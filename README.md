@@ -20,6 +20,7 @@ This project depends on :
 
 * [AboutDialog-Delphi-Component](https://github.com/DeveloppeurPascal/AboutDialog-Delphi-Component) is needed in ./lib-externes/AboutDialog-Delphi-Component
 * [librairies](https://github.com/DeveloppeurPascal/librairies) is needed in ./lib-externes/librairies
+* [Delphi Game Engine](https://github.com/DeveloppeurPascal/Delphi-Game-Engine) is needed in ./lib-externes/Delphi-Game-Engine
 
 ## How to ask a new feature, report a bug or a security issue ?
 
