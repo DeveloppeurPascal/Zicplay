@@ -1,4 +1,44 @@
 # TODO List
 
-* topic 1
-* topic 2
+=> lecteur MP3 
+
+- affichage de la liste des musiques (fichiers MP3/WAV/...) disponibles
+- affichage des sources de listes de musiques et leur contenu
+- ajout/modification/suppression des sources de musiques (arborescence de fichiers, sources externes, ...)
+- possibilité de créer des playlist (avec recherche, sélection de titres, ...)
+- play/pause/stop sur 1 musique ou une liste de musiques
+- lecture des intros (30s), lecture complète, lecture aléatoire, lecture en boucle du morceau en cours ou de la liste en cours
+- menu pour Windows, Mac et Linux
+- boite de dialogue "à propos" & licence d'utilisation
+- système de mise à jour ou info de sortie d'une nouvelle version
+- choix de la langue + traduction de tous les textes
+- choix du style appliqué au programme (clair / sombre / par défaut)
+
+=> source "fichiers locaux"
+- écran de configuration (choix du dossier à parcourir, fréquence de rafraichissement, rafraichissement immédiat, ajout/suppression de sous-dossiers)
+
+=> source "Zicplay Server"
+- écran de configuration (IP ou URL et port du serveur)
+
+=> source "iTunes Server"
+...
+
+=> Liste de sources
+=> Liste de musiques d'un source
+=> Données d'une musique
+
+- soumission du projet sur AppStore (iOS)
+- soumission du projet sur Mac AppStore (Mac)
+- soumission du projet sur PlayStore (Android)
+- soumission du projet sur Amazon App Store (Android)
+- soumission du projet sur Microsoft Store (Windows)
+- créer une icone pour le programme
+- ajouter l'icone aux options du projet
+- paramétrer les infos du projet dans ses options
+- gestion du style pour l'affichage (thème clair / sombre, éventuellement autre en option)
+
+* créer https://zicplay.olfsoftware.fr
+* ajouter une description de la licence dans l boite de dialogue "à propos"
+* ajouter une description du logiciel dans l boite de dialogue "à propos"
+* ajouter la couverture des albums ou le visuel des musiques dans TSong et l'interface utilisateur
+* ajouter icones sur la liste d'actions et lier les listes d'images sur les éléments d'interface
