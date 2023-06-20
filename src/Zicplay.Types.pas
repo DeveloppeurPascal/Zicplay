@@ -35,6 +35,7 @@ type
     FUniqID: string;
     FonGetFilename: TSongFileNameEvent;
     FSongSource: TSongSource;
+    FDuration: integer;
     procedure SetAlbum(const Value: string);
     procedure SetArtist(const Value: string);
     procedure SetCategory(const Value: string);
@@ -48,6 +49,8 @@ type
     procedure SetUniqID(const Value: string);
     function GetFileName: string;
     procedure SetSongSource(const Value: TSongSource);
+    procedure SetDuration(const Value: integer);
+    function GetDurationAsTime: string;
   protected
   public
     /// <summary>
@@ -62,6 +65,14 @@ type
     /// Name of the album or single
     /// </summary>
     property Album: string read FAlbum write SetAlbum;
+    /// <summary>
+    /// Duration of this song in seconds
+    /// </summary>
+    property Duration: integer read FDuration write SetDuration;
+    /// <summary>
+    /// Return the duration in HH:MM:SS string format
+    /// </summary>
+    property DurationAsTime: string read GetDurationAsTime;
     /// <summary>
     /// Publication date (at least the year if known)
     /// </summary>
@@ -232,6 +243,12 @@ uses
 
 { TSong }
 
+function TSong.GetDurationAsTime: string;
+begin
+  // TODO : à compléter
+  result := 'n/a';
+end;
+
 function TSong.GetFileName: string;
 begin
   if (not FFilename.isempty) then
@@ -273,6 +290,11 @@ end;
 procedure TSong.SetCategory(const Value: string);
 begin
   FCategory := Value;
+end;
+
+procedure TSong.SetDuration(const Value: integer);
+begin
+  FDuration := Value;
 end;
 
 procedure TSong.SetFilename(const Value: string);
@@ -369,26 +391,30 @@ end;
 constructor TSongSourceTypeList.Create;
 begin
   // TODO : à compléter
-{$MESSAGE fatal 'todo'}
+{$MESSAGE warn 'todo'}
+  raise Exception.Create('no code in this method');
 end;
 
 class function TSongSourceTypeList.Current: TSongSourceTypeList;
 begin
   // TODO : à compléter
-{$MESSAGE fatal 'todo'}
+{$MESSAGE warn 'todo'}
+  raise Exception.Create('no code in this method');
 end;
 
 destructor TSongSourceTypeList.Destroy;
 begin
   // TODO : à compléter
-{$MESSAGE fatal 'todo'}
+{$MESSAGE warn 'todo'}
+  raise Exception.Create('no code in this method');
   inherited;
 end;
 
 procedure TSongSourceTypeList.Register(ASongSourceType: ISongSourceType);
 begin
   // TODO : à compléter
-{$MESSAGE fatal 'todo'}
+{$MESSAGE warn 'todo'}
+  raise Exception.Create('no code in this method');
 end;
 
 { TSongSource }
@@ -396,7 +422,8 @@ end;
 function TSongSource.GetConnected: boolean;
 begin
   // TODO : à compléter
-{$MESSAGE fatal 'todo'}
+{$MESSAGE warn 'todo'}
+  raise Exception.Create('no code in this method');
 end;
 
 procedure TSongSource.LoadFromStream(AStream: TStream);
@@ -414,7 +441,8 @@ end;
 procedure TSongSource.SetConnected(const Value: boolean);
 begin
   // TODO : à compléter
-{$MESSAGE fatal 'todo'}
+{$MESSAGE warn 'todo'}
+  raise Exception.Create('no code in this method');
 end;
 
 procedure TSongSource.SetName(const Value: string);
