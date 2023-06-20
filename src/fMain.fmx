@@ -7,5 +7,67 @@ object Form1: TForm1
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
   DesignerMasterStyle = 0
+  object StatusBar1: TStatusBar
+    Position.Y = 458.000000000000000000
+    ShowSizeGrip = True
+    Size.Width = 640.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+  end
+  object ToolBar1: TToolBar
+    Size.Width = 640.000000000000000000
+    Size.Height = 40.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+  end
+  object MainMenu1: TMainMenu
+    Left = 176
+    Top = 128
+    object MacSystemMenu: TMenuItem
+      Text = 'mnuMacSystem'
+    end
+    object mnuFile: TMenuItem
+      Text = '&File'
+      object mnuExit: TMenuItem
+        Locked = True
+        Text = '&Quit'
+        OnClick = mnuExitClick
+      end
+    end
+    object mnuTools: TMenuItem
+      Text = '&Tools'
+      object mnuOptions: TMenuItem
+        Locked = True
+        Text = '&Options'
+        OnClick = mnuOptionsClick
+      end
+    end
+    object mnuHelp: TMenuItem
+      Text = '&Help'
+      object mnuAbout: TMenuItem
+        Locked = True
+        Text = '&About'
+        OnClick = mnuAboutClick
+      end
+    end
+  end
+  object AboutDialog: TOlfAboutDialog
+    Titre = 'Zicplay'
+    VersionNumero = '1.0'
+    VersionDate = '20230620'
+    MultiResBitmap = <
+      item
+      end>
+    URL = 'https://zicplay.olfsoftware.fr'
+    Langue = EN
+    Left = 552
+    Top = 72
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 152
+    Top = 256
+  end
 end
