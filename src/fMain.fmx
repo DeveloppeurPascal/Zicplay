@@ -22,6 +22,26 @@ object Form1: TForm1
     Size.Height = 40.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 2
+    object btnAbout: TSpeedButton
+      Action = actAbout
+      Align = Right
+      Enabled = True
+      ImageIndex = -1
+      Position.X = 560.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object btnOptions: TSpeedButton
+      Action = actOptions
+      Align = Right
+      Enabled = True
+      ImageIndex = -1
+      Position.X = 480.000000000000000000
+      Size.Width = 80.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+    end
   end
   object MainMenu1: TMainMenu
     Left = 176
@@ -32,25 +52,28 @@ object Form1: TForm1
     object mnuFile: TMenuItem
       Text = '&File'
       object mnuExit: TMenuItem
+        Action = actExit
+        Enabled = True
         Locked = True
-        Text = '&Quit'
-        OnClick = mnuExitClick
+        ImageIndex = -1
       end
     end
     object mnuTools: TMenuItem
       Text = '&Tools'
       object mnuOptions: TMenuItem
+        Action = actOptions
+        Enabled = True
         Locked = True
-        Text = '&Options'
-        OnClick = mnuOptionsClick
+        ImageIndex = -1
       end
     end
     object mnuHelp: TMenuItem
       Text = '&Help'
       object mnuAbout: TMenuItem
+        Action = actAbout
+        Enabled = True
         Locked = True
-        Text = '&About'
-        OnClick = mnuAboutClick
+        ImageIndex = -1
       end
     end
   end
@@ -69,5 +92,48 @@ object Form1: TForm1
   object PopupMenu1: TPopupMenu
     Left = 152
     Top = 256
+  end
+  object btnLoadMP3List: TButton
+    Align = Top
+    Margins.Left = 5.000000000000000000
+    Margins.Top = 5.000000000000000000
+    Margins.Right = 5.000000000000000000
+    Margins.Bottom = 5.000000000000000000
+    Position.X = 5.000000000000000000
+    Position.Y = 45.000000000000000000
+    Size.Width = 630.000000000000000000
+    Size.Height = 48.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 7
+    Text = 'btnLoadMP3List'
+    OnClick = btnLoadMP3ListClick
+  end
+  object ListView1: TListView
+    ItemAppearanceClassName = 'TImageListItemBottomDetailRightButtonAppearance'
+    ItemEditAppearanceClassName = 'TImageListItemBottomDetailRightButtonShowCheckAppearance'
+    HeaderAppearanceClassName = 'TListHeaderObjects'
+    FooterAppearanceClassName = 'TListHeaderObjects'
+    Align = Client
+    Size.Width = 640.000000000000000000
+    Size.Height = 360.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 8
+    OnButtonClick = ListView1ButtonClick
+  end
+  object ActionList1: TActionList
+    Left = 552
+    Top = 160
+    object actAbout: TAction
+      Text = '&About'
+      OnExecute = actAboutExecute
+    end
+    object actExit: TAction
+      Text = '&Quit'
+      OnExecute = actExitExecute
+    end
+    object actOptions: TAction
+      Text = '&Options'
+      OnExecute = actOptionsExecute
+    end
   end
 end
