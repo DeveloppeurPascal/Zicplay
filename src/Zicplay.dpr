@@ -3,7 +3,8 @@ program Zicplay;
 uses
   System.StartUpCopy,
   FMX.Forms,
-  fMain in 'fMain.pas' {Form1};
+  fMain in 'fMain.pas' {Form1},
+  Zicplay.Types in 'Zicplay.Types.pas';
 
 {$R *.res}
 
