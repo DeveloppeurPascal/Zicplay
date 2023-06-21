@@ -38,7 +38,15 @@
 - gestion du style pour l'affichage (thème clair / sombre, éventuellement autre en option)
 
 * créer https://zicplay.olfsoftware.fr
-* ajouter une description de la licence dans l boite de dialogue "à propos"
-* ajouter une description du logiciel dans l boite de dialogue "à propos"
+* ajouter une description de la licence dans la boite de dialogue "à propos"
+* ajouter une description du logiciel dans la boite de dialogue "à propos"
 * ajouter la couverture des albums ou le visuel des musiques dans TSong et l'interface utilisateur
 * ajouter icones sur la liste d'actions et lier les listes d'images sur les éléments d'interface
+
+* gérer la boucle sur le morceau en cours (REPEAT 1)
+* gérer la boucle sur la liste en cours (REPEAT ALL)
+* boutons PLAY / PAUSE / NEXT / PREVIOUS au niveau global
+* gestion du volume
+* lecture des intro d'une play List
+* gestion des playlist et des sources
+* ajout du fonnecteur "arborescence de fichiers"

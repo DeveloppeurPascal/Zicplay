@@ -4,7 +4,8 @@ interface
 
 uses
   System.Generics.Collections,
-  System.Classes;
+  System.Classes,
+  System.JSON;
 
 type
   TSong = class;
@@ -28,9 +29,13 @@ type
     FSongList: TSongList;
     FOrder: integer;
     FTitle: string;
+    FTitleLowerCase: string;
     FArtist: string;
+    FArtistLowerCase: string;
     FCategory: string;
+    FCategoryLowerCase: string;
     FAlbum: string;
+    FAlbumLowerCase: string;
     FPublishedDate: TDate;
     FUniqID: string;
     FonGetFilename: TSongFileNameEvent;
@@ -57,14 +62,17 @@ type
     /// Song title
     /// </summary>
     property Title: string read FTitle write SetTitle;
+    property TitleLowerCase: string read FTitleLowerCase;
     /// <summary>
     /// Artist (or artists) : singer, musician, ...
     /// </summary>
     property Artist: string read FArtist write SetArtist;
+    property ArtistLowerCase: string read FArtistLowerCase;
     /// <summary>
     /// Name of the album or single
     /// </summary>
     property Album: string read FAlbum write SetAlbum;
+    property AlbumLowerCase: string read FAlbumLowerCase;
     /// <summary>
     /// Duration of this song in seconds
     /// </summary>
@@ -85,6 +93,7 @@ type
     /// Category of the song (dance, techno, classic, ...)
     /// </summary>
     property Category: string read FCategory write SetCategory;
+    property CategoryLowerCase: string read FCategoryLowerCase;
     /// <summary>
     /// Order of the song in it's album
     /// </summary>
@@ -125,7 +134,7 @@ type
   /// <summary>
   /// Songs list
   /// </summary>
-  TSongList = class(TObjectList<TSong>)
+  TSongList = class(TList<TSong>)
   private
     FSongSource: TSongSource;
     procedure SetSongSource(const Value: TSongSource);
@@ -165,32 +174,102 @@ type
     /// Save song list datas to a stream
     /// </summary>
     procedure SaveToStream(AStream: TStream);
-  end;
+  end; // TODO : add a ClearAndFreeItems() method
+
+  /// <summary>
+  /// Used as callback procedure between a connector source and a song source
+  /// </summary>
+  TZicPlayGetSongListProc = reference to procedure(ASongList: TSongList);
 
   /// <summary>
   /// Interface for Zicplay source connectors (see it like a driver)
   /// </summary>
   ISongSourceType = interface
     ['{2A668080-A4BC-4E5B-8640-4EA0809E21DA}']
-    // TODO : à compléter
+    /// <summary>
+    /// Name of this connector (displayed to the users)
+    /// </summary>
+    function getName: string;
+
+    /// <summary>
+    /// Uniq ID (a GUID is fine) for this connector
+    /// </summary>
+    function getUniqID: string;
+
+    /// <summary>
+    /// Display setup dialog for a source
+    /// </summary>
+    procedure SourceSetupDialog(Params: TJSONObject);
+
+    /// <summary>
+    /// Display setup dialog for the connector
+    /// </summary>
+    procedure ConnectorSetupDialog;
+
+    /// <summary>
+    /// True if the ConnectorSetupDialog procedure can be called to display a dialog box from the Tools menu
+    /// False if no setup dialog for this connector
+    /// </summary>
+    function hasConnectorSetupDialog: boolean;
+
+    /// <summary>
+    /// return the song list from a source parameters
+    /// </summary>
+    procedure GetSongList(Params: TJSONObject;
+      CallbackProc: TZicPlayGetSongListProc);
+
+    /// <summary>
+    /// Load connector parameters from a stream
+    /// </summary>
+    procedure LoadFromStream(AStream: TStream);
+
+    /// <summary>
+    /// Save connector parameters in a stream
+    /// </summary>
+    procedure SaveToStream(AStream: TStream);
   end;
 
   /// <summary>
   /// List of registered source connectors
+  /// (it's a singleton, use TSongSourceTypeList.Current to access to it's instance)
   /// </summary>
   TSongSourceTypeList = class
   private
-    List: tlist<ISongSourceType>;
+    List: TList<ISongSourceType>;
+    class var SongSourceTypeListInstance: TSongSourceTypeList;
     constructor Create;
     destructor Destroy; override;
   protected
   public
+    /// <summary>
+    /// Return the singleton instance of this class
+    /// </summary>
     class function Current: TSongSourceTypeList;
+    /// <summary>
+    /// Used to register sources connectors
+    /// </summary>
     procedure Register(ASongSourceType: ISongSourceType);
+    /// <summary>
+    /// Sort the items in the list by alphabetical order of their name.
+    /// </summary>
+    procedure Sort;
+    /// <summary>
+    /// Return the number of registered connectors (aka "source type")
+    /// </summary>
+    function Count: integer;
+    /// <summary>
+    /// Return the registered connector at specified index (if available)
+    /// </summary>
+    function SourceTypeAt(AIndex: integer): ISongSourceType;
+    /// <summary>
+    /// Return the registered connector from it's UniqID (if available)
+    /// </summary>
+    function SourceTypeFromUID(AUniqID: string): ISongSourceType;
   end;
 
   /// <summary>
   /// Song source (configured in the program)
+  /// (a list from a connected source connector)
   /// </summary>
   TSongSource = class
   private
@@ -203,11 +282,26 @@ type
     procedure SetSongSourceType(const Value: ISongSourceType);
     function GetConnected: boolean;
   protected
+    FParams: TJSONObject;
+  public
+    /// <summary>
+    /// Name of this song source
+    /// </summary>
     property Name: string read FName write SetName;
+    /// <summary>
+    /// True if the connector is okay, False if not (MP3 files not available)
+    /// </summary>
     property Connected: boolean read GetConnected write SetConnected;
+    /// <summary>
+    /// List of songs from this source
+    /// </summary>
     property SongList: TSongList read FSongList write SetSongList;
+    /// <summary>
+    /// Link to the source type (connector / driver)
+    /// </summary>
     property SongSourceType: ISongSourceType read FSongSourceType
       write SetSongSourceType;
+
     /// <summary>
     /// Load source connector datas from a stream
     /// </summary>
@@ -216,15 +310,44 @@ type
     /// Save source connector datas to a stream
     /// </summary>
     procedure SaveToStream(AStream: TStream);
+
+    /// <summary>
+    /// Display connector setup dialog for this source
+    /// </summary>
+    procedure ShowSetupDialog;
+
+    /// <summary>
+    /// Load song list from its connector
+    /// (can take a very long time depending on the connector type and list size)
+    /// </summary>
+    procedure RefreshSongList;
+
+    /// <summary>
+    /// Instance constructor
+    /// </summary>
+    constructor Create;
+    /// <summary>
+    /// Instance destructor
+    /// </summary>
+    destructor Destroy; override;
   end;
 
   /// <summary>
   /// List of configured song sources on this device
   /// </summary>
-  TSongSourceList = class(TObjectList<TSongSource>)
+  TSongSourceList = class(TList<TSongSource>)
   private
+    class var SongSourceListInstance: TSongSourceList;
   protected
   public
+    /// <summary>
+    /// Return the singleton instance of this class
+    /// </summary>
+    class function Current: TSongSourceList;
+    /// <summary>
+    /// Sort the items in the list by alphabetical order of their name.
+    /// </summary>
+    procedure Sort;
     /// <summary>
     /// Load source connector datas from a stream
     /// </summary>
@@ -233,13 +356,14 @@ type
     /// Save source connector datas to a stream
     /// </summary>
     procedure SaveToStream(AStream: TStream);
-  end;
+  end; // TODO : add a ClearAndFreeItems() method
 
 implementation
 
 uses
   System.DateUtils,
-  System.SysUtils;
+  System.SysUtils,
+  System.Generics.Defaults;
 
 { TSong }
 
@@ -280,16 +404,19 @@ end;
 procedure TSong.SetAlbum(const Value: string);
 begin
   FAlbum := Value;
+  FAlbumLowerCase := FAlbum.ToLower;
 end;
 
 procedure TSong.SetArtist(const Value: string);
 begin
   FArtist := Value;
+  FArtistLowerCase := FArtist.ToLower;
 end;
 
 procedure TSong.SetCategory(const Value: string);
 begin
   FCategory := Value;
+  FCategoryLowerCase := FCategory.ToLower;
 end;
 
 procedure TSong.SetDuration(const Value: integer);
@@ -330,6 +457,7 @@ end;
 procedure TSong.SetTitle(const Value: string);
 begin
   FTitle := Value;
+  FTitleLowerCase := FTitle.ToLower;
 end;
 
 procedure TSong.SetUniqID(const Value: string);
@@ -358,66 +486,198 @@ end;
 
 procedure TSongList.SortByAlbum;
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
+  Sort(TComparer<TSong>.Construct(
+    function(const A, B: TSong): integer
+    begin
+      if (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
+        (A.FTitleLowerCase = B.FTitleLowerCase) then
+        result := 0
+      else if (A.FAlbumLowerCase < B.FAlbumLowerCase) or
+        ((A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder < B.FOrder)) or
+        ((A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
+        (A.FTitleLowerCase < B.FTitleLowerCase)) then
+        result := -1
+      else
+        result := 1;
+    end));
 end;
 
 procedure TSongList.SortByArtist;
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
+  Sort(TComparer<TSong>.Construct(
+    function(const A, B: TSong): integer
+    begin
+      if (A.FArtistLowerCase = B.FArtistLowerCase) and
+        (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
+        (A.FTitleLowerCase = B.FTitleLowerCase) then
+        result := 0
+      else if (A.FArtistLowerCase < B.FArtistLowerCase) or
+        ((A.FArtistLowerCase = B.FArtistLowerCase) and
+        (A.FAlbumLowerCase < B.FAlbumLowerCase)) or
+        ((A.FArtistLowerCase = B.FArtistLowerCase) and
+        (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder < B.FOrder)) or
+        ((A.FArtistLowerCase = B.FArtistLowerCase) and
+        (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
+        (A.FTitleLowerCase < B.FTitleLowerCase)) then
+        result := -1
+      else
+        result := 1;
+    end));
 end;
 
 procedure TSongList.SortByCategoryAlbum;
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
+  Sort(TComparer<TSong>.Construct(
+    function(const A, B: TSong): integer
+    begin
+      if (A.FCategoryLowerCase = B.FCategoryLowerCase) and
+        (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
+        (A.FTitleLowerCase = B.FTitleLowerCase) then
+        result := 0
+      else if (A.FCategoryLowerCase < B.FCategoryLowerCase) or
+        ((A.FCategoryLowerCase = B.FCategoryLowerCase) and
+        (A.FAlbumLowerCase < B.FAlbumLowerCase)) or
+        ((A.FCategoryLowerCase = B.FCategoryLowerCase) and
+        (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder < B.FOrder)) or
+        ((A.FCategoryLowerCase = B.FCategoryLowerCase) and
+        (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
+        (A.FTitleLowerCase < B.FTitleLowerCase)) then
+        result := -1
+      else
+        result := 1;
+    end));
 end;
 
 procedure TSongList.SortByCategoryTitle;
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
+  Sort(TComparer<TSong>.Construct(
+    function(const A, B: TSong): integer
+    begin
+      if (A.FCategoryLowerCase = B.FCategoryLowerCase) and
+        (A.FTitleLowerCase = B.FTitleLowerCase) and
+        (A.FAlbumLowerCase = B.FAlbumLowerCase) then
+        result := 0
+      else if (A.FCategoryLowerCase < B.FCategoryLowerCase) or
+        ((A.FCategoryLowerCase = B.FCategoryLowerCase) and
+        (A.FTitleLowerCase < B.FTitleLowerCase)) or
+        ((A.FCategoryLowerCase = B.FCategoryLowerCase) and
+        (A.FTitleLowerCase = B.FTitleLowerCase) and
+        (A.FAlbumLowerCase < B.FAlbumLowerCase)) then
+        result := -1
+      else
+        result := 1;
+    end));
 end;
 
 procedure TSongList.SortByTitle;
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
+  Sort(TComparer<TSong>.Construct(
+    function(const A, B: TSong): integer
+    begin
+      if (A.FTitleLowerCase = B.FTitleLowerCase) and
+        (A.FAlbumLowerCase = B.FAlbumLowerCase) then
+        result := 0
+      else if (A.FTitleLowerCase < B.FTitleLowerCase) or
+        ((A.FTitleLowerCase = B.FTitleLowerCase) and
+        (A.FAlbumLowerCase < B.FAlbumLowerCase)) then
+        result := -1
+      else
+        result := 1;
+    end));
 end;
 
 { TSongSourceTypeList }
 
+function TSongSourceTypeList.Count: integer;
+begin
+  result := List.Count;
+end;
+
 constructor TSongSourceTypeList.Create;
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
-  raise Exception.Create('no code in this method');
+  List := TList<ISongSourceType>.Create;
 end;
 
 class function TSongSourceTypeList.Current: TSongSourceTypeList;
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
-  raise Exception.Create('no code in this method');
+  if not assigned(SongSourceTypeListInstance) then
+    SongSourceTypeListInstance := TSongSourceTypeList.Create;
+  if assigned(SongSourceTypeListInstance) then
+    result := SongSourceTypeListInstance
+  else
+    result := nil;
 end;
 
 destructor TSongSourceTypeList.Destroy;
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
-  raise Exception.Create('no code in this method');
+  List.Free;
   inherited;
 end;
 
 procedure TSongSourceTypeList.Register(ASongSourceType: ISongSourceType);
+var
+  i: integer;
+  ItemFound: boolean;
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
-  raise Exception.Create('no code in this method');
+  ItemFound := false;
+  for i := 0 to List.Count - 1 do
+    if List[i].getUniqID = ASongSourceType.getUniqID then
+    begin
+      ItemFound := true;
+      break;
+    end;
+  if not ItemFound then
+    List.Add(ASongSourceType);
+end;
+
+procedure TSongSourceTypeList.Sort;
+begin
+  List.Sort(TComparer<ISongSourceType>.Construct(
+    function(const A, B: ISongSourceType): integer
+    begin
+      if A.getName = B.getName then
+        result := 0
+      else if A.getName < B.getName then
+        result := -1
+      else
+        result := 1;
+    end));
+end;
+
+function TSongSourceTypeList.SourceTypeAt(AIndex: integer): ISongSourceType;
+begin
+  if (AIndex >= 0) and (AIndex < List.Count) then
+    result := List.Items[AIndex]
+  else
+    result := nil;
+end;
+
+function TSongSourceTypeList.SourceTypeFromUID(AUniqID: string)
+  : ISongSourceType;
+var
+  i: integer;
+begin
+  result := nil;
+  for i := 0 to List.Count - 1 do
+    if (List.Items[i].getUniqID = AUniqID) then
+    begin
+      result := List.Items[i];
+      break;
+    end;
 end;
 
 { TSongSource }
+
+constructor TSongSource.Create;
+begin
+  FParams := TJSONObject.Create;
+end;
+
+destructor TSongSource.Destroy;
+begin
+  FParams.Free;
+  inherited;
+end;
 
 function TSongSource.GetConnected: boolean;
 begin
@@ -430,6 +690,17 @@ procedure TSongSource.LoadFromStream(AStream: TStream);
 begin
   // TODO : à compléter
 {$MESSAGE warn 'todo'}
+end;
+
+procedure TSongSource.RefreshSongList;
+begin
+  if assigned(SongSourceType) then
+    SongSourceType.GetSongList(FParams,
+      procedure(ASongList: TSongList)
+      begin
+      end)
+  else
+    raise Exception.Create('No connector for this source.');
 end;
 
 procedure TSongSource.SaveToStream(AStream: TStream);
@@ -460,7 +731,25 @@ begin
   FSongSourceType := Value;
 end;
 
+procedure TSongSource.ShowSetupDialog;
+begin
+  if assigned(SongSourceType) then
+    SongSourceType.SourceSetupDialog(FParams)
+  else
+    raise Exception.Create('No connector for this source.');
+end;
+
 { TSongSourceList }
+
+class function TSongSourceList.Current: TSongSourceList;
+begin
+  if not assigned(SongSourceListInstance) then
+    SongSourceListInstance := TSongSourceList.Create;
+  if assigned(SongSourceListInstance) then
+    result := SongSourceListInstance
+  else
+    result := nil;
+end;
 
 procedure TSongSourceList.LoadFromStream(AStream: TStream);
 begin
@@ -473,5 +762,25 @@ begin
   // TODO : à compléter
 {$MESSAGE warn 'todo'}
 end;
+
+procedure TSongSourceList.Sort;
+begin
+  inherited Sort(TComparer<TSongSource>.Construct(
+    function(const A, B: TSongSource): integer
+    begin
+      if A.Name = B.Name then
+        result := 0
+      else if A.Name < B.Name then
+        result := -1
+      else
+        result := 1;
+    end));
+end;
+
+initialization
+
+finalization
+
+TSongSourceTypeList.SongSourceTypeListInstance.Free;
 
 end.

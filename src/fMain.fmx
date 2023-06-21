@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 0
   Caption = 'Form1'
   ClientHeight = 480
-  ClientWidth = 640
+  ClientWidth = 900
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
@@ -12,7 +12,7 @@ object Form1: TForm1
   object StatusBar1: TStatusBar
     Position.Y = 458.000000000000000000
     ShowSizeGrip = True
-    Size.Width = 640.000000000000000000
+    Size.Width = 900.000000000000000000
     Size.Height = 22.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 1
@@ -22,7 +22,7 @@ object Form1: TForm1
       Margins.Top = 5.000000000000000000
       Margins.Right = 5.000000000000000000
       Margins.Bottom = 5.000000000000000000
-      Size.Width = 630.000000000000000000
+      Size.Width = 890.000000000000000000
       Size.Height = 12.000000000000000000
       Size.PlatformDefault = False
       Text = 'lblSongPlayed'
@@ -30,7 +30,7 @@ object Form1: TForm1
     end
   end
   object ToolBar1: TToolBar
-    Size.Width = 640.000000000000000000
+    Size.Width = 900.000000000000000000
     Size.Height = 40.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 2
@@ -39,7 +39,7 @@ object Form1: TForm1
       Align = Right
       Enabled = True
       ImageIndex = -1
-      Position.X = 560.000000000000000000
+      Position.X = 820.000000000000000000
       Size.Width = 80.000000000000000000
       Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
@@ -49,10 +49,66 @@ object Form1: TForm1
       Align = Right
       Enabled = True
       ImageIndex = -1
-      Position.X = 480.000000000000000000
+      Position.X = 740.000000000000000000
       Size.Width = 80.000000000000000000
       Size.Height = 40.000000000000000000
       Size.PlatformDefault = False
+    end
+    object cbSortList: TComboBox
+      Align = Left
+      Hint = 'Sort the list'
+      Items.Strings = (
+        'Title'
+        'Artist'
+        'Album'
+        'Category / Album'
+        'Category / Title')
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 265.000000000000000000
+      Position.Y = 5.000000000000000000
+      Size.Width = 200.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      OnChange = cbSortListChange
+    end
+    object edtSearch: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Left
+      TabOrder = 1
+      Position.X = 5.000000000000000000
+      Position.Y = 5.000000000000000000
+      Hint = 'Filter the list'
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Size.Width = 250.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      OnKeyDown = edtSearchKeyDown
+      object SearchEditButton1: TSearchEditButton
+        CanFocus = False
+        Cursor = crArrow
+        Size.Width = 28.000000000000000000
+        Size.Height = 26.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        OnClick = SearchEditButton1Click
+      end
+      object ClearEditButton1: TClearEditButton
+        CanFocus = False
+        Cursor = crArrow
+        Position.X = 28.000000000000000000
+        Size.Width = 28.000000000000000000
+        Size.Height = 26.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        OnClick = ClearEditButton1Click
+      end
     end
   end
   object MainMenu1: TMainMenu
@@ -101,10 +157,6 @@ object Form1: TForm1
     Left = 552
     Top = 72
   end
-  object PopupMenu1: TPopupMenu
-    Left = 152
-    Top = 256
-  end
   object btnLoadMP3List: TButton
     Align = Top
     Margins.Left = 5.000000000000000000
@@ -113,7 +165,7 @@ object Form1: TForm1
     Margins.Bottom = 5.000000000000000000
     Position.X = 5.000000000000000000
     Position.Y = 45.000000000000000000
-    Size.Width = 630.000000000000000000
+    Size.Width = 890.000000000000000000
     Size.Height = 48.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 7
@@ -126,11 +178,17 @@ object Form1: TForm1
     HeaderAppearanceClassName = 'TListHeaderObjects'
     FooterAppearanceClassName = 'TListHeaderObjects'
     Align = Client
-    Size.Width = 640.000000000000000000
+    Size.Width = 900.000000000000000000
     Size.Height = 360.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 8
     OnButtonClick = ListView1ButtonClick
+  end
+  object timerIsSongFinished: TTimer
+    Interval = 100
+    OnTimer = timerIsSongFinishedTimer
+    Left = 440
+    Top = 224
   end
   object ActionList1: TActionList
     Left = 552
