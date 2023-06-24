@@ -155,6 +155,7 @@ object Form1: TForm1
     Images = DMIcons.AboutBox
     ImageIndex = 0
     URL = 'https://zicplay.olfsoftware.fr'
+    onURLClick = AboutDialogURLClick
     Langue = EN
     Left = 552
     Top = 72

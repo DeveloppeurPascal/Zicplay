@@ -68,6 +68,7 @@ type
     procedure edtSearchKeyDown(Sender: TObject; var Key: Word;
       var KeyChar: Char; Shift: TShiftState);
     procedure timerIsSongFinishedTimer(Sender: TObject);
+    procedure AboutDialogURLClick(const AURL: string);
   private
     FPlayedSong: TSong;
     FDefaultCaption: string;
@@ -99,7 +100,8 @@ implementation
 uses
   System.IOUtils,
   System.Messaging,
-  Gamolf.FMX.MusicLoop;
+  Gamolf.FMX.MusicLoop,
+  u_urlOpen;
 
 function ReverseString(From: string): string;
 // TODO : for dev tests only, remove it
@@ -111,6 +113,14 @@ end;
 
 Type
   TZicPlayMessage = TMessage<TSong>;
+
+procedure TForm1.AboutDialogURLClick(const AURL: string);
+begin
+  if AURL.IsEmpty then
+    exit;
+
+  url_Open_In_Browser(AURL);
+end;
 
 procedure TForm1.actAboutExecute(Sender: TObject);
 begin
