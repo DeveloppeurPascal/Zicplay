@@ -147,11 +147,13 @@ object Form1: TForm1
   end
   object AboutDialog: TOlfAboutDialog
     Titre = 'Zicplay'
-    VersionNumero = '1.0'
-    VersionDate = '20230620'
+    VersionNumero = '0.2'
+    VersionDate = '20230624'
     MultiResBitmap = <
       item
       end>
+    Images = DMIcons.AboutBox
+    ImageIndex = 0
     URL = 'https://zicplay.olfsoftware.fr'
     Langue = EN
     Left = 552

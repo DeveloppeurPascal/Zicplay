@@ -25,7 +25,8 @@ uses
   FMX.ListView,
   Zicplay.Types,
   FMX.Edit,
-  FMX.ListBox;
+  FMX.ListBox,
+  uDMIcons;
 
 type
   TForm1 = class(TForm)
