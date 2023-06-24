@@ -27,17 +27,6 @@
 => Liste de musiques d'un source
 => Données d'une musique
 
-- soumission du projet sur AppStore (iOS)
-- soumission du projet sur Mac AppStore (Mac)
-- soumission du projet sur PlayStore (Android)
-- soumission du projet sur Amazon App Store (Android)
-- soumission du projet sur Microsoft Store (Windows)
-- créer une icone pour le programme
-- ajouter l'icone aux options du projet
-- paramétrer les infos du projet dans ses options
-- gestion du style pour l'affichage (thème clair / sombre, éventuellement autre en option)
-
-* créer https://zicplay.olfsoftware.fr
 * ajouter une description de la licence dans la boite de dialogue "à propos"
 * ajouter une description du logiciel dans la boite de dialogue "à propos"
 * ajouter la couverture des albums ou le visuel des musiques dans TSong et l'interface utilisateur
@@ -49,4 +38,4 @@
 * gestion du volume
 * lecture des intro d'une play List
 * gestion des playlist et des sources
-* ajout du fonnecteur "arborescence de fichiers"
+* ajout du connecteur "arborescence de fichiers"
