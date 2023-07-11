@@ -9,10 +9,10 @@ uses
 
 type
   TSong = class;
-  TSongList = class;
-  ISongSourceType = interface;
-  TSongSource = class;
-  TSongSourceList = class;
+  TPlaylist = class;
+  IConnector = interface;
+  TConnector = class;
+  TConnectorsList = class;
 
   /// <summary>
   /// A function getting the UniqID of a song to answer with it's local file name and path (realy local or in a cache)
@@ -26,7 +26,7 @@ type
   TSong = class
   private
     FFilename: string;
-    FSongList: TSongList;
+    FPlaylist: TPlaylist;
     FOrder: integer;
     FTitle: string;
     FTitleLowerCase: string;
@@ -39,7 +39,7 @@ type
     FPublishedDate: TDate;
     FUniqID: string;
     FonGetFilename: TSongFileNameEvent;
-    FSongSource: TSongSource;
+    FConnector: TConnector;
     FDuration: integer;
     procedure SetAlbum(const Value: string);
     procedure SetArtist(const Value: string);
@@ -47,13 +47,13 @@ type
     procedure SetFilename(const Value: string);
     procedure SetOrder(const Value: integer);
     procedure SetPublishedDate(const Value: TDate);
-    procedure SetSongList(const Value: TSongList);
+    procedure SetPlaylist(const Value: TPlaylist);
     procedure SetTitle(const Value: string);
     function GetPublishedYear: word;
     procedure SetonGetFilename(const Value: TSongFileNameEvent);
     procedure SetUniqID(const Value: string);
     function GetFileName: string;
-    procedure SetSongSource(const Value: TSongSource);
+    procedure SetConnector(const Value: TConnector);
     procedure SetDuration(const Value: integer);
     function GetDurationAsTime: string;
   protected
@@ -99,24 +99,24 @@ type
     /// </summary>
     property Order: integer read FOrder write SetOrder;
     /// <summary>
-    /// Unique ID of the song for the song source
+    /// Unique ID of the song for its playlist
     /// </summary>
     property UniqID: string read FUniqID write SetUniqID;
     /// <summary>
-    /// Source for this song
+    /// Song's playlist
     /// </summary>
-    property SongSource: TSongSource read FSongSource write SetSongSource;
+    property Connector: TConnector read FConnector write SetConnector;
     /// <summary>
     /// Song list for this song
     /// </summary>
-    property SongList: TSongList read FSongList write SetSongList;
+    property Playlist: TPlaylist read FPlaylist write SetPlaylist;
     /// <summary>
     /// Return the file name and local path of this song to open it in the TMediaPlayer component
     /// </summary>
     property FileName: string read GetFileName write SetFilename;
     /// <summary>
     /// Called each time property FileName is read if the FFileName field is empty.
-    /// Use it for your source connectors if the song has no local file (to access to a local cache).
+    /// Use it for your connectors if the song has no local file (to access to a local cache).
     /// </summary>
     property onGetFilename: TSongFileNameEvent read FonGetFilename
       write SetonGetFilename;
@@ -134,16 +134,16 @@ type
   /// <summary>
   /// Songs list
   /// </summary>
-  TSongList = class(TList<TSong>)
+  TPlaylist = class(TList<TSong>)
   private
-    FSongSource: TSongSource;
-    procedure SetSongSource(const Value: TSongSource);
+    FConnector: TConnector;
+    procedure SetConnector(const Value: TConnector);
   protected
   public
     /// <summary>
-    /// Source for this list of songs
+    /// Connector for this playlist
     /// </summary>
-    property SongSource: TSongSource read FSongSource write SetSongSource;
+    property Connector: TConnector read FConnector write SetConnector;
 
     /// <summary>
     /// Sort the songs in this list by Album / Order / Title
@@ -177,14 +177,14 @@ type
   end; // TODO : add a ClearAndFreeItems() method
 
   /// <summary>
-  /// Used as callback procedure between a connector source and a song source
+  /// Used as callback procedure between a connector and a playlist
   /// </summary>
-  TZicPlayGetSongListProc = reference to procedure(ASongList: TSongList);
+  TZicPlayGetPlaylistProc = reference to procedure(APlaylist: TPlaylist);
 
   /// <summary>
-  /// Interface for Zicplay source connectors (see it like a driver)
+  /// Interface for Zicplay connectors (see it like a driver)
   /// </summary>
-  ISongSourceType = interface
+  IConnector = interface
     ['{2A668080-A4BC-4E5B-8640-4EA0809E21DA}']
     /// <summary>
     /// Name of this connector (displayed to the users)
@@ -197,26 +197,32 @@ type
     function getUniqID: string;
 
     /// <summary>
-    /// Display setup dialog for a source
+    /// Display setup dialog for a playlist using this connector
     /// </summary>
-    procedure SourceSetupDialog(Params: TJSONObject);
+    procedure ConnectorSetupDialog(Params: TJSONObject);
 
     /// <summary>
-    /// Display setup dialog for the connector
-    /// </summary>
-    procedure ConnectorSetupDialog;
-
-    /// <summary>
-    /// True if the ConnectorSetupDialog procedure can be called to display a dialog box from the Tools menu
+    /// True if the ConnectorSetupDialog procedure can be called to display a dialog box from the playlist options
     /// False if no setup dialog for this connector
     /// </summary>
     function hasConnectorSetupDialog: boolean;
 
     /// <summary>
-    /// return the song list from a source parameters
+    /// Display setup dialog for a connector type
     /// </summary>
-    procedure GetSongList(Params: TJSONObject;
-      CallbackProc: TZicPlayGetSongListProc);
+    procedure ConnectorTypeSetupDialog(Params: TJSONObject);
+
+    /// <summary>
+    /// True if the ConnectorTypeSetupDialog procedure can be called to display a dialog box from the Tools menu
+    /// False if no setup dialog for this connector Type
+    /// </summary>
+    function hasConnectorTypeSetupDialog: boolean;
+
+    /// <summary>
+    /// Return the song list from a connector (with local parameters)
+    /// </summary>
+    procedure GetPlaylist(Params: TJSONObject;
+      CallbackProc: TZicPlayGetPlaylistProc);
 
     /// <summary>
     /// Load connector parameters from a stream
@@ -230,13 +236,13 @@ type
   end;
 
   /// <summary>
-  /// List of registered source connectors
-  /// (it's a singleton, use TSongSourceTypeList.Current to access to it's instance)
+  /// List of registered connectors
+  /// (it's a singleton, use TConnectorTypeList.Current to access to it's instance)
   /// </summary>
-  TSongSourceTypeList = class
+  TConnectorTypeList = class
   private
-    List: TList<ISongSourceType>;
-    class var SongSourceTypeListInstance: TSongSourceTypeList;
+    List: TList<IConnector>;
+    class var ConnectorTypeListInstance: TConnectorTypeList;
     constructor Create;
     destructor Destroy; override;
   protected
@@ -244,48 +250,48 @@ type
     /// <summary>
     /// Return the singleton instance of this class
     /// </summary>
-    class function Current: TSongSourceTypeList;
+    class function Current: TConnectorTypeList;
     /// <summary>
-    /// Used to register sources connectors
+    /// Used to register the connectors
     /// </summary>
-    procedure Register(ASongSourceType: ISongSourceType);
+    procedure Register(AConnectorType: IConnector);
     /// <summary>
     /// Sort the items in the list by alphabetical order of their name.
     /// </summary>
     procedure Sort;
     /// <summary>
-    /// Return the number of registered connectors (aka "source type")
+    /// Return the number of registered connectors
     /// </summary>
     function Count: integer;
     /// <summary>
     /// Return the registered connector at specified index (if available)
     /// </summary>
-    function SourceTypeAt(AIndex: integer): ISongSourceType;
+    function GetConnectorAt(AIndex: integer): IConnector;
     /// <summary>
     /// Return the registered connector from it's UniqID (if available)
     /// </summary>
-    function SourceTypeFromUID(AUniqID: string): ISongSourceType;
+    function GetConnectorFromUID(AUniqID: string): IConnector;
   end;
 
   /// <summary>
-  /// Song source (configured in the program)
-  /// (a list from a connected source connector)
+  /// An available connector
+  /// (configured in the program to get its songs as a playlist)
   /// </summary>
-  TSongSource = class
+  TConnector = class
   private
     FName: string;
-    FSongList: TSongList;
-    FSongSourceType: ISongSourceType;
+    FPlaylist: TPlaylist;
+    FConnectorType: IConnector;
     procedure SetConnected(const Value: boolean);
     procedure SetName(const Value: string);
-    procedure SetSongList(const Value: TSongList);
-    procedure SetSongSourceType(const Value: ISongSourceType);
+    procedure SetPlaylist(const Value: TPlaylist);
+    procedure SetConnectorType(const Value: IConnector);
     function GetConnected: boolean;
   protected
     FParams: TJSONObject;
   public
     /// <summary>
-    /// Name of this song source
+    /// Name of this connector
     /// </summary>
     property Name: string read FName write SetName;
     /// <summary>
@@ -293,26 +299,26 @@ type
     /// </summary>
     property Connected: boolean read GetConnected write SetConnected;
     /// <summary>
-    /// List of songs from this source
+    /// List of songs from this connector
     /// </summary>
-    property SongList: TSongList read FSongList write SetSongList;
+    property Playlist: TPlaylist read FPlaylist write SetPlaylist;
     /// <summary>
-    /// Link to the source type (connector / driver)
+    /// Link to the connector type
     /// </summary>
-    property SongSourceType: ISongSourceType read FSongSourceType
-      write SetSongSourceType;
+    property ConnectorType: IConnector read FConnectorType
+      write SetConnectorType;
 
     /// <summary>
-    /// Load source connector datas from a stream
+    /// Load connector datas from a stream
     /// </summary>
     procedure LoadFromStream(AStream: TStream);
     /// <summary>
-    /// Save source connector datas to a stream
+    /// Save connector datas to a stream
     /// </summary>
     procedure SaveToStream(AStream: TStream);
 
     /// <summary>
-    /// Display connector setup dialog for this source
+    /// Display connector setup dialog
     /// </summary>
     procedure ShowSetupDialog;
 
@@ -320,7 +326,7 @@ type
     /// Load song list from its connector
     /// (can take a very long time depending on the connector type and list size)
     /// </summary>
-    procedure RefreshSongList;
+    procedure RefreshPlaylist;
 
     /// <summary>
     /// Instance constructor
@@ -333,27 +339,27 @@ type
   end;
 
   /// <summary>
-  /// List of configured song sources on this device
+  /// List of registered connectors in this program
   /// </summary>
-  TSongSourceList = class(TList<TSongSource>)
+  TConnectorsList = class(TList<TConnector>)
   private
-    class var SongSourceListInstance: TSongSourceList;
+    class var ConnectorListInstance: TConnectorsList;
   protected
   public
     /// <summary>
     /// Return the singleton instance of this class
     /// </summary>
-    class function Current: TSongSourceList;
+    class function Current: TConnectorsList;
     /// <summary>
     /// Sort the items in the list by alphabetical order of their name.
     /// </summary>
     procedure Sort;
     /// <summary>
-    /// Load source connector datas from a stream
+    /// Load connectors list from a stream
     /// </summary>
     procedure LoadFromStream(AStream: TStream);
     /// <summary>
-    /// Save source connector datas to a stream
+    /// Save connectors list to a stream
     /// </summary>
     procedure SaveToStream(AStream: TStream);
   end; // TODO : add a ClearAndFreeItems() method
@@ -444,14 +450,14 @@ begin
   FPublishedDate := Value;
 end;
 
-procedure TSong.SetSongList(const Value: TSongList);
+procedure TSong.SetPlaylist(const Value: TPlaylist);
 begin
-  FSongList := Value;
+  FPlaylist := Value;
 end;
 
-procedure TSong.SetSongSource(const Value: TSongSource);
+procedure TSong.SetConnector(const Value: TConnector);
 begin
-  FSongSource := Value;
+  FConnector := Value;
 end;
 
 procedure TSong.SetTitle(const Value: string);
@@ -465,26 +471,26 @@ begin
   FUniqID := Value;
 end;
 
-{ TSongList }
+{ TPlaylist }
 
-procedure TSongList.LoadFromStream(AStream: TStream);
+procedure TPlaylist.LoadFromStream(AStream: TStream);
 begin
   // TODO : à compléter
 {$MESSAGE warn 'todo'}
 end;
 
-procedure TSongList.SaveToStream(AStream: TStream);
+procedure TPlaylist.SaveToStream(AStream: TStream);
 begin
   // TODO : à compléter
 {$MESSAGE warn 'todo'}
 end;
 
-procedure TSongList.SetSongSource(const Value: TSongSource);
+procedure TPlaylist.SetConnector(const Value: TConnector);
 begin
-  FSongSource := Value;
+  FConnector := Value;
 end;
 
-procedure TSongList.SortByAlbum;
+procedure TPlaylist.SortByAlbum;
 begin
   Sort(TComparer<TSong>.Construct(
     function(const A, B: TSong): integer
@@ -502,7 +508,7 @@ begin
     end));
 end;
 
-procedure TSongList.SortByArtist;
+procedure TPlaylist.SortByArtist;
 begin
   Sort(TComparer<TSong>.Construct(
     function(const A, B: TSong): integer
@@ -525,7 +531,7 @@ begin
     end));
 end;
 
-procedure TSongList.SortByCategoryAlbum;
+procedure TPlaylist.SortByCategoryAlbum;
 begin
   Sort(TComparer<TSong>.Construct(
     function(const A, B: TSong): integer
@@ -548,7 +554,7 @@ begin
     end));
 end;
 
-procedure TSongList.SortByCategoryTitle;
+procedure TPlaylist.SortByCategoryTitle;
 begin
   Sort(TComparer<TSong>.Construct(
     function(const A, B: TSong): integer
@@ -569,7 +575,7 @@ begin
     end));
 end;
 
-procedure TSongList.SortByTitle;
+procedure TPlaylist.SortByTitle;
 begin
   Sort(TComparer<TSong>.Construct(
     function(const A, B: TSong): integer
@@ -586,54 +592,54 @@ begin
     end));
 end;
 
-{ TSongSourceTypeList }
+{ TConnectorTypeList }
 
-function TSongSourceTypeList.Count: integer;
+function TConnectorTypeList.Count: integer;
 begin
   result := List.Count;
 end;
 
-constructor TSongSourceTypeList.Create;
+constructor TConnectorTypeList.Create;
 begin
-  List := TList<ISongSourceType>.Create;
+  List := TList<IConnector>.Create;
 end;
 
-class function TSongSourceTypeList.Current: TSongSourceTypeList;
+class function TConnectorTypeList.Current: TConnectorTypeList;
 begin
-  if not assigned(SongSourceTypeListInstance) then
-    SongSourceTypeListInstance := TSongSourceTypeList.Create;
-  if assigned(SongSourceTypeListInstance) then
-    result := SongSourceTypeListInstance
+  if not assigned(ConnectorTypeListInstance) then
+    ConnectorTypeListInstance := TConnectorTypeList.Create;
+  if assigned(ConnectorTypeListInstance) then
+    result := ConnectorTypeListInstance
   else
     result := nil;
 end;
 
-destructor TSongSourceTypeList.Destroy;
+destructor TConnectorTypeList.Destroy;
 begin
   List.Free;
   inherited;
 end;
 
-procedure TSongSourceTypeList.Register(ASongSourceType: ISongSourceType);
+procedure TConnectorTypeList.Register(AConnectorType: IConnector);
 var
   i: integer;
   ItemFound: boolean;
 begin
   ItemFound := false;
   for i := 0 to List.Count - 1 do
-    if List[i].getUniqID = ASongSourceType.getUniqID then
+    if List[i].getUniqID = AConnectorType.getUniqID then
     begin
       ItemFound := true;
       break;
     end;
   if not ItemFound then
-    List.Add(ASongSourceType);
+    List.Add(AConnectorType);
 end;
 
-procedure TSongSourceTypeList.Sort;
+procedure TConnectorTypeList.Sort;
 begin
-  List.Sort(TComparer<ISongSourceType>.Construct(
-    function(const A, B: ISongSourceType): integer
+  List.Sort(TComparer<IConnector>.Construct(
+    function(const A, B: IConnector): integer
     begin
       if A.getName = B.getName then
         result := 0
@@ -644,7 +650,7 @@ begin
     end));
 end;
 
-function TSongSourceTypeList.SourceTypeAt(AIndex: integer): ISongSourceType;
+function TConnectorTypeList.GetConnectorAt(AIndex: integer): IConnector;
 begin
   if (AIndex >= 0) and (AIndex < List.Count) then
     result := List.Items[AIndex]
@@ -652,8 +658,7 @@ begin
     result := nil;
 end;
 
-function TSongSourceTypeList.SourceTypeFromUID(AUniqID: string)
-  : ISongSourceType;
+function TConnectorTypeList.GetConnectorFromUID(AUniqID: string): IConnector;
 var
   i: integer;
 begin
@@ -666,107 +671,112 @@ begin
     end;
 end;
 
-{ TSongSource }
+{ TConnector }
 
-constructor TSongSource.Create;
+constructor TConnector.Create;
 begin
   FParams := TJSONObject.Create;
 end;
 
-destructor TSongSource.Destroy;
+destructor TConnector.Destroy;
 begin
   FParams.Free;
   inherited;
 end;
 
-function TSongSource.GetConnected: boolean;
+function TConnector.GetConnected: boolean;
 begin
   // TODO : à compléter
 {$MESSAGE warn 'todo'}
   raise Exception.Create('no code in this method');
 end;
 
-procedure TSongSource.LoadFromStream(AStream: TStream);
+procedure TConnector.LoadFromStream(AStream: TStream);
 begin
   // TODO : à compléter
 {$MESSAGE warn 'todo'}
 end;
 
-procedure TSongSource.RefreshSongList;
+procedure TConnector.RefreshPlaylist;
 begin
-  if assigned(SongSourceType) then
-    SongSourceType.GetSongList(FParams,
-      procedure(ASongList: TSongList)
+  if assigned(ConnectorType) then
+    ConnectorType.GetPlaylist(FParams,
+      procedure(APlaylist: TPlaylist)
       begin
       end)
   else
-    raise Exception.Create('No connector for this source.');
+    raise Exception.Create('No connector for this playlist.');
 end;
 
-procedure TSongSource.SaveToStream(AStream: TStream);
+procedure TConnector.SaveToStream(AStream: TStream);
 begin
   // TODO : à compléter
 {$MESSAGE warn 'todo'}
 end;
 
-procedure TSongSource.SetConnected(const Value: boolean);
+procedure TConnector.SetConnected(const Value: boolean);
 begin
   // TODO : à compléter
 {$MESSAGE warn 'todo'}
-  raise Exception.Create('no code in this method');
+  raise Exception.Create('No code in this method');
 end;
 
-procedure TSongSource.SetName(const Value: string);
+procedure TConnector.SetName(const Value: string);
 begin
   FName := Value;
 end;
 
-procedure TSongSource.SetSongList(const Value: TSongList);
+procedure TConnector.SetPlaylist(const Value: TPlaylist);
 begin
-  FSongList := Value;
+  FPlaylist := Value;
 end;
 
-procedure TSongSource.SetSongSourceType(const Value: ISongSourceType);
+procedure TConnector.SetConnectorType(const Value: IConnector);
 begin
-  FSongSourceType := Value;
+  FConnectorType := Value;
 end;
 
-procedure TSongSource.ShowSetupDialog;
+procedure TConnector.ShowSetupDialog;
 begin
-  if assigned(SongSourceType) then
-    SongSourceType.SourceSetupDialog(FParams)
+  if assigned(ConnectorType) then
+  begin
+    if ConnectorType.hasConnectorSetupDialog then
+      ConnectorType.ConnectorSetupDialog(FParams)
+    else
+      raise Exception.Create('No setup dialog available for this connector.');
+  end
   else
-    raise Exception.Create('No connector for this source.');
+    raise Exception.Create('Unknown connector. No setup dialog available.');
 end;
 
-{ TSongSourceList }
+{ TConnectorList }
 
-class function TSongSourceList.Current: TSongSourceList;
+class function TConnectorsList.Current: TConnectorsList;
 begin
-  if not assigned(SongSourceListInstance) then
-    SongSourceListInstance := TSongSourceList.Create;
-  if assigned(SongSourceListInstance) then
-    result := SongSourceListInstance
+  if not assigned(ConnectorListInstance) then
+    ConnectorListInstance := TConnectorsList.Create;
+  if assigned(ConnectorListInstance) then
+    result := ConnectorListInstance
   else
     result := nil;
 end;
 
-procedure TSongSourceList.LoadFromStream(AStream: TStream);
+procedure TConnectorsList.LoadFromStream(AStream: TStream);
 begin
   // TODO : à compléter
 {$MESSAGE warn 'todo'}
 end;
 
-procedure TSongSourceList.SaveToStream(AStream: TStream);
+procedure TConnectorsList.SaveToStream(AStream: TStream);
 begin
   // TODO : à compléter
 {$MESSAGE warn 'todo'}
 end;
 
-procedure TSongSourceList.Sort;
+procedure TConnectorsList.Sort;
 begin
-  inherited Sort(TComparer<TSongSource>.Construct(
-    function(const A, B: TSongSource): integer
+  inherited Sort(TComparer<TConnector>.Construct(
+    function(const A, B: TConnector): integer
     begin
       if A.Name = B.Name then
         result := 0
@@ -781,6 +791,6 @@ initialization
 
 finalization
 
-TSongSourceTypeList.SongSourceTypeListInstance.Free;
+TConnectorTypeList.ConnectorTypeListInstance.Free;
 
 end.

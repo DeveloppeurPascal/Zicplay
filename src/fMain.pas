@@ -72,21 +72,21 @@ type
   private
     FPlayedSong: TSong;
     FDefaultCaption: string;
-    FCurrentSongsList: TSongList;
-    FCurrentSongsListNotFiltered: TSongList;
+    FCurrentSongsList: TPlaylist;
+    FCurrentSongsListNotFiltered: TPlaylist;
     procedure SetPlayedSong(const Value: TSong);
-    procedure SetCurrentSongsList(const Value: TSongList);
+    procedure SetCurrentSongsList(const Value: TPlaylist);
     { Déclarations privées }
     procedure RefreshListView;
     function SubscribeToZicPlayMessage(AItem: TListviewItem): integer;
-    procedure SetCurrentSongsListNotFiltered(const Value: TSongList);
+    procedure SetCurrentSongsListNotFiltered(const Value: TPlaylist);
     procedure ConnectorMenuClick(Sender: TObject);
   public
     { Déclarations publiques }
     property PlayedSong: TSong read FPlayedSong write SetPlayedSong;
-    property CurrentSongsList: TSongList read FCurrentSongsList
+    property CurrentSongsList: TPlaylist read FCurrentSongsList
       write SetCurrentSongsList;
-    property CurrentSongsListNotFiltered: TSongList
+    property CurrentSongsListNotFiltered: TPlaylist
       read FCurrentSongsListNotFiltered write SetCurrentSongsListNotFiltered;
   end;
 
@@ -98,6 +98,7 @@ implementation
 {$R *.fmx}
 
 uses
+  System.JSON,
   System.IOUtils,
   System.Messaging,
   Gamolf.FMX.MusicLoop,
@@ -169,11 +170,11 @@ var
   i: integer;
   files: TStringDynArray;
   song: TSong;
-  songlist: TSongList;
+  songlist: TPlaylist;
 begin
   btnLoadMP3List.Visible := false;
 
-  songlist := TSongList.Create;
+  songlist := TPlaylist.Create;
   try
 {$IFDEF RELEASE}
 {$IF Defined(MACOS) and not Defined(IOS)}
@@ -196,7 +197,7 @@ begin
         song.Category := 'mp3'; // TODO : à compléter
         song.Order := 0; // TODO : à compléter
         song.UniqID := files[i];
-        song.SongSource := nil;
+        song.Playlist := nil;
         song.FileName := files[i];
         song.onGetFilename := nil;
 
@@ -262,14 +263,15 @@ end;
 
 procedure TfrmMain.ConnectorMenuClick(Sender: TObject);
 var
-  sst: ISongSourceType;
+  sst: IConnector;
 begin
-  if (Sender is TMenuItem) and not(Sender as TMenuItem).Tagstring.IsEmpty then
+  if (Sender is TMenuItem) and (not(Sender as TMenuItem).Tagstring.IsEmpty) then
   begin
-    sst := TSongSourcetypeList.Current.SourceTypeFromUID
+    sst := TConnectorTypeList.Current.getConnectorFromUID
       ((Sender as TMenuItem).Tagstring);
-    if assigned(sst) and sst.hasConnectorSetupDialog then
-      sst.ConnectorSetupDialog;
+    if assigned(sst) and sst.hasConnectorTypeSetupDialog then
+      sst.ConnectorTypeSetupDialog((Sender as TMenuItem)
+        .tagobject as tjsonobject);
   end;
 end;
 
@@ -286,8 +288,8 @@ procedure TfrmMain.FormCreate(Sender: TObject);
 var
   i: integer;
   mnu: TMenuItem;
-  sstl: TSongSourcetypeList;
-  sst: ISongSourceType;
+  sstl: TConnectorTypeList;
+  sst: IConnector;
 begin
   // TODO : load program parameters
 
@@ -305,11 +307,11 @@ begin
   MacSystemMenu.Visible := false;
 {$ENDIF}
   //
-  sstl := TSongSourcetypeList.Current;
+  sstl := TConnectorTypeList.Current;
   sstl.Sort;
   for i := 0 to sstl.Count - 1 do
   begin
-    sst := sstl.SourceTypeAt(i);
+    sst := sstl.GetConnectorAt(i);
     if sst.hasConnectorSetupDialog then
     begin
       mnu := TMenuItem.Create(Self);
@@ -358,14 +360,14 @@ const AItem: TListItem; const AObject: TListItemSimpleControl);
 var
   isPlaying: boolean;
 begin
-  if assigned(AItem) and assigned(AItem.TagObject) and (AItem.TagObject is TSong)
+  if assigned(AItem) and assigned(AItem.tagobject) and (AItem.tagobject is TSong)
   then
   begin
     isPlaying := (AItem as TListviewItem).Tag <> 0;
     (AItem as TListviewItem).Tag := SubscribeToZicPlayMessage
       (AItem as TListviewItem);
     if (not isPlaying) then
-      PlayedSong := AItem.TagObject as TSong
+      PlayedSong := AItem.tagobject as TSong
     else
       PlayedSong := nil;
 
@@ -384,7 +386,7 @@ begin
   try
     // remove messaging subscriptions before deleting items
     for i := 0 to ListView1.ItemCount - 1 do
-      if assigned(ListView1.items[i].TagObject) and (ListView1.items[i].Tag <> 0)
+      if assigned(ListView1.items[i].tagobject) and (ListView1.items[i].Tag <> 0)
       then
         TMessageManager.DefaultManager.Unsubscribe(TZicPlayMessage,
           ListView1.items[i].Tag, true);
@@ -403,7 +405,7 @@ begin
       try
         item.Text := song.Title;
         item.Detail := song.Artist + ' / ' + song.Album; // song.FileName;
-        item.TagObject := song;
+        item.tagobject := song;
         if (song = PlayedSong) then
         begin
           item.ButtonText := 'Pause';
@@ -432,7 +434,7 @@ end;
 
 procedure TfrmMain.SearchEditButton1Click(Sender: TObject);
 var
-  songlist: TSongList;
+  songlist: TPlaylist;
   i: integer;
   song: TSong;
   FindText: string;
@@ -455,7 +457,7 @@ begin
   end
   else
   begin
-    songlist := TSongList.Create;
+    songlist := TPlaylist.Create;
     try
       for i := 0 to CurrentSongsListNotFiltered.Count - 1 do
       begin
@@ -477,7 +479,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.SetCurrentSongsList(const Value: TSongList);
+procedure TfrmMain.SetCurrentSongsList(const Value: TPlaylist);
 begin
   if (Value = nil) and (FCurrentSongsList <> FCurrentSongsListNotFiltered) then
     FCurrentSongsList.Free;
@@ -489,7 +491,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.SetCurrentSongsListNotFiltered(const Value: TSongList);
+procedure TfrmMain.SetCurrentSongsListNotFiltered(const Value: TPlaylist);
 begin
   if (FCurrentSongsListNotFiltered <> Value) then
   begin
@@ -527,7 +529,7 @@ begin
       if (M is TZicPlayMessage) then
       begin
         msg := M as TZicPlayMessage;
-        if msg.Value = AItem.TagObject then
+        if msg.Value = AItem.tagobject then
           AItem.ButtonText := 'Pause'
         else
         begin
@@ -568,7 +570,7 @@ begin
     begin
       // PlayedSong := CurrentSongsList[SongIndex + 1]
       for i := 0 to ListView1.items.Count - 1 do
-        if ListView1.items[i].TagObject = CurrentSongsList[SongIndex + 1] then
+        if ListView1.items[i].tagobject = CurrentSongsList[SongIndex + 1] then
         begin
           ListView1ButtonClick(Self, ListView1.items[i], nil);
           break;
