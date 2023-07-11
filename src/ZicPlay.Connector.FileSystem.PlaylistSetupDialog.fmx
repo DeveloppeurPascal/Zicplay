@@ -1,0 +1,149 @@
+object frmPlaylistSetupDialog: TfrmPlaylistSetupDialog
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 480
+  ClientWidth = 640
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnClose = FormClose
+  DesignerMasterStyle = 0
+  object VertScrollBox1: TVertScrollBox
+    Align = Client
+    Size.Width = 640.000000000000000000
+    Size.Height = 412.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Viewport.Width = 640.000000000000000000
+    Viewport.Height = 412.000000000000000000
+    object edtSearchFolder: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Top
+      TabOrder = 1
+      Position.X = 10.000000000000000000
+      Position.Y = 37.000000000000000000
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 68.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 562.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      object btnFolderChoice: TButton
+        Align = Right
+        Margins.Right = -58.000000000000000000
+        Position.X = 572.000000000000000000
+        Size.Width = 48.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = '..'
+        OnClick = btnFolderChoiceClick
+      end
+    end
+    object lblFolder: TLabel
+      Align = Top
+      FocusControl = edtSearchFolder
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 10.000000000000000000
+      Size.Width = 620.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Search folder'
+      TabOrder = 0
+    end
+    object lblInSubFolders: TLabel
+      Align = Top
+      FocusControl = swInSubFolders
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 89.000000000000000000
+      Size.Width = 620.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Search files in subfolders'
+      TabOrder = 2
+      object swInSubFolders: TSwitch
+        Align = Right
+        IsChecked = False
+        Position.X = 576.000000000000000000
+        Size.Width = 44.000000000000000000
+        Size.Height = 30.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+      end
+    end
+  end
+  object GridPanelLayout1: TGridPanelLayout
+    Align = Bottom
+    Position.Y = 412.000000000000000000
+    Size.Width = 640.000000000000000000
+    Size.Height = 68.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    ColumnCollection = <
+      item
+        Value = 50.000000000000000000
+      end
+      item
+        Value = 50.000000000000000000
+      end>
+    ControlCollection = <
+      item
+        Column = 0
+        Control = btnOk
+        Row = 0
+      end
+      item
+        Column = 1
+        Control = btnCancel
+        Row = 0
+      end>
+    RowCollection = <
+      item
+        Value = 100.000000000000000000
+      end>
+    object btnOk: TButton
+      Align = Client
+      Default = True
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 300.000000000000000000
+      Size.Height = 48.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Ok'
+      OnClick = btnOkClick
+    end
+    object btnCancel: TButton
+      Align = Client
+      Cancel = True
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 300.000000000000000000
+      Size.Height = 48.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Cancel'
+      OnClick = btnCancelClick
+    end
+  end
+  object OpenDialog1: TOpenDialog
+    Options = [ofPathMustExist, ofEnableSizing, ofDontAddToRecent]
+    Title = 'Choose your songs folder'
+    Left = 304
+    Top = 224
+  end
+end
