@@ -55,6 +55,7 @@ type
     SearchEditButton1: TSearchEditButton;
     ClearEditButton1: TClearEditButton;
     timerIsSongFinished: TTimer;
+    btnMyMusic: TButton;
     procedure FormCreate(Sender: TObject);
     procedure actAboutExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
@@ -69,6 +70,7 @@ type
       var KeyChar: Char; Shift: TShiftState);
     procedure timerIsSongFinishedTimer(Sender: TObject);
     procedure AboutDialogURLClick(const AURL: string);
+    procedure btnMyMusicClick(Sender: TObject);
   private
     FPlayedSong: TSong;
     FDefaultCaption: string;
@@ -231,6 +233,24 @@ begin
   CurrentSongsListNotFiltered := Playlist;
 end;
 
+procedure TfrmMain.btnMyMusicClick(Sender: TObject);
+var
+  jso: tjsonobject;
+begin
+  jso := tjsonobject.Create;
+  try
+    TConnectorsList.Current.GetConnectorFromUID
+      ('6B3510A0-2972-48C8-80CF-9C43436B5794').GetPlaylist(jso,
+      procedure(APlaylist: TPlaylist)
+      begin
+        CurrentSongsListNotFiltered := nil;
+        CurrentSongsListNotFiltered := APlaylist;
+      end);
+  finally
+    jso.Free;
+  end;
+end;
+
 procedure TfrmMain.cbSortListChange(Sender: TObject);
 begin
   if not assigned(CurrentSongsList) then
@@ -268,7 +288,7 @@ var
 begin
   if (Sender is TMenuItem) and (not(Sender as TMenuItem).Tagstring.IsEmpty) then
   begin
-    Connector := TConnectorsList.Current.getConnectorFromUID
+    Connector := TConnectorsList.Current.GetConnectorFromUID
       ((Sender as TMenuItem).Tagstring);
     if assigned(Connector) and Connector.hasSetupDialog then
       Connector.SetupDialog;
@@ -276,7 +296,7 @@ begin
 end;
 
 procedure TfrmMain.edtSearchKeyDown(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkreturn then
     SearchEditButton1Click(Self)
