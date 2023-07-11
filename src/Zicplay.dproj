@@ -342,6 +342,7 @@
         <Icns_MainIcns>..\design\icons\zicplay.icns</Icns_MainIcns>
         <VerInfo_Build>1</VerInfo_Build>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.1;InternalName=;LegalCopyright=2023 Patrick Prémartin;LegalTrademarks=;OriginalFilename=;ProgramID=fr.olfsoftware.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0;Comments=</VerInfo_Keys>
+        <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -422,6 +423,11 @@
         </DCCReference>
         <DCCReference Include="..\lib-externes\librairies\u_urlOpen.pas"/>
         <DCCReference Include="ZicPlay.Connector.FileSystem.pas"/>
+        <DCCReference Include="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.pas">
+            <Form>frmPlaylistSetupDialog</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
+        <DCCReference Include="ZicPlay.Connector.MyMusic.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

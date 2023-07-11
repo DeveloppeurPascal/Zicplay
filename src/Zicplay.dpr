@@ -10,7 +10,9 @@ uses
   Gamolf.FMX.MusicLoop in '..\lib-externes\Delphi-Game-Engine\src\Gamolf.FMX.MusicLoop.pas',
   uDMIcons in 'uDMIcons.pas' {DMIcons: TDataModule},
   u_urlOpen in '..\lib-externes\librairies\u_urlOpen.pas',
-  ZicPlay.Connector.FileSystem in 'ZicPlay.Connector.FileSystem.pas';
+  ZicPlay.Connector.FileSystem in 'ZicPlay.Connector.FileSystem.pas',
+  ZicPlay.Connector.FileSystem.PlaylistSetupDialog in 'ZicPlay.Connector.FileSystem.PlaylistSetupDialog.pas' {frmPlaylistSetupDialog},
+  ZicPlay.Connector.MyMusic in 'ZicPlay.Connector.MyMusic.pas';
 
 {$R *.res}
 
