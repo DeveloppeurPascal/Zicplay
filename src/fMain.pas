@@ -291,6 +291,8 @@ var
 begin
   // TODO : load program parameters
 
+  lblSongPlayed.Text := '';
+
 {$IF Defined(ANDROID) or Defined(IOS)}
   MainMenu1.Visible := false;
 {$ELSEIF Defined(MACOS) and not Defined(IOS)}
