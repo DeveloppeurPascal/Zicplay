@@ -190,7 +190,7 @@ type
     /// <summary>
     /// Display setup dialog for a playlist using this connector
     /// </summary>
-    procedure PlaylistSetupDialog(Params: TJSONObject);
+    procedure PlaylistSetupDialog(AParams: TJSONObject);
 
     /// <summary>
     /// True if the PlaylistSetupDialog procedure can be called to display a dialog box from the playlist options
@@ -212,8 +212,8 @@ type
     /// <summary>
     /// Return the playlist from a connector (with playlist parameters)
     /// </summary>
-    procedure GetPlaylist(Params: TJSONObject;
-      CallbackProc: TZicPlayGetPlaylistProc);
+    procedure GetPlaylist(AParams: TJSONObject;
+      ACallbackProc: TZicPlayGetPlaylistProc);
 
     /// <summary>
     /// Load connector parameters from a stream
@@ -269,7 +269,14 @@ type
   /// using the interface IConnector.
   /// </summary>
   TConnector = class(TInterfacedObject, IConnector)
+  private
+    class var FCurrent: TConnector;
   public
+    /// <summary>
+    /// Return current instance of this connector
+    /// </summary>
+    class property Current: TConnector read FCurrent;
+
     /// <summary>
     /// Name of this connector (displayed to the users)
     /// </summary>
@@ -283,7 +290,7 @@ type
     /// <summary>
     /// Display setup dialog for a playlist using this connector
     /// </summary>
-    procedure PlaylistSetupDialog(Params: TJSONObject); virtual; abstract;
+    procedure PlaylistSetupDialog(AParams: TJSONObject); virtual; abstract;
 
     /// <summary>
     /// True if the PlaylistSetupDialog procedure can be called to display a dialog box from the playlist options
@@ -305,8 +312,8 @@ type
     /// <summary>
     /// Return the playlist from a connector (with playlist parameters)
     /// </summary>
-    procedure GetPlaylist(Params: TJSONObject;
-      CallbackProc: TZicPlayGetPlaylistProc); virtual; abstract;
+    procedure GetPlaylist(AParams: TJSONObject;
+      ACallbackProc: TZicPlayGetPlaylistProc); virtual; abstract;
 
     /// <summary>
     /// Load connector parameters from a stream
@@ -317,6 +324,16 @@ type
     /// Save connector parameters in a stream
     /// </summary>
     procedure SaveToStream(AStream: TStream); virtual;
+
+    /// <summary>
+    /// Create an instance of this connector
+    /// </summary>
+    constructor Create;
+
+    /// <summary>
+    /// Destroy current instance of this connector
+    /// </summary>
+    destructor Destroy; override;
   end;
 
 implementation
@@ -625,6 +642,18 @@ begin
 end;
 
 { TConnector }
+
+constructor TConnector.Create;
+begin
+  inherited;
+  FCurrent := self;
+end;
+
+destructor TConnector.Destroy;
+begin
+  FCurrent := nil;
+  inherited;
+end;
 
 function TConnector.hasPlaylistSetupDialog: boolean;
 begin
