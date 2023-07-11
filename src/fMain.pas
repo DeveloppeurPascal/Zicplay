@@ -98,6 +98,7 @@ implementation
 {$R *.fmx}
 
 uses
+  FMX.DialogService,
   System.JSON,
   System.IOUtils,
   System.Messaging,
@@ -170,11 +171,11 @@ var
   i: integer;
   files: TStringDynArray;
   song: TSong;
-  songlist: TPlaylist;
+  Playlist: TPlaylist;
 begin
   btnLoadMP3List.Visible := false;
 
-  songlist := TPlaylist.Create;
+  Playlist := TPlaylist.Create;
   try
 {$IFDEF RELEASE}
 {$IF Defined(MACOS) and not Defined(IOS)}
@@ -201,20 +202,20 @@ begin
         song.FileName := files[i];
         song.onGetFilename := nil;
 
-        songlist.Add(song);
+        Playlist.Add(song);
       end;
 
     case cbSortList.ItemIndex of
       0: // sort by title
-        songlist.SortByTitle;
+        Playlist.SortByTitle;
       1: // sort by artist
-        songlist.SortByArtist;
+        Playlist.SortByArtist;
       2: // sort by album
-        songlist.SortByAlbum;
+        Playlist.SortByAlbum;
       3: // sort by category + album
-        songlist.SortByCategoryAlbum;
+        Playlist.SortByCategoryAlbum;
       4: // sort by caterogy + Title
-        songlist.SortByCategoryTitle;
+        Playlist.SortByCategoryTitle;
       -1: // do nothing
         ;
     else
@@ -222,12 +223,12 @@ begin
     end;
 
   except
-    songlist.Free;
+    Playlist.Free;
     raise;
   end;
 
   CurrentSongsListNotFiltered := nil;
-  CurrentSongsListNotFiltered := songlist;
+  CurrentSongsListNotFiltered := Playlist;
 end;
 
 procedure TfrmMain.cbSortListChange(Sender: TObject);
@@ -252,7 +253,7 @@ begin
     raise exception.Create('I don''t know how to sort this list !');
   end;
 
-  RefreshListView; // TODO : replace by a message or event from the songlist
+  RefreshListView; // TODO : replace by a message or event from the Playlist
 end;
 
 procedure TfrmMain.ClearEditButton1Click(Sender: TObject);
@@ -263,15 +264,14 @@ end;
 
 procedure TfrmMain.ConnectorMenuClick(Sender: TObject);
 var
-  sst: IConnector;
+  Connector: IConnector;
 begin
   if (Sender is TMenuItem) and (not(Sender as TMenuItem).Tagstring.IsEmpty) then
   begin
-    sst := TConnectorTypeList.Current.getConnectorFromUID
+    Connector := TConnectorsList.Current.getConnectorFromUID
       ((Sender as TMenuItem).Tagstring);
-    if assigned(sst) and sst.hasConnectorTypeSetupDialog then
-      sst.ConnectorTypeSetupDialog((Sender as TMenuItem)
-        .tagobject as tjsonobject);
+    if assigned(Connector) and Connector.hasSetupDialog then
+      Connector.SetupDialog;
   end;
 end;
 
@@ -287,9 +287,9 @@ end;
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
   i: integer;
-  mnu: TMenuItem;
-  sstl: TConnectorTypeList;
-  sst: IConnector;
+  mnuConnectors, mnu: TMenuItem;
+  ConnectorsList: TConnectorsList;
+  Connector: IConnector;
 begin
   // TODO : load program parameters
 
@@ -307,20 +307,27 @@ begin
   MacSystemMenu.Visible := false;
 {$ENDIF}
   //
-  sstl := TConnectorTypeList.Current;
-  sstl.Sort;
-  for i := 0 to sstl.Count - 1 do
+  mnuConnectors := nil;
+  ConnectorsList := TConnectorsList.Current;
+  ConnectorsList.Sort;
+  for i := 0 to ConnectorsList.Count - 1 do
   begin
-    sst := sstl.GetConnectorAt(i);
-    if sst.hasConnectorSetupDialog then
+    Connector := ConnectorsList.GetConnectorAt(i);
+    if Connector.hasSetupDialog then
     begin
+      if not assigned(mnuConnectors) then
+      begin
+        if not mnuTools.Visible then
+          mnuTools.Visible := true;
+        mnuConnectors := TMenuItem.Create(Self);
+        mnuConnectors.Parent := mnuTools;
+        mnuConnectors.Text := 'Connectors'; // TODO : à traduire
+      end;
       mnu := TMenuItem.Create(Self);
-      mnu.Parent := mnuOptions;
-      mnu.Text := sst.getName;
+      mnu.Parent := mnuConnectors;
+      mnu.Text := Connector.getName;
       mnu.OnClick := ConnectorMenuClick;
-      mnu.Tagstring := sst.getUniqID;
-      if not mnuOptions.Visible then
-        mnuOptions.Visible := true;
+      mnu.Tagstring := Connector.getUniqID;
     end;
   end;
 
@@ -434,7 +441,7 @@ end;
 
 procedure TfrmMain.SearchEditButton1Click(Sender: TObject);
 var
-  songlist: TPlaylist;
+  Playlist: TPlaylist;
   i: integer;
   song: TSong;
   FindText: string;
@@ -457,7 +464,7 @@ begin
   end
   else
   begin
-    songlist := TPlaylist.Create;
+    Playlist := TPlaylist.Create;
     try
       for i := 0 to CurrentSongsListNotFiltered.Count - 1 do
       begin
@@ -467,13 +474,13 @@ begin
           song.ArtistLowerCase.Contains(FindText) or
           song.AlbumLowerCase.Contains(FindText) or
           song.CategoryLowerCase.Contains(FindText) then
-          songlist.Add(song);
+          Playlist.Add(song);
       end;
 
       CurrentSongsList := nil;
-      CurrentSongsList := songlist;
+      CurrentSongsList := Playlist;
     except
-      songlist.Free;
+      Playlist.Free;
       raise;
     end;
   end;
@@ -589,5 +596,6 @@ initialization
 {$IFDEF DEBUG}
   ReportMemoryLeaksOnShutdown := true;
 {$ENDIF}
+TDialogService.PreferredMode := TDialogService.TPreferredMode.Sync;
 
 end.
