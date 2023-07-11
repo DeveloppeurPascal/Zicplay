@@ -29,7 +29,7 @@ uses
   uDMIcons;
 
 type
-  TForm1 = class(TForm)
+  TfrmMain = class(TForm)
     MainMenu1: TMainMenu;
     StatusBar1: TStatusBar;
     ToolBar1: TToolBar;
@@ -91,7 +91,7 @@ type
   end;
 
 var
-  Form1: TForm1;
+  frmMain: TfrmMain;
 
 implementation
 
@@ -114,7 +114,7 @@ end;
 Type
   TZicPlayMessage = TMessage<TSong>;
 
-procedure TForm1.AboutDialogURLClick(const AURL: string);
+procedure TfrmMain.AboutDialogURLClick(const AURL: string);
 begin
   if AURL.IsEmpty then
     exit;
@@ -122,24 +122,24 @@ begin
   url_Open_In_Browser(AURL);
 end;
 
-procedure TForm1.actAboutExecute(Sender: TObject);
+procedure TfrmMain.actAboutExecute(Sender: TObject);
 begin
   AboutDialog.Execute;
 end;
 
-procedure TForm1.actExitExecute(Sender: TObject);
+procedure TfrmMain.actExitExecute(Sender: TObject);
 begin
   Close;
 end;
 
-procedure TForm1.actOptionsExecute(Sender: TObject);
+procedure TfrmMain.actOptionsExecute(Sender: TObject);
 begin
   showmessage('No option dialog in this release.');
   // TODO : à compléter
 {$MESSAGE warn 'todo'}
 end;
 
-procedure TForm1.btnLoadMP3ListClick(Sender: TObject);
+procedure TfrmMain.btnLoadMP3ListClick(Sender: TObject);
   procedure recursif(AFolder: string; var AFiles: TStringDynArray);
   var
     fs: TStringDynArray;
@@ -229,7 +229,7 @@ begin
   CurrentSongsListNotFiltered := songlist;
 end;
 
-procedure TForm1.cbSortListChange(Sender: TObject);
+procedure TfrmMain.cbSortListChange(Sender: TObject);
 begin
   if not assigned(CurrentSongsList) then
     exit;
@@ -254,13 +254,13 @@ begin
   RefreshListView; // TODO : replace by a message or event from the songlist
 end;
 
-procedure TForm1.ClearEditButton1Click(Sender: TObject);
+procedure TfrmMain.ClearEditButton1Click(Sender: TObject);
 begin
   edtSearch.Text := '';
   SearchEditButton1Click(Self);
 end;
 
-procedure TForm1.ConnectorMenuClick(Sender: TObject);
+procedure TfrmMain.ConnectorMenuClick(Sender: TObject);
 var
   sst: ISongSourceType;
 begin
@@ -273,7 +273,7 @@ begin
   end;
 end;
 
-procedure TForm1.edtSearchKeyDown(Sender: TObject; var Key: Word;
+procedure TfrmMain.edtSearchKeyDown(Sender: TObject; var Key: Word;
   var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkreturn then
@@ -282,7 +282,7 @@ begin
     ClearEditButton1Click(Self);
 end;
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TfrmMain.FormCreate(Sender: TObject);
 var
   i: integer;
   mnu: TMenuItem;
@@ -353,7 +353,7 @@ begin
   edtSearch.Tagstring := '';
 end;
 
-procedure TForm1.ListView1ButtonClick(const Sender: TObject;
+procedure TfrmMain.ListView1ButtonClick(const Sender: TObject;
 const AItem: TListItem; const AObject: TListItemSimpleControl);
 var
   isPlaying: boolean;
@@ -374,7 +374,7 @@ begin
   end;
 end;
 
-procedure TForm1.RefreshListView;
+procedure TfrmMain.RefreshListView;
 var
   item: TListviewItem;
   i: integer;
@@ -430,7 +430,7 @@ begin
   end;
 end;
 
-procedure TForm1.SearchEditButton1Click(Sender: TObject);
+procedure TfrmMain.SearchEditButton1Click(Sender: TObject);
 var
   songlist: TSongList;
   i: integer;
@@ -477,7 +477,7 @@ begin
   end;
 end;
 
-procedure TForm1.SetCurrentSongsList(const Value: TSongList);
+procedure TfrmMain.SetCurrentSongsList(const Value: TSongList);
 begin
   if (Value = nil) and (FCurrentSongsList <> FCurrentSongsListNotFiltered) then
     FCurrentSongsList.Free;
@@ -489,7 +489,7 @@ begin
   end;
 end;
 
-procedure TForm1.SetCurrentSongsListNotFiltered(const Value: TSongList);
+procedure TfrmMain.SetCurrentSongsListNotFiltered(const Value: TSongList);
 begin
   if (FCurrentSongsListNotFiltered <> Value) then
   begin
@@ -498,7 +498,7 @@ begin
   end;
 end;
 
-procedure TForm1.SetPlayedSong(const Value: TSong);
+procedure TfrmMain.SetPlayedSong(const Value: TSong);
 begin
   if FPlayedSong <> Value then
   begin
@@ -517,7 +517,7 @@ begin
   end;
 end;
 
-function TForm1.SubscribeToZicPlayMessage(AItem: TListviewItem): integer;
+function TfrmMain.SubscribeToZicPlayMessage(AItem: TListviewItem): integer;
 begin
   result := TMessageManager.DefaultManager.SubscribeToMessage(TZicPlayMessage,
     procedure(const Sender: TObject; const M: TMessage)
@@ -546,7 +546,7 @@ begin
     end);
 end;
 
-procedure TForm1.timerIsSongFinishedTimer(Sender: TObject);
+procedure TfrmMain.timerIsSongFinishedTimer(Sender: TObject);
 var
   i: integer;
   SongIndex: integer;
