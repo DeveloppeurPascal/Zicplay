@@ -8,11 +8,8 @@ uses
   System.JSON;
 
 type
-  TSong = class;
   TPlaylist = class;
   IConnector = interface;
-  TConnector = class;
-  TConnectorsList = class;
 
   /// <summary>
   /// A function getting the UniqID of a song to answer with it's local file name and path (realy local or in a cache)
@@ -39,7 +36,6 @@ type
     FPublishedDate: TDate;
     FUniqID: string;
     FonGetFilename: TSongFileNameEvent;
-    FConnector: TConnector;
     FDuration: integer;
     procedure SetAlbum(const Value: string);
     procedure SetArtist(const Value: string);
@@ -53,7 +49,6 @@ type
     procedure SetonGetFilename(const Value: TSongFileNameEvent);
     procedure SetUniqID(const Value: string);
     function GetFileName: string;
-    procedure SetConnector(const Value: TConnector);
     procedure SetDuration(const Value: integer);
     function GetDurationAsTime: string;
   protected
@@ -103,11 +98,7 @@ type
     /// </summary>
     property UniqID: string read FUniqID write SetUniqID;
     /// <summary>
-    /// Song's playlist
-    /// </summary>
-    property Connector: TConnector read FConnector write SetConnector;
-    /// <summary>
-    /// Song list for this song
+    /// Playlist source for this song
     /// </summary>
     property Playlist: TPlaylist read FPlaylist write SetPlaylist;
     /// <summary>
@@ -132,18 +123,18 @@ type
   end;
 
   /// <summary>
-  /// Songs list
+  /// Playlist (list of songs from a connector)
   /// </summary>
   TPlaylist = class(TList<TSong>)
   private
-    FConnector: TConnector;
-    procedure SetConnector(const Value: TConnector);
+    FConnector: IConnector;
+    procedure SetConnector(const Value: IConnector);
   protected
   public
     /// <summary>
     /// Connector for this playlist
     /// </summary>
-    property Connector: TConnector read FConnector write SetConnector;
+    property Connector: IConnector read FConnector write SetConnector;
 
     /// <summary>
     /// Sort the songs in this list by Album / Order / Title
@@ -199,27 +190,27 @@ type
     /// <summary>
     /// Display setup dialog for a playlist using this connector
     /// </summary>
-    procedure ConnectorSetupDialog(Params: TJSONObject);
+    procedure PlaylistSetupDialog(Params: TJSONObject);
 
     /// <summary>
-    /// True if the ConnectorSetupDialog procedure can be called to display a dialog box from the playlist options
+    /// True if the PlaylistSetupDialog procedure can be called to display a dialog box from the playlist options
     /// False if no setup dialog for this connector
     /// </summary>
-    function hasConnectorSetupDialog: boolean;
+    function hasPlaylistSetupDialog: boolean;
 
     /// <summary>
-    /// Display setup dialog for a connector type
+    /// Display setup dialog for a connector
     /// </summary>
-    procedure ConnectorTypeSetupDialog(Params: TJSONObject);
+    procedure SetupDialog;
 
     /// <summary>
-    /// True if the ConnectorTypeSetupDialog procedure can be called to display a dialog box from the Tools menu
-    /// False if no setup dialog for this connector Type
+    /// True if the SetupDialog procedure can be called to display a dialog box from the Tools menu
+    /// False if no setup dialog for this connector
     /// </summary>
-    function hasConnectorTypeSetupDialog: boolean;
+    function hasSetupDialog: boolean;
 
     /// <summary>
-    /// Return the song list from a connector (with local parameters)
+    /// Return the playlist from a connector (with playlist parameters)
     /// </summary>
     procedure GetPlaylist(Params: TJSONObject;
       CallbackProc: TZicPlayGetPlaylistProc);
@@ -237,12 +228,12 @@ type
 
   /// <summary>
   /// List of registered connectors
-  /// (it's a singleton, use TConnectorTypeList.Current to access to it's instance)
+  /// (it's a singleton, use TConnectorsList.Current to access to it's instance)
   /// </summary>
-  TConnectorTypeList = class
+  TConnectorsList = class
   private
     List: TList<IConnector>;
-    class var ConnectorTypeListInstance: TConnectorTypeList;
+    class var FCurrent: TConnectorsList;
     constructor Create;
     destructor Destroy; override;
   protected
@@ -250,11 +241,11 @@ type
     /// <summary>
     /// Return the singleton instance of this class
     /// </summary>
-    class function Current: TConnectorTypeList;
+    class function Current: TConnectorsList;
     /// <summary>
     /// Used to register the connectors
     /// </summary>
-    procedure Register(AConnectorType: IConnector);
+    procedure Register(AConnector: IConnector);
     /// <summary>
     /// Sort the items in the list by alphabetical order of their name.
     /// </summary>
@@ -274,99 +265,64 @@ type
   end;
 
   /// <summary>
-  /// An available connector
-  /// (configured in the program to get its songs as a playlist)
+  /// Base connector if you want an ancestor for your connectors instead of
+  /// using the interface IConnector.
   /// </summary>
-  TConnector = class
-  private
-    FName: string;
-    FPlaylist: TPlaylist;
-    FConnectorType: IConnector;
-    procedure SetConnected(const Value: boolean);
-    procedure SetName(const Value: string);
-    procedure SetPlaylist(const Value: TPlaylist);
-    procedure SetConnectorType(const Value: IConnector);
-    function GetConnected: boolean;
-  protected
-    FParams: TJSONObject;
+  TConnector = class(TInterfacedObject, IConnector)
   public
     /// <summary>
-    /// Name of this connector
+    /// Name of this connector (displayed to the users)
     /// </summary>
-    property Name: string read FName write SetName;
-    /// <summary>
-    /// True if the connector is okay, False if not (MP3 files not available)
-    /// </summary>
-    property Connected: boolean read GetConnected write SetConnected;
-    /// <summary>
-    /// List of songs from this connector
-    /// </summary>
-    property Playlist: TPlaylist read FPlaylist write SetPlaylist;
-    /// <summary>
-    /// Link to the connector type
-    /// </summary>
-    property ConnectorType: IConnector read FConnectorType
-      write SetConnectorType;
+    function getName: string; virtual; abstract;
 
     /// <summary>
-    /// Load connector datas from a stream
+    /// Uniq ID (a GUID is fine) for this connector
     /// </summary>
-    procedure LoadFromStream(AStream: TStream);
-    /// <summary>
-    /// Save connector datas to a stream
-    /// </summary>
-    procedure SaveToStream(AStream: TStream);
+    function getUniqID: string; virtual; abstract;
 
     /// <summary>
-    /// Display connector setup dialog
+    /// Display setup dialog for a playlist using this connector
     /// </summary>
-    procedure ShowSetupDialog;
+    procedure PlaylistSetupDialog(Params: TJSONObject); virtual; abstract;
 
     /// <summary>
-    /// Load song list from its connector
-    /// (can take a very long time depending on the connector type and list size)
+    /// True if the PlaylistSetupDialog procedure can be called to display a dialog box from the playlist options
+    /// False if no setup dialog for this connector
     /// </summary>
-    procedure RefreshPlaylist;
+    function hasPlaylistSetupDialog: boolean; virtual;
 
     /// <summary>
-    /// Instance constructor
+    /// Display setup dialog for a connector
     /// </summary>
-    constructor Create;
+    procedure SetupDialog; virtual;
+
     /// <summary>
-    /// Instance destructor
+    /// True if the SetupDialog procedure can be called to display a dialog box from the Tools menu
+    /// False if no setup dialog for this connector
     /// </summary>
-    destructor Destroy; override;
+    function hasSetupDialog: boolean; virtual;
+
+    /// <summary>
+    /// Return the playlist from a connector (with playlist parameters)
+    /// </summary>
+    procedure GetPlaylist(Params: TJSONObject;
+      CallbackProc: TZicPlayGetPlaylistProc); virtual; abstract;
+
+    /// <summary>
+    /// Load connector parameters from a stream
+    /// </summary>
+    procedure LoadFromStream(AStream: TStream); virtual;
+
+    /// <summary>
+    /// Save connector parameters in a stream
+    /// </summary>
+    procedure SaveToStream(AStream: TStream); virtual;
   end;
-
-  /// <summary>
-  /// List of registered connectors in this program
-  /// </summary>
-  TConnectorsList = class(TList<TConnector>)
-  private
-    class var ConnectorListInstance: TConnectorsList;
-  protected
-  public
-    /// <summary>
-    /// Return the singleton instance of this class
-    /// </summary>
-    class function Current: TConnectorsList;
-    /// <summary>
-    /// Sort the items in the list by alphabetical order of their name.
-    /// </summary>
-    procedure Sort;
-    /// <summary>
-    /// Load connectors list from a stream
-    /// </summary>
-    procedure LoadFromStream(AStream: TStream);
-    /// <summary>
-    /// Save connectors list to a stream
-    /// </summary>
-    procedure SaveToStream(AStream: TStream);
-  end; // TODO : add a ClearAndFreeItems() method
 
 implementation
 
 uses
+  fmx.DialogService,
   System.DateUtils,
   System.SysUtils,
   System.Generics.Defaults;
@@ -455,11 +411,6 @@ begin
   FPlaylist := Value;
 end;
 
-procedure TSong.SetConnector(const Value: TConnector);
-begin
-  FConnector := Value;
-end;
-
 procedure TSong.SetTitle(const Value: string);
 begin
   FTitle := Value;
@@ -485,7 +436,7 @@ begin
 {$MESSAGE warn 'todo'}
 end;
 
-procedure TPlaylist.SetConnector(const Value: TConnector);
+procedure TPlaylist.SetConnector(const Value: IConnector);
 begin
   FConnector := Value;
 end;
@@ -592,51 +543,53 @@ begin
     end));
 end;
 
-{ TConnectorTypeList }
+{ TConnectorsList }
 
-function TConnectorTypeList.Count: integer;
+function TConnectorsList.Count: integer;
 begin
   result := List.Count;
 end;
 
-constructor TConnectorTypeList.Create;
+constructor TConnectorsList.Create;
 begin
   List := TList<IConnector>.Create;
 end;
 
-class function TConnectorTypeList.Current: TConnectorTypeList;
+class function TConnectorsList.Current: TConnectorsList;
 begin
-  if not assigned(ConnectorTypeListInstance) then
-    ConnectorTypeListInstance := TConnectorTypeList.Create;
-  if assigned(ConnectorTypeListInstance) then
-    result := ConnectorTypeListInstance
+  if not assigned(FCurrent) then
+    FCurrent := TConnectorsList.Create;
+
+  if assigned(FCurrent) then
+    result := FCurrent
   else
     result := nil;
 end;
 
-destructor TConnectorTypeList.Destroy;
+destructor TConnectorsList.Destroy;
 begin
+  FCurrent := nil;
   List.Free;
   inherited;
 end;
 
-procedure TConnectorTypeList.Register(AConnectorType: IConnector);
+procedure TConnectorsList.Register(AConnector: IConnector);
 var
   i: integer;
   ItemFound: boolean;
 begin
   ItemFound := false;
   for i := 0 to List.Count - 1 do
-    if List[i].getUniqID = AConnectorType.getUniqID then
+    if List[i].getUniqID = AConnector.getUniqID then
     begin
       ItemFound := true;
       break;
     end;
   if not ItemFound then
-    List.Add(AConnectorType);
+    List.Add(AConnector);
 end;
 
-procedure TConnectorTypeList.Sort;
+procedure TConnectorsList.Sort;
 begin
   List.Sort(TComparer<IConnector>.Construct(
     function(const A, B: IConnector): integer
@@ -650,7 +603,7 @@ begin
     end));
 end;
 
-function TConnectorTypeList.GetConnectorAt(AIndex: integer): IConnector;
+function TConnectorsList.GetConnectorAt(AIndex: integer): IConnector;
 begin
   if (AIndex >= 0) and (AIndex < List.Count) then
     result := List.Items[AIndex]
@@ -658,7 +611,7 @@ begin
     result := nil;
 end;
 
-function TConnectorTypeList.GetConnectorFromUID(AUniqID: string): IConnector;
+function TConnectorsList.GetConnectorFromUID(AUniqID: string): IConnector;
 var
   i: integer;
 begin
@@ -673,124 +626,35 @@ end;
 
 { TConnector }
 
-constructor TConnector.Create;
+function TConnector.hasPlaylistSetupDialog: boolean;
 begin
-  FParams := TJSONObject.Create;
+  result := false;
 end;
 
-destructor TConnector.Destroy;
+function TConnector.hasSetupDialog: boolean;
 begin
-  FParams.Free;
-  inherited;
-end;
-
-function TConnector.GetConnected: boolean;
-begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
-  raise Exception.Create('no code in this method');
+  result := true;
 end;
 
 procedure TConnector.LoadFromStream(AStream: TStream);
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
-end;
-
-procedure TConnector.RefreshPlaylist;
-begin
-  if assigned(ConnectorType) then
-    ConnectorType.GetPlaylist(FParams,
-      procedure(APlaylist: TPlaylist)
-      begin
-      end)
-  else
-    raise Exception.Create('No connector for this playlist.');
+  // does nothing by default (no parameter to load for this object)
 end;
 
 procedure TConnector.SaveToStream(AStream: TStream);
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
+  // does nothing by default (no parameter to save for this object)
 end;
 
-procedure TConnector.SetConnected(const Value: boolean);
+procedure TConnector.SetupDialog;
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
-  raise Exception.Create('No code in this method');
-end;
-
-procedure TConnector.SetName(const Value: string);
-begin
-  FName := Value;
-end;
-
-procedure TConnector.SetPlaylist(const Value: TPlaylist);
-begin
-  FPlaylist := Value;
-end;
-
-procedure TConnector.SetConnectorType(const Value: IConnector);
-begin
-  FConnectorType := Value;
-end;
-
-procedure TConnector.ShowSetupDialog;
-begin
-  if assigned(ConnectorType) then
-  begin
-    if ConnectorType.hasConnectorSetupDialog then
-      ConnectorType.ConnectorSetupDialog(FParams)
-    else
-      raise Exception.Create('No setup dialog available for this connector.');
-  end
-  else
-    raise Exception.Create('Unknown connector. No setup dialog available.');
-end;
-
-{ TConnectorList }
-
-class function TConnectorsList.Current: TConnectorsList;
-begin
-  if not assigned(ConnectorListInstance) then
-    ConnectorListInstance := TConnectorsList.Create;
-  if assigned(ConnectorListInstance) then
-    result := ConnectorListInstance
-  else
-    result := nil;
-end;
-
-procedure TConnectorsList.LoadFromStream(AStream: TStream);
-begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
-end;
-
-procedure TConnectorsList.SaveToStream(AStream: TStream);
-begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
-end;
-
-procedure TConnectorsList.Sort;
-begin
-  inherited Sort(TComparer<TConnector>.Construct(
-    function(const A, B: TConnector): integer
-    begin
-      if A.Name = B.Name then
-        result := 0
-      else if A.Name < B.Name then
-        result := -1
-      else
-        result := 1;
-    end));
+  tdialogservice.ShowMessage(getName);
 end;
 
 initialization
 
 finalization
 
-TConnectorTypeList.ConnectorTypeListInstance.Free;
+TConnectorsList.Current.Free;
 
 end.
