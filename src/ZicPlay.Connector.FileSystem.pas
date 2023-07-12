@@ -180,7 +180,7 @@ begin
     raise exception.create('Needs the params to find songs files.');
 
   if not AParams.TryGetValue<string>('folder', SearchFolder) then
-    raise exception.create('Need the path to find files !');
+    SearchFolder := tpath.GetMusicPath;
 
   if not AParams.TryGetValue<Boolean>('sub', SearchSubFolders) then
     SearchSubFolders := false;
