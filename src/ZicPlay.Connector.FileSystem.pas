@@ -195,4 +195,6 @@ finalization
 // if assigned(TZicPlayConnectorFileSystem.current) then
 // TZicPlayConnectorFileSystem.current.Free;
 
+// TODO : find a way to free the instance if Delphi don't do it by itself
+
 end.
