@@ -112,8 +112,8 @@ object frmMain: TfrmMain
     end
   end
   object MainMenu1: TMainMenu
-    Left = 176
-    Top = 128
+    Left = 312
+    Top = 208
     object MacSystemMenu: TMenuItem
       Text = 'mnuMacSystem'
     end
@@ -124,6 +124,18 @@ object frmMain: TfrmMain
         Enabled = True
         Locked = True
         ImageIndex = -1
+      end
+    end
+    object mnuPlaylist: TMenuItem
+      Text = '&Playlists'
+      object mnuPlaylistCreate: TMenuItem
+        Locked = True
+        Text = '&New playlist'
+        OnClick = mnuPlaylistCreateClick
+      end
+      object mnuPlaylistSeparator: TMenuItem
+        Locked = True
+        Text = '-'
       end
     end
     object mnuTools: TMenuItem

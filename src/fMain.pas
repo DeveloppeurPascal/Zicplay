@@ -56,6 +56,9 @@ type
     ClearEditButton1: TClearEditButton;
     timerIsSongFinished: TTimer;
     btnMyMusic: TButton;
+    mnuPlaylist: TMenuItem;
+    mnuPlaylistCreate: TMenuItem;
+    mnuPlaylistSeparator: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actAboutExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
@@ -71,6 +74,7 @@ type
     procedure timerIsSongFinishedTimer(Sender: TObject);
     procedure AboutDialogURLClick(const AURL: string);
     procedure btnMyMusicClick(Sender: TObject);
+    procedure mnuPlaylistCreateClick(Sender: TObject);
   private
     FPlayedSong: TSong;
     FDefaultCaption: string;
@@ -311,8 +315,6 @@ var
   ConnectorsList: TConnectorsList;
   Connector: IConnector;
 begin
-  // TODO : load program parameters
-
   lblSongPlayed.Text := '';
 
 {$IF Defined(ANDROID) or Defined(IOS)}
@@ -326,7 +328,7 @@ begin
 {$ELSE}
   MacSystemMenu.Visible := false;
 {$ENDIF}
-  //
+//
   mnuConnectors := nil;
   ConnectorsList := TConnectorsList.Current;
   ConnectorsList.Sort;
@@ -350,6 +352,9 @@ begin
       mnu.Tagstring := Connector.getUniqID;
     end;
   end;
+
+
+mnuPlaylistSeparator.Visible:=false;
 
   caption := AboutDialog.Titre + ' ' + AboutDialog.VersionNumero;
 {$IFDEF DEBUG}
@@ -380,6 +385,9 @@ begin
 
   edtSearch.Text := '';
   edtSearch.Tagstring := '';
+
+    // TODO : load program parameters
+
 end;
 
 procedure TfrmMain.ListView1ButtonClick(const Sender: TObject;
@@ -401,6 +409,11 @@ begin
     if ListView1.Selected <> AItem then
       ListView1.Selected := AItem;
   end;
+end;
+
+procedure TfrmMain.mnuPlaylistCreateClick(Sender: TObject);
+begin
+// TODO : à compléter
 end;
 
 procedure TfrmMain.RefreshListView;
