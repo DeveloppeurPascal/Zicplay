@@ -79,7 +79,7 @@ object frmPlaylistSetupDialog: TfrmPlaylistSetupDialog
         Size.Width = 44.000000000000000000
         Size.Height = 30.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 3
+        TabOrder = 4
       end
     end
   end
@@ -142,6 +142,7 @@ object frmPlaylistSetupDialog: TfrmPlaylistSetupDialog
     end
   end
   object OpenDialog1: TOpenDialog
+    Filter = 'MP3 file|*.mp3'
     Options = [ofPathMustExist, ofEnableSizing, ofDontAddToRecent]
     Title = 'Choose your songs folder'
     Left = 304
