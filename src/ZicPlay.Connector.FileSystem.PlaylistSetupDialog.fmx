@@ -1,9 +1,10 @@
 object frmPlaylistSetupDialog: TfrmPlaylistSetupDialog
   Left = 0
   Top = 0
-  Caption = 'Form1'
+  Caption = 'Playlist Setup'
   ClientHeight = 480
   ClientWidth = 640
+  Position = MainFormCenter
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
@@ -78,7 +79,7 @@ object frmPlaylistSetupDialog: TfrmPlaylistSetupDialog
         Size.Width = 44.000000000000000000
         Size.Height = 30.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 4
+        TabOrder = 3
       end
     end
   end
