@@ -87,6 +87,7 @@ type
     function SubscribeToZicPlayMessage(AItem: TListviewItem): integer;
     procedure SetCurrentSongsListNotFiltered(const Value: TPlaylist);
     procedure ConnectorMenuClick(Sender: TObject);
+    procedure PlaylistMenuClick(Sender: TObject);
   public
     { Déclarations publiques }
     property PlayedSong: TSong read FPlayedSong write SetPlayedSong;
@@ -109,7 +110,9 @@ uses
   System.IOUtils,
   System.Messaging,
   Gamolf.FMX.MusicLoop,
-  u_urlOpen;
+  u_urlOpen,
+  uConfig,
+  fPlaylist;
 
 function ReverseString(From: string): string;
 // TODO : for dev tests only, remove it
@@ -120,7 +123,8 @@ begin
 end;
 
 Type
-  TZicPlayMessage = TMessage<TSong>;
+  TNowPlayingMessage = class(TMessage<TSong>)
+  end;
 
 procedure TfrmMain.AboutDialogURLClick(const AURL: string);
 begin
@@ -315,6 +319,8 @@ var
   ConnectorsList: TConnectorsList;
   Connector: IConnector;
 begin
+  TConfig.Current.LoadFromFile;
+
   lblSongPlayed.Text := '';
 
 {$IF Defined(ANDROID) or Defined(IOS)}
@@ -328,7 +334,7 @@ begin
 {$ELSE}
   MacSystemMenu.Visible := false;
 {$ENDIF}
-//
+  //
   mnuConnectors := nil;
   ConnectorsList := TConnectorsList.Current;
   ConnectorsList.Sort;
@@ -353,8 +359,35 @@ begin
     end;
   end;
 
-
-mnuPlaylistSeparator.Visible:=false;
+  mnuPlaylistSeparator.Visible := (TConfig.Current.Playlists.Count > 0);
+  for i := 0 to TConfig.Current.Playlists.Count - 1 do
+  begin
+    mnu := TMenuItem.Create(Self);
+    mnu.Parent := mnuPlaylist;
+    mnu.Text := TConfig.Current.Playlists[i].Text;
+    mnu.OnClick := PlaylistMenuClick;
+    mnu.TagObject := TConfig.Current.Playlists[i];
+  end;
+  TMessageManager.DefaultManager.SubscribeToMessage(TNewPlaylistMessage,
+    procedure(const Sender: TObject; const M: TMessage)
+    var
+      msg: TNewPlaylistMessage;
+      mnu: TMenuItem;
+    begin
+      if (M is TNewPlaylistMessage) then
+      begin
+        msg := M as TNewPlaylistMessage;
+        if assigned(msg.Value) then
+        begin
+          mnuPlaylistSeparator.Visible := true;
+          mnu := TMenuItem.Create(Self);
+          mnu.Parent := mnuPlaylist;
+          mnu.Text := msg.Value.Text;
+          mnu.OnClick := PlaylistMenuClick;
+          mnu.TagObject := msg.Value;
+        end;
+      end;
+    end);
 
   caption := AboutDialog.Titre + ' ' + AboutDialog.VersionNumero;
 {$IFDEF DEBUG}
@@ -362,14 +395,14 @@ mnuPlaylistSeparator.Visible:=false;
 {$ENDIF}
   FDefaultCaption := caption;
 
-  TMessageManager.DefaultManager.SubscribeToMessage(TZicPlayMessage,
+  TMessageManager.DefaultManager.SubscribeToMessage(TNowPlayingMessage,
     procedure(const Sender: TObject; const M: TMessage)
     var
-      msg: TZicPlayMessage;
+      msg: TNowPlayingMessage;
     begin
-      if (M is TZicPlayMessage) then
+      if (M is TNowPlayingMessage) then
       begin
-        msg := M as TZicPlayMessage;
+        msg := M as TNowPlayingMessage;
         if assigned(msg.Value) then
         begin
           lblSongPlayed.Text := 'Playing : ' + msg.Value.Title;
@@ -385,9 +418,6 @@ mnuPlaylistSeparator.Visible:=false;
 
   edtSearch.Text := '';
   edtSearch.Tagstring := '';
-
-    // TODO : load program parameters
-
 end;
 
 procedure TfrmMain.ListView1ButtonClick(const Sender: TObject;
@@ -395,14 +425,14 @@ const AItem: TListItem; const AObject: TListItemSimpleControl);
 var
   isPlaying: boolean;
 begin
-  if assigned(AItem) and assigned(AItem.tagobject) and (AItem.tagobject is TSong)
+  if assigned(AItem) and assigned(AItem.TagObject) and (AItem.TagObject is TSong)
   then
   begin
     isPlaying := (AItem as TListviewItem).Tag <> 0;
     (AItem as TListviewItem).Tag := SubscribeToZicPlayMessage
       (AItem as TListviewItem);
     if (not isPlaying) then
-      PlayedSong := AItem.tagobject as TSong
+      PlayedSong := AItem.TagObject as TSong
     else
       PlayedSong := nil;
 
@@ -413,7 +443,16 @@ end;
 
 procedure TfrmMain.mnuPlaylistCreateClick(Sender: TObject);
 begin
-// TODO : à compléter
+  TfrmPlaylist.Execute(nil);
+end;
+
+procedure TfrmMain.PlaylistMenuClick(Sender: TObject);
+begin
+  if (Sender is TMenuItem) and ((Sender as TMenuItem).TagObject is TPlaylist)
+  then
+    TfrmPlaylist.Execute((Sender as TMenuItem).TagObject as TPlaylist)
+  else
+    raise exception.Create('No playlist to setup !');
 end;
 
 procedure TfrmMain.RefreshListView;
@@ -426,9 +465,9 @@ begin
   try
     // remove messaging subscriptions before deleting items
     for i := 0 to ListView1.ItemCount - 1 do
-      if assigned(ListView1.items[i].tagobject) and (ListView1.items[i].Tag <> 0)
+      if assigned(ListView1.items[i].TagObject) and (ListView1.items[i].Tag <> 0)
       then
-        TMessageManager.DefaultManager.Unsubscribe(TZicPlayMessage,
+        TMessageManager.DefaultManager.Unsubscribe(TNowPlayingMessage,
           ListView1.items[i].Tag, true);
 
     // delete all items of the displayed list
@@ -445,7 +484,7 @@ begin
       try
         item.Text := song.Title;
         item.Detail := song.Artist + ' / ' + song.Album; // song.FileName;
-        item.tagobject := song;
+        item.TagObject := song;
         if (song = PlayedSong) then
         begin
           item.ButtonText := 'Pause';
@@ -555,21 +594,22 @@ begin
       MusicLoop.Play(FPlayedSong.FileName, false);
     end;
     TMessageManager.DefaultManager.SendMessage(Self,
-      TZicPlayMessage.Create(FPlayedSong));
+      TNowPlayingMessage.Create(FPlayedSong));
   end;
 end;
 
 function TfrmMain.SubscribeToZicPlayMessage(AItem: TListviewItem): integer;
 begin
-  result := TMessageManager.DefaultManager.SubscribeToMessage(TZicPlayMessage,
+  result := TMessageManager.DefaultManager.SubscribeToMessage
+    (TNowPlayingMessage,
     procedure(const Sender: TObject; const M: TMessage)
     var
-      msg: TZicPlayMessage;
+      msg: TNowPlayingMessage;
     begin
-      if (M is TZicPlayMessage) then
+      if (M is TNowPlayingMessage) then
       begin
-        msg := M as TZicPlayMessage;
-        if msg.Value = AItem.tagobject then
+        msg := M as TNowPlayingMessage;
+        if msg.Value = AItem.TagObject then
           AItem.ButtonText := 'Pause'
         else
         begin
@@ -579,7 +619,7 @@ begin
           tthread.ForceQueue(nil,
             procedure
             begin
-              TMessageManager.DefaultManager.Unsubscribe(TZicPlayMessage,
+              TMessageManager.DefaultManager.Unsubscribe(TNowPlayingMessage,
                 AItem.Tag, true);
               AItem.Tag := 0;
             end);
@@ -610,7 +650,7 @@ begin
     begin
       // PlayedSong := CurrentSongsList[SongIndex + 1]
       for i := 0 to ListView1.items.Count - 1 do
-        if ListView1.items[i].tagobject = CurrentSongsList[SongIndex + 1] then
+        if ListView1.items[i].TagObject = CurrentSongsList[SongIndex + 1] then
         begin
           ListView1ButtonClick(Self, ListView1.items[i], nil);
           break;
