@@ -429,6 +429,14 @@
         </DCCReference>
         <DCCReference Include="ZicPlay.Connector.MyMusic.pas"/>
         <DCCReference Include="uConfig.pas"/>
+        <DCCReference Include="fPlaylist.pas">
+            <Form>frmPlaylist</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
+        <DCCReference Include="fSelectConnector.pas">
+            <Form>frmSelectConnector</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -521,6 +529,12 @@
                 <DeployFile LocalName="..\design\icons\zicplay.icns" Configuration="Release" Class="ProjectOSXResource">
                     <Platform Name="OSXARM64">
                         <RemoteName>Zicplay.icns</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="OSXARM64\Debug\Zicplay.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
+                    <Platform Name="OSXARM64">
+                        <RemoteName>Zicplay</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

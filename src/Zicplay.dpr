@@ -13,7 +13,9 @@ uses
   ZicPlay.Connector.FileSystem in 'ZicPlay.Connector.FileSystem.pas',
   ZicPlay.Connector.FileSystem.PlaylistSetupDialog in 'ZicPlay.Connector.FileSystem.PlaylistSetupDialog.pas' {frmPlaylistSetupDialog},
   ZicPlay.Connector.MyMusic in 'ZicPlay.Connector.MyMusic.pas',
-  uConfig in 'uConfig.pas';
+  uConfig in 'uConfig.pas',
+  fPlaylist in 'fPlaylist.pas' {frmPlaylist},
+  fSelectConnector in 'fSelectConnector.pas' {frmSelectConnector};
 
 {$R *.res}
 
