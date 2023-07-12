@@ -5,6 +5,7 @@ interface
 uses
   system.Generics.Collections,
   system.Classes,
+  system.Messaging,
   Zicplay.Types;
 
 type
@@ -12,30 +13,34 @@ type
   private
   protected
   public
+    procedure Add(APlaylist: TPlaylist);
   end;
 
-  TZicPlayConfig = class
+  TNewPlaylistMessage = class(TMessage<TPlaylist>)
+  end;
+
+  TConfig = class
   private const
     CDataVersion = 1;
 
   var
     FConfigFilename: string;
     FPlaylists: TPlaylistsList;
-    class var FCurrent: TZicPlayConfig;
+    class var FCurrent: TConfig;
     procedure SetConfigFilename(const Value: string);
     procedure SetPlaylists(const Value: TPlaylistsList);
-    class function GetCurrent: TZicPlayConfig; static;
+    class function GetCurrent: TConfig; static;
   protected
     property ConfigFilename: string read FConfigFilename
       write SetConfigFilename;
     constructor Create;
     destructor Destroy; override;
   public
-    class property Current: TZicPlayConfig read GetCurrent;
+    class property Current: TConfig read GetCurrent;
     property Playlists: TPlaylistsList read FPlaylists write SetPlaylists;
     procedure LoadFromStream(AStream: TStream);
     procedure SaveToStream(AStream: TStream);
-    procedure LoadFromFile(AFilename: string);
+    procedure LoadFromFile(AFilename: string = '');
     procedure SaveTofile(AFilename: string = '');
   end;
 
@@ -76,34 +81,37 @@ end;
 
 { TZicPlayConfig }
 
-constructor TZicPlayConfig.Create;
+constructor TConfig.Create;
 begin
   inherited;
   Playlists := TPlaylistsList.Create;
 end;
 
-destructor TZicPlayConfig.Destroy;
+destructor TConfig.Destroy;
 begin
   Playlists.Free;
   inherited;
 end;
 
-class function TZicPlayConfig.GetCurrent: TZicPlayConfig;
+class function TConfig.GetCurrent: TConfig;
 begin
   if not assigned(FCurrent) then
-    FCurrent := TZicPlayConfig.Create;
+    FCurrent := TConfig.Create;
 
   result := FCurrent;
 end;
 
-procedure TZicPlayConfig.LoadFromFile(AFilename: string);
+procedure TConfig.LoadFromFile(AFilename: string);
 var
   Stream: TFileStream;
 begin
   AFilename := AFilename.Trim;
 
   if AFilename.IsEmpty then
-    raise exception.Create('No filename to load the config.');
+    AFilename := GetDefaultConfigFilePath;
+  // raise exception.Create('No filename to load the config.');
+
+  FConfigFilename := AFilename;
 
   if not tfile.Exists(AFilename) then
     exit;
@@ -113,11 +121,10 @@ begin
     LoadFromStream(Stream);
   finally
     Stream.Free;
-    FConfigFilename := AFilename;
   end;
 end;
 
-procedure TZicPlayConfig.LoadFromStream(AStream: TStream);
+procedure TConfig.LoadFromStream(AStream: TStream);
 var
   DataVersion: word;
   nb: TZicPlayCounter;
@@ -144,7 +151,7 @@ begin
   end;
 end;
 
-procedure TZicPlayConfig.SaveTofile(AFilename: string);
+procedure TConfig.SaveTofile(AFilename: string);
 var
   Stream: TFileStream;
 begin
@@ -164,7 +171,7 @@ begin
   end;
 end;
 
-procedure TZicPlayConfig.SaveToStream(AStream: TStream);
+procedure TConfig.SaveToStream(AStream: TStream);
 var
   DataVersion: word;
   nb: TZicPlayCounter;
@@ -183,22 +190,29 @@ begin
       Playlist.SaveToStream(AStream);
 end;
 
-procedure TZicPlayConfig.SetConfigFilename(const Value: string);
+procedure TConfig.SetConfigFilename(const Value: string);
 begin
   FConfigFilename := Value;
 end;
 
-procedure TZicPlayConfig.SetPlaylists(const Value: TPlaylistsList);
+procedure TConfig.SetPlaylists(const Value: TPlaylistsList);
 begin
   FPlaylists := Value;
 end;
 
-initialization
+{ TPlaylistsList }
 
-TZicPlayConfig.Current.LoadFromFile(GetDefaultConfigFilePath);
+procedure TPlaylistsList.Add(APlaylist: TPlaylist);
+begin
+  inherited Add(APlaylist);
+  TMessageManager.DefaultManager.SendMessage(Self,
+    TNewPlaylistMessage.Create(APlaylist));
+end;
+
+initialization
 
 finalization
 
-TZicPlayConfig.Current.Free;
+TConfig.Current.Free;
 
 end.
