@@ -126,9 +126,16 @@ type
   /// Playlist (list of songs from a connector)
   /// </summary>
   TPlaylist = class(TList<TSong>)
-  private
+  private const
+    CDataVersion = 1;
+
+  var
     FConnector: IConnector;
+    FText: string;
+    FConnectorParams: TJSONObject;
     procedure SetConnector(const Value: IConnector);
+    procedure SetText(const Value: string);
+    procedure SetConnectorParams(const Value: TJSONObject);
   protected
   public
     /// <summary>
@@ -137,21 +144,36 @@ type
     property Connector: IConnector read FConnector write SetConnector;
 
     /// <summary>
+    /// Playlist name
+    /// </summary>
+    property Text: string read FText write SetText;
+
+    /// <summary>
+    /// Params to use with this connector to get the songs
+    /// </summary>
+    property ConnectorParams: TJSONObject read FConnectorParams
+      write SetConnectorParams;
+
+    /// <summary>
     /// Sort the songs in this list by Album / Order / Title
     /// </summary>
     procedure SortByAlbum;
+
     /// <summary>
     /// Sort the songs in this list by Artist / Album / Order / Title
     /// </summary>
     procedure SortByArtist;
+
     /// <summary>
     /// Sort the songs in this list by Title / Album
     /// </summary>
     procedure SortByTitle;
+
     /// <summary>
     /// Sort the songs in this list by Category / Album / Order / Title
     /// </summary>
     procedure SortByCategoryAlbum;
+
     /// <summary>
     /// Sort the songs in this list by Category / Title / Album
     /// </summary>
@@ -161,10 +183,14 @@ type
     /// Load song list datas from a stream
     /// </summary>
     procedure LoadFromStream(AStream: TStream);
+
     /// <summary>
     /// Save song list datas to a stream
     /// </summary>
     procedure SaveToStream(AStream: TStream);
+
+    constructor Create;
+    destructor Destroy; override;
   end; // TODO : add a ClearAndFreeItems() method
 
   /// <summary>
@@ -344,7 +370,10 @@ uses
   System.SysUtils,
   System.Generics.Defaults;
 
-{ TSong }
+type
+  TZicPlayCounter = word;
+
+  { TSong }
 
 function TSong.GetDurationAsTime: string;
 begin
@@ -441,21 +470,151 @@ end;
 
 { TPlaylist }
 
-procedure TPlaylist.LoadFromStream(AStream: TStream);
+constructor TPlaylist.Create;
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
+  inherited;
+  FConnector := nil;
+  FConnectorParams := TJSONObject.Create;
+  FText := '';
+end;
+
+destructor TPlaylist.Destroy;
+begin
+  FConnectorParams.Free;
+  inherited;
+end;
+
+procedure TPlaylist.LoadFromStream(AStream: TStream);
+var
+  DataVersion: word;
+  ss: tStringStream;
+  ssLen: int64;
+  guid: string;
+  JSON: string;
+begin
+  if not assigned(AStream) then
+    raise exception.Create
+      ('Where do you expect I load this playlist''s settings from ?');
+
+  AStream.Read(DataVersion, sizeof(DataVersion));
+  if (DataVersion > CDataVersion) then
+    raise exception.Create
+      ('The program is too old to read the settings for this playlist.');
+
+  if (DataVersion >= 1) then
+  begin
+    AStream.Read(ssLen, sizeof(ssLen));
+    if (ssLen > 0) then
+    begin
+      ss := tStringStream.Create;
+      try
+        ss.CopyFrom(AStream, ssLen);
+        FText := ss.DataString;
+      finally
+        ss.Free;
+      end;
+    end
+    else
+      FText := '';
+
+    AStream.Read(ssLen, sizeof(ssLen));
+    if (ssLen > 0) then
+    begin
+      ss := tStringStream.Create;
+      try
+        ss.CopyFrom(AStream, ssLen);
+        guid := ss.DataString;
+      finally
+        ss.Free;
+      end;
+    end
+    else
+      guid := '';
+    FConnector := TConnectorsList.Current.GetConnectorFromUID(guid);
+
+    AStream.Read(ssLen, sizeof(ssLen));
+    if (ssLen > 0) then
+    begin
+      ss := tStringStream.Create;
+      try
+        ss.CopyFrom(AStream, ssLen);
+        JSON := ss.DataString;
+      finally
+        ss.Free;
+      end;
+    end
+    else
+      JSON := '';
+    FConnectorParams.Free;
+    FConnectorParams := TJSONObject.ParseJSONValue(JSON) as TJSONObject;
+  end;
 end;
 
 procedure TPlaylist.SaveToStream(AStream: TStream);
+var
+  DataVersion: word;
+  ss: tStringStream;
+  ssLen: int64;
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
+  if not assigned(AStream) then
+    raise exception.Create('Where do you expect I save the settings to ?');
+
+  DataVersion := CDataVersion;
+  AStream.Write(DataVersion, sizeof(DataVersion));
+
+  ss := tStringStream.Create(FText, tencoding.utf8);
+  try
+    ssLen := ss.Size;
+    AStream.Write(ssLen, sizeof(ssLen));
+    if (ssLen > 0) then
+    begin
+      ss.Position := 0;
+      AStream.CopyFrom(ss);
+    end;
+  finally
+    ss.Free;
+  end;
+
+  ss := tStringStream.Create(FConnector.getUniqID, tencoding.utf8);
+  try
+    ssLen := ss.Size;
+    AStream.Write(ssLen, sizeof(ssLen));
+    if (ssLen > 0) then
+    begin
+      ss.Position := 0;
+      AStream.CopyFrom(ss);
+    end;
+  finally
+    ss.Free;
+  end;
+
+  ss := tStringStream.Create(FConnectorParams.ToJSON, tencoding.utf8);
+  try
+    ssLen := ss.Size;
+    AStream.Write(ssLen, sizeof(ssLen));
+    if (ssLen > 0) then
+    begin
+      ss.Position := 0;
+      AStream.CopyFrom(ss);
+    end;
+  finally
+    ss.Free;
+  end;
 end;
 
 procedure TPlaylist.SetConnector(const Value: IConnector);
 begin
   FConnector := Value;
+end;
+
+procedure TPlaylist.SetConnectorParams(const Value: TJSONObject);
+begin
+  FConnectorParams := Value;
+end;
+
+procedure TPlaylist.SetText(const Value: string);
+begin
+  FText := Value;
 end;
 
 procedure TPlaylist.SortByAlbum;
