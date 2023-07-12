@@ -16,9 +16,6 @@ type
     procedure Add(APlaylist: TPlaylist);
   end;
 
-  TNewPlaylistMessage = class(TMessage<TPlaylist>)
-  end;
-
   TConfig = class
   private const
     CDataVersion = 1;
