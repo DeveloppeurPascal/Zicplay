@@ -84,10 +84,14 @@ type
     procedure SetCurrentSongsList(const Value: TPlaylist);
     { Déclarations privées }
     procedure RefreshListView;
-    function SubscribeToZicPlayMessage(AItem: TListviewItem): integer;
     procedure SetCurrentSongsListNotFiltered(const Value: TPlaylist);
     procedure ConnectorMenuClick(Sender: TObject);
     procedure PlaylistMenuClick(Sender: TObject);
+    function SubscribeToNowPlayingMessage(AItem: TListviewItem)
+      : integer; overload;
+    procedure SubscribeToNowPlayingMessage; overload;
+    procedure SubscribeToNewPlaylistMessage;
+    procedure SubscribeToPlaylistUpdatedMessage;
   public
     { Déclarations publiques }
     property PlayedSong: TSong read FPlayedSong write SetPlayedSong;
@@ -121,10 +125,6 @@ begin
   for var i := length(From) - 1 downto 0 do
     result := result + From.Chars[i];
 end;
-
-Type
-  TNowPlayingMessage = class(TMessage<TSong>)
-  end;
 
 procedure TfrmMain.AboutDialogURLClick(const AURL: string);
 begin
@@ -321,8 +321,6 @@ var
 begin
   TConfig.Current.LoadFromFile;
 
-  lblSongPlayed.Text := '';
-
 {$IF Defined(ANDROID) or Defined(IOS)}
   MainMenu1.Visible := false;
 {$ELSEIF Defined(MACOS) and not Defined(IOS)}
@@ -368,26 +366,8 @@ begin
     mnu.OnClick := PlaylistMenuClick;
     mnu.TagObject := TConfig.Current.Playlists[i];
   end;
-  TMessageManager.DefaultManager.SubscribeToMessage(TNewPlaylistMessage,
-    procedure(const Sender: TObject; const M: TMessage)
-    var
-      msg: TNewPlaylistMessage;
-      mnu: TMenuItem;
-    begin
-      if (M is TNewPlaylistMessage) then
-      begin
-        msg := M as TNewPlaylistMessage;
-        if assigned(msg.Value) then
-        begin
-          mnuPlaylistSeparator.Visible := true;
-          mnu := TMenuItem.Create(Self);
-          mnu.Parent := mnuPlaylist;
-          mnu.Text := msg.Value.Text;
-          mnu.OnClick := PlaylistMenuClick;
-          mnu.TagObject := msg.Value;
-        end;
-      end;
-    end);
+  SubscribeToNewPlaylistMessage;
+  SubscribeToPlaylistUpdatedMessage;
 
   caption := AboutDialog.Titre + ' ' + AboutDialog.VersionNumero;
 {$IFDEF DEBUG}
@@ -395,26 +375,8 @@ begin
 {$ENDIF}
   FDefaultCaption := caption;
 
-  TMessageManager.DefaultManager.SubscribeToMessage(TNowPlayingMessage,
-    procedure(const Sender: TObject; const M: TMessage)
-    var
-      msg: TNowPlayingMessage;
-    begin
-      if (M is TNowPlayingMessage) then
-      begin
-        msg := M as TNowPlayingMessage;
-        if assigned(msg.Value) then
-        begin
-          lblSongPlayed.Text := 'Playing : ' + msg.Value.Title;
-          caption := FDefaultCaption + ' - ' + msg.Value.Title;
-        end
-        else
-        begin
-          lblSongPlayed.Text := '';
-          caption := FDefaultCaption;
-        end;
-      end;
-    end);
+  lblSongPlayed.Text := '';
+  SubscribeToNowPlayingMessage;
 
   edtSearch.Text := '';
   edtSearch.Tagstring := '';
@@ -429,7 +391,7 @@ begin
   then
   begin
     isPlaying := (AItem as TListviewItem).Tag <> 0;
-    (AItem as TListviewItem).Tag := SubscribeToZicPlayMessage
+    (AItem as TListviewItem).Tag := SubscribeToNowPlayingMessage
       (AItem as TListviewItem);
     if (not isPlaying) then
       PlayedSong := AItem.TagObject as TSong
@@ -488,7 +450,7 @@ begin
         if (song = PlayedSong) then
         begin
           item.ButtonText := 'Pause';
-          item.Tag := SubscribeToZicPlayMessage(item);
+          item.Tag := SubscribeToNowPlayingMessage(item);
           // 0 = not playing,
           // other = playing (value is subcription id to rtl messaging)
 
@@ -598,7 +560,57 @@ begin
   end;
 end;
 
-function TfrmMain.SubscribeToZicPlayMessage(AItem: TListviewItem): integer;
+procedure TfrmMain.SubscribeToNewPlaylistMessage;
+begin
+  TMessageManager.DefaultManager.SubscribeToMessage(TNewPlaylistMessage,
+    procedure(const Sender: TObject; const M: TMessage)
+    var
+      msg: TNewPlaylistMessage;
+      mnu: TMenuItem;
+      Playlist: TPlaylist;
+    begin
+      if (M is TNewPlaylistMessage) then
+      begin
+        msg := M as TNewPlaylistMessage;
+        if assigned(msg.Value) then
+        begin
+          Playlist := msg.Value;
+          mnuPlaylistSeparator.Visible := true;
+          mnu := TMenuItem.Create(Self);
+          mnu.Parent := mnuPlaylist;
+          mnu.Text := Playlist.Text;
+          mnu.OnClick := PlaylistMenuClick;
+          mnu.TagObject := Playlist;
+        end;
+      end;
+    end);
+end;
+
+procedure TfrmMain.SubscribeToNowPlayingMessage;
+begin
+  TMessageManager.DefaultManager.SubscribeToMessage(TNowPlayingMessage,
+    procedure(const Sender: TObject; const M: TMessage)
+    var
+      msg: TNowPlayingMessage;
+    begin
+      if (M is TNowPlayingMessage) then
+      begin
+        msg := M as TNowPlayingMessage;
+        if assigned(msg.Value) then
+        begin
+          lblSongPlayed.Text := 'Playing : ' + msg.Value.Title;
+          caption := FDefaultCaption + ' - ' + msg.Value.Title;
+        end
+        else
+        begin
+          lblSongPlayed.Text := '';
+          caption := FDefaultCaption;
+        end;
+      end;
+    end);
+end;
+
+function TfrmMain.SubscribeToNowPlayingMessage(AItem: TListviewItem): integer;
 begin
   result := TMessageManager.DefaultManager.SubscribeToMessage
     (TNowPlayingMessage,
@@ -623,6 +635,37 @@ begin
                 AItem.Tag, true);
               AItem.Tag := 0;
             end);
+        end;
+      end;
+    end);
+end;
+
+procedure TfrmMain.SubscribeToPlaylistUpdatedMessage;
+begin
+  TMessageManager.DefaultManager.SubscribeToMessage(TPlaylistUpdatedMessage,
+    procedure(const Sender: TObject; const M: TMessage)
+    var
+      msg: TPlaylistUpdatedMessage;
+      mnu: TMenuItem;
+      i: integer;
+      Playlist: TPlaylist;
+    begin
+      if (M is TPlaylistUpdatedMessage) then
+      begin
+        msg := M as TPlaylistUpdatedMessage;
+        if assigned(msg.Value) then
+        begin
+          Playlist := msg.Value;
+
+          if (mnuPlaylist.itemsCount > 0) then
+            for i := 0 to mnuPlaylist.ItemsCount - 1 do
+              if (mnuPlaylist.items[i] is TMenuItem) then
+              begin
+                mnu := mnuPlaylist.items[i] as TMenuItem;
+                if assigned(mnu.TagObject) and (mnu.TagObject is TPlaylist) and
+                  (Playlist = (mnu.TagObject as TPlaylist)) then
+                  mnu.Text := Playlist.Text;
+              end;
         end;
       end;
     end);

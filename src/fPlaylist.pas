@@ -60,6 +60,7 @@ implementation
 {$R *.fmx}
 
 uses
+  System.Messaging,
   uConfig,
   fSelectConnector;
 
@@ -118,6 +119,9 @@ begin
     if InsertMode then
       TConfig.Current.Playlists.Add(fPlaylist);
 
+    TMessageManager.DefaultManager.SendMessage(Self,
+      TPlaylistupdatedMessage.Create(fPlaylist));
+
     TConfig.Current.SaveTofile;
   end;
 
@@ -148,7 +152,7 @@ begin
   tthread.ForceQueue(nil,
     procedure
     begin
-      self.Free;
+      Self.Free;
     end);
 end;
 

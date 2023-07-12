@@ -4,6 +4,7 @@ interface
 
 uses
   System.Generics.Collections,
+  System.Messaging,
   System.Classes,
   System.JSON;
 
@@ -360,6 +361,27 @@ type
     /// Destroy current instance of this connector
     /// </summary>
     destructor Destroy; override;
+  end;
+
+  /// <summary>
+  /// Subscribe to this mesage to be notified when a new song is played.
+  /// The song could be "nil" if no song is available after previous one.
+  /// </summary>
+  TNowPlayingMessage = class(TMessage<TSong>)
+  end;
+
+  /// <summary>
+  /// Subscribe to this message to be notified when a new playlist is added
+  /// to the configuration.
+  /// </summary>
+  TNewPlaylistMessage = class(TMessage<TPlaylist>)
+  end;
+
+  /// <summary>
+  /// Subscribe to this message to be notified when a playlist has been
+  /// changed (settings of the playlist and its connector)
+  /// </summary>
+  TPlaylistUpdatedMessage = class(TMessage<TPlaylist>)
   end;
 
 implementation
