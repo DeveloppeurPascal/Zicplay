@@ -14,6 +14,7 @@ type
   protected
   public
     procedure Add(APlaylist: TPlaylist);
+    procedure SortByName;
   end;
 
   TConfig = class
@@ -44,6 +45,7 @@ type
 implementation
 
 uses
+  system.Generics.Defaults,
   system.JSON,
   system.IOUtils,
   system.SysUtils;
@@ -138,6 +140,7 @@ begin
   if (DataVersion >= 1) then
   begin
     Playlists.Clear;
+    // TODO : DANGER is the load is done on a filled playlist with played songs
     AStream.Read(nb, sizeof(nb));
     for i := 1 to nb do
     begin
@@ -145,6 +148,7 @@ begin
       Playlist.LoadFromStream(AStream);
       Playlists.Add(Playlist);
     end;
+    Playlists.SortByName;
   end;
 end;
 
@@ -204,6 +208,20 @@ begin
   inherited Add(APlaylist);
   TMessageManager.DefaultManager.SendMessage(Self,
     TNewPlaylistMessage.Create(APlaylist));
+end;
+
+procedure TPlaylistsList.SortByName;
+begin
+  Sort(TComparer<TPlaylist>.Construct(
+    function(const A, B: TPlaylist): integer
+    begin
+      if (A.Text = B.Text) then
+        result := 0
+      else if (A.Text < B.Text) then
+        result := -1
+      else
+        result := 1;
+    end));
 end;
 
 initialization
