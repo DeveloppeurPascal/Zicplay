@@ -227,6 +227,11 @@ type
     procedure SortByCategoryTitle;
 
     /// <summary>
+    /// Sort the songs by their UniqID
+    /// </summary>
+    procedure SortByUniqID;
+
+    /// <summary>
     /// Load song list datas from a stream
     /// </summary>
     procedure LoadFromStream(AStream: TStream);
@@ -242,6 +247,17 @@ type
     /// </summary>
     procedure RefreshSongsList(ACallbackProc: TZicPlayGetPlaylistProc;
       AForceReload: boolean = false);
+
+    /// <summary>
+    /// Update current list from APlaylist
+    /// (mirror current list with the other as source)
+    /// </summary>
+    procedure UpdateAsAMirrorOf(APlaylist: TPlaylist);
+
+    /// <summary>
+    /// Delete item at AIndex
+    /// </summary>
+    procedure Delete(Index: integer);
 
     constructor Create;
     destructor Destroy; override;
@@ -467,8 +483,7 @@ end;
 
 function TSong.GetDurationAsTime: string;
 begin
-  // TODO : à compléter
-  result := 'n/a';
+  result := SecToHMS(FDuration);
 end;
 
 function TSong.GetFileName: string;
@@ -562,7 +577,7 @@ end;
 
 procedure TSong.SetFilename(const Value: string);
 begin
-  if tfile.Exists(FFilename) then
+  if tfile.Exists(Value) then
     FFilename := Value
   else
     FFilename := '';
@@ -609,6 +624,21 @@ begin
   FText := '';
   FEnabled := true;
   FUniqID := '';
+end;
+
+procedure TPlaylist.Delete(Index: integer);
+var
+  List: TList<TSong>;
+begin
+  if (index < 0) or (index >= Count) then
+    exit;
+
+  List := LockList;
+  try
+    List.Delete(index);
+  finally
+    UnlockList;
+  end;
 end;
 
 destructor TPlaylist.Destroy;
@@ -715,7 +745,7 @@ begin
     exit;
 
   if not tfile.Exists(FileName) then
-    exit;
+    raise exception.Create('No cache for this playlist !');
 
   clear;
   Stream := TFileStream.Create(FileName, fmOpenRead);
@@ -763,7 +793,7 @@ begin
         Connector.GetPlaylist(ConnectorParams,
           procedure(APlaylist: TPlaylist)
           begin
-            // TODO : à compléter
+            UpdateAsAMirrorOf(APlaylist);
             SaveSongsList;
             tthread.Synchronize(nil,
               procedure
@@ -991,6 +1021,83 @@ begin
         else
           result := 1;
       end));
+  finally
+    UnlockList;
+  end;
+end;
+
+procedure TPlaylist.SortByUniqID;
+var
+  List: TList<TSong>;
+begin
+  List := LockList;
+  try
+    List.Sort(TComparer<TSong>.Construct(
+      function(const A, B: TSong): integer
+      begin
+        if (A.UniqID = B.UniqID) then
+          result := 0
+        else if (A.UniqID < B.UniqID) then
+          result := -1
+        else
+          result := 1;
+      end));
+  finally
+    UnlockList;
+  end;
+end;
+
+procedure TPlaylist.UpdateAsAMirrorOf(APlaylist: TPlaylist);
+var
+  LocalList, MirrorList, TempList: TList<TSong>;
+  idxLocal, idxMirror, idxTemp: integer;
+begin
+  LocalList := LockList;
+  try
+    SortByUniqID;
+    MirrorList := APlaylist.LockList;
+    try
+      APlaylist.SortByUniqID;
+      TempList := TList<TSong>.Create;
+      try
+        idxLocal := 0;
+        idxMirror := 0;
+        while true do
+        begin
+          if (idxLocal >= LocalList.Count) and (idxMirror >= MirrorList.Count)
+          then
+            break
+          else if (idxLocal >= LocalList.Count) or
+            (LocalList[idxLocal].UniqID > MirrorList[idxMirror].UniqID) then
+          begin
+            TempList.add(MirrorList[idxMirror]);
+            inc(idxMirror);
+          end
+          else if (idxMirror >= MirrorList.Count) or
+            (LocalList[idxLocal].UniqID < MirrorList[idxMirror].UniqID) then
+          begin
+            // TODO : get the TSong instance, remove it from other playlists and the memory
+            LocalList.Delete(idxLocal);
+            // Count := Count-1, so idxLocal don't need to change
+          end
+          else if (LocalList[idxLocal].UniqID = MirrorList[idxMirror].UniqID)
+          then
+          begin
+            inc(idxLocal);
+            inc(idxMirror);
+          end;
+        end;
+        for idxTemp := 0 to TempList.Count - 1 do
+        begin
+          TempList[idxTemp].Playlist := self;
+          LocalList.add(TempList[idxTemp]);
+        end;
+      finally
+        TempList.Free;
+      end;
+    finally
+      APlaylist.UnlockList;
+    end;
   finally
     UnlockList;
   end;
