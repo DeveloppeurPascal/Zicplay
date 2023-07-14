@@ -205,7 +205,7 @@ begin
     for i := 0 to length(files) - 1 do
       if (tpath.GetExtension(files[i]).ToLower = '.mp3') then
       begin
-        song := TSong.Create;
+        song := TSong.Create(Playlist);
         song.Title := tpath.GetFileNameWithoutExtension(files[i]);
         song.Artist := ReverseString(song.Title); // TODO : à compléter
         song.Album := random(maxint).tostring; // TODO : à compléter
@@ -214,7 +214,6 @@ begin
         song.Category := 'mp3'; // TODO : à compléter
         song.Order := 0; // TODO : à compléter
         song.UniqID := files[i];
-        song.Playlist := nil;
         song.FileName := files[i];
         song.onGetFilename := nil;
 
@@ -484,7 +483,7 @@ begin
     // Generate the new list on screen
     for i := 0 to CurrentSongsList.Count - 1 do
     begin
-      song := CurrentSongsList[i];
+      song := CurrentSongsList.GetSongAt(i);
       item := ListView1.items.Add;
       try
         item.Text := song.Title;
@@ -546,7 +545,7 @@ begin
       for i := 0 to CurrentSongsListNotFiltered.Count - 1 do
       begin
         // TODO : change filtering method (case sensitive, keyword or full text, choose on what property, ...)
-        song := CurrentSongsListNotFiltered[i];
+        song := CurrentSongsListNotFiltered.GetSongAt(i);
         if song.TitleLowerCase.Contains(FindText) or
           song.ArtistLowerCase.Contains(FindText) or
           song.AlbumLowerCase.Contains(FindText) or
@@ -757,7 +756,7 @@ begin
     // TODO : if REPEAT 1 is selected, replay the song
     SongIndex := -1;
     for i := 0 to CurrentSongsList.Count - 1 do
-      if CurrentSongsList[i] = PlayedSong then
+      if CurrentSongsList.GetSongAt(i) = PlayedSong then
       begin
         SongIndex := i;
         break;
@@ -766,7 +765,8 @@ begin
     begin
       // PlayedSong := CurrentSongsList[SongIndex + 1]
       for i := 0 to ListView1.items.Count - 1 do
-        if ListView1.items[i].TagObject = CurrentSongsList[SongIndex + 1] then
+        if ListView1.items[i].TagObject = CurrentSongsList.GetSongAt
+          (SongIndex + 1) then
         begin
           ListView1ButtonClick(Self, ListView1.items[i], nil);
           break;
