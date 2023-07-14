@@ -128,12 +128,18 @@ type
   /// </summary>
   TPlaylist = class(TList<TSong>)
   private const
-    CDataVersion = 1;
+    CDataVersion = 2;
+
+  var
+    FEnabled: boolean;
+    function GetUniqID: string;
+    procedure SetEnabled(const Value: boolean);
 
   var
     FConnector: IConnector;
     FText: string;
     FConnectorParams: TJSONObject;
+    FUniqID: string;
     procedure SetConnector(const Value: IConnector);
     procedure SetText(const Value: string);
     procedure SetConnectorParams(const Value: TJSONObject);
@@ -154,6 +160,19 @@ type
     /// </summary>
     property ConnectorParams: TJSONObject read FConnectorParams
       write SetConnectorParams;
+
+    /// <summary>
+    /// Uniq Id of the playlist
+    /// A GUID generated when the list is created, to link it to other
+    /// files or classes.
+    /// </summary>
+    property UniqID: string read GetUniqID;
+
+    /// <summary>
+    /// True is the songs in this playlists are available in the global playlist
+    /// False is it's songs are not shown on the global playlist
+    /// </summary>
+    property Enabled: boolean read FEnabled write SetEnabled;
 
     /// <summary>
     /// Sort the songs in this list by Album / Order / Title
@@ -212,7 +231,7 @@ type
     /// <summary>
     /// Uniq ID (a GUID is fine) for this connector
     /// </summary>
-    function getUniqID: string;
+    function GetUniqID: string;
 
     /// <summary>
     /// Display setup dialog for a playlist using this connector
@@ -312,7 +331,7 @@ type
     /// <summary>
     /// Uniq ID (a GUID is fine) for this connector
     /// </summary>
-    function getUniqID: string; virtual; abstract;
+    function GetUniqID: string; virtual; abstract;
 
     /// <summary>
     /// Display setup dialog for a playlist using this connector
@@ -390,7 +409,8 @@ uses
   fmx.DialogService,
   System.DateUtils,
   System.SysUtils,
-  System.Generics.Defaults;
+  System.Generics.Defaults,
+  uConfig;
 
 type
   TZicPlayCounter = word;
@@ -498,12 +518,32 @@ begin
   FConnector := nil;
   FConnectorParams := TJSONObject.Create;
   FText := '';
+  FEnabled := true;
+  FUniqID := '';
 end;
 
 destructor TPlaylist.Destroy;
 begin
   FConnectorParams.Free;
   inherited;
+end;
+
+function TPlaylist.GetUniqID: string;
+var
+  i: integer;
+  LGuid: string;
+begin
+  if FUniqID.isempty then
+  begin
+    LGuid := TGUID.NewGuid.ToString;
+    for i := 0 to length(LGuid) - 1 do
+    begin
+      if CharInSet(LGuid.Chars[i], ['0' .. '9', 'A' .. 'Z', 'a' .. 'z']) then
+        FUniqID := FUniqID + LGuid.Chars[i];
+    end;
+    tconfig.Current.hasConfigChanged := true;
+  end;
+  result := FUniqID;
 end;
 
 procedure TPlaylist.LoadFromStream(AStream: TStream);
@@ -570,6 +610,25 @@ begin
     FConnectorParams.Free;
     FConnectorParams := TJSONObject.ParseJSONValue(JSON) as TJSONObject;
   end;
+
+  if (DataVersion >= 2) then
+  begin
+    AStream.Read(FEnabled, sizeof(FEnabled));
+
+    AStream.Read(ssLen, sizeof(ssLen));
+    if (ssLen > 0) then
+    begin
+      ss := tStringStream.Create;
+      try
+        ss.CopyFrom(AStream, ssLen);
+        FUniqID := ss.DataString;
+      finally
+        ss.Free;
+      end;
+    end
+    else
+      FUniqID := '';
+  end;
 end;
 
 procedure TPlaylist.SaveToStream(AStream: TStream);
@@ -597,7 +656,7 @@ begin
     ss.Free;
   end;
 
-  ss := tStringStream.Create(FConnector.getUniqID, tencoding.utf8);
+  ss := tStringStream.Create(FConnector.GetUniqID, tencoding.utf8);
   try
     ssLen := ss.Size;
     AStream.Write(ssLen, sizeof(ssLen));
@@ -622,11 +681,27 @@ begin
   finally
     ss.Free;
   end;
+
+  AStream.Write(FEnabled, sizeof(FEnabled));
+
+  ss := tStringStream.Create(FUniqID, tencoding.utf8);
+  try
+    ssLen := ss.Size;
+    AStream.Write(ssLen, sizeof(ssLen));
+    if (ssLen > 0) then
+    begin
+      ss.Position := 0;
+      AStream.CopyFrom(ss);
+    end;
+  finally
+    ss.Free;
+  end;
 end;
 
 procedure TPlaylist.SetConnector(const Value: IConnector);
 begin
   FConnector := Value;
+  tconfig.Current.hasConfigChanged := true;
 end;
 
 procedure TPlaylist.SetConnectorParams(const Value: TJSONObject);
@@ -634,9 +709,22 @@ begin
   FConnectorParams := Value;
 end;
 
+procedure TPlaylist.SetEnabled(const Value: boolean);
+begin
+  if (FEnabled = Value) then
+    exit;
+
+  FEnabled := Value;
+  tconfig.Current.hasConfigChanged := true;
+end;
+
 procedure TPlaylist.SetText(const Value: string);
 begin
+  if (FText = Value) then
+    exit;
+
   FText := Value;
+  tconfig.Current.hasConfigChanged := true;
 end;
 
 procedure TPlaylist.SortByAlbum;
@@ -778,7 +866,7 @@ var
 begin
   ItemFound := false;
   for i := 0 to List.Count - 1 do
-    if List[i].getUniqID = AConnector.getUniqID then
+    if List[i].GetUniqID = AConnector.GetUniqID then
     begin
       ItemFound := true;
       break;
@@ -815,7 +903,7 @@ var
 begin
   result := nil;
   for i := 0 to List.Count - 1 do
-    if (List.Items[i].getUniqID = AUniqID) then
+    if (List.Items[i].GetUniqID = AUniqID) then
     begin
       result := List.Items[i];
       break;
