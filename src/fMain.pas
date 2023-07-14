@@ -49,7 +49,6 @@ type
     actOptions: TAction;
     btnAbout: TSpeedButton;
     btnOptions: TSpeedButton;
-    btnLoadMP3List: TButton;
     ListView1: TListView;
     lblSongPlayed: TLabel;
     cbSortList: TComboBox;
@@ -57,7 +56,6 @@ type
     SearchEditButton1: TSearchEditButton;
     ClearEditButton1: TClearEditButton;
     timerIsSongFinished: TTimer;
-    btnMyMusic: TButton;
     mnuPlaylist: TMenuItem;
     mnuPlaylistCreate: TMenuItem;
     mnuPlaylistSeparator: TMenuItem;
@@ -68,7 +66,6 @@ type
     procedure actAboutExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
     procedure actOptionsExecute(Sender: TObject);
-    procedure btnLoadMP3ListClick(Sender: TObject);
     procedure ListView1ButtonClick(const Sender: TObject;
       const AItem: TListItem; const AObject: TListItemSimpleControl);
     procedure cbSortListChange(Sender: TObject);
@@ -78,7 +75,6 @@ type
       var KeyChar: Char; Shift: TShiftState);
     procedure timerIsSongFinishedTimer(Sender: TObject);
     procedure AboutDialogURLClick(const AURL: string);
-    procedure btnMyMusicClick(Sender: TObject);
     procedure mnuPlaylistCreateClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
@@ -156,113 +152,6 @@ begin
   showmessage('No option dialog in this release.');
   // TODO : à compléter
 {$MESSAGE warn 'todo'}
-end;
-
-procedure TfrmMain.btnLoadMP3ListClick(Sender: TObject);
-  procedure recursif(AFolder: string; var AFiles: TStringDynArray);
-  var
-    fs: TStringDynArray;
-    i, j: integer;
-  begin
-    // if length(AFiles) > 50 then
-    // exit;
-    try
-      fs := tdirectory.GetFiles(AFolder);
-      if length(fs) > 0 then
-      begin
-        j := length(AFiles);
-        setlength(AFiles, j + length(fs));
-        for i := 0 to length(fs) - 1 do
-          AFiles[j + i] := fs[i];
-      end;
-      fs := tdirectory.GetDirectories(AFolder);
-      if length(fs) > 0 then
-        for i := 0 to length(fs) - 1 do
-          recursif(fs[i], AFiles);
-    except
-
-    end;
-  end;
-
-var
-  i: integer;
-  files: TStringDynArray;
-  song: TSong;
-  Playlist: TPlaylist;
-begin
-  btnLoadMP3List.Visible := false;
-
-  Playlist := TPlaylist.Create;
-  try
-{$IFDEF RELEASE}
-{$IF Defined(MACOS) and not Defined(IOS)}
-    setlength(files, 0);
-    recursif('/Volumes/PatrickPremartin1To/Musiques/Music', files);
-    // TODO : for PP use only (temporary code)
-{$ENDIF}
-{$ELSE}
-    files := tdirectory.GetFiles(tpath.GetMusicPath);
-{$ENDIF}
-    for i := 0 to length(files) - 1 do
-      if (tpath.GetExtension(files[i]).ToLower = '.mp3') then
-      begin
-        song := TSong.Create(Playlist);
-        song.Title := tpath.GetFileNameWithoutExtension(files[i]);
-        song.Artist := ReverseString(song.Title); // TODO : à compléter
-        song.Album := random(maxint).tostring; // TODO : à compléter
-        song.Duration := random(60 * 5); // TODO : à compléter
-        song.PublishedDate := now; // TODO : à compléter
-        song.Category := 'mp3'; // TODO : à compléter
-        song.Order := 0; // TODO : à compléter
-        song.UniqID := files[i];
-        song.FileName := files[i];
-        song.onGetFilename := nil;
-
-        Playlist.Add(song);
-      end;
-
-    case cbSortList.ItemIndex of
-      0: // sort by title
-        Playlist.SortByTitle;
-      1: // sort by artist
-        Playlist.SortByArtist;
-      2: // sort by album
-        Playlist.SortByAlbum;
-      3: // sort by category + album
-        Playlist.SortByCategoryAlbum;
-      4: // sort by caterogy + Title
-        Playlist.SortByCategoryTitle;
-      -1: // do nothing
-        ;
-    else
-      raise exception.Create('I don''t know how to sort this list !');
-    end;
-
-  except
-    Playlist.Free;
-    raise;
-  end;
-
-  CurrentSongsListNotFiltered := nil;
-  CurrentSongsListNotFiltered := Playlist;
-end;
-
-procedure TfrmMain.btnMyMusicClick(Sender: TObject);
-var
-  jso: tjsonobject;
-begin
-  jso := tjsonobject.Create;
-  try
-    TConnectorsList.Current.GetConnectorFromUID
-      ('6B3510A0-2972-48C8-80CF-9C43436B5794').GetPlaylist(jso,
-      procedure(APlaylist: TPlaylist)
-      begin
-        CurrentSongsListNotFiltered := nil;
-        CurrentSongsListNotFiltered := APlaylist;
-      end);
-  finally
-    jso.Free;
-  end;
 end;
 
 procedure TfrmMain.cbSortListChange(Sender: TObject);

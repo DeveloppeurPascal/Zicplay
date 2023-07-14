@@ -197,21 +197,6 @@ object frmMain: TfrmMain
     Left = 552
     Top = 72
   end
-  object btnLoadMP3List: TButton
-    Align = Top
-    Margins.Left = 5.000000000000000000
-    Margins.Top = 5.000000000000000000
-    Margins.Right = 5.000000000000000000
-    Margins.Bottom = 5.000000000000000000
-    Position.X = 5.000000000000000000
-    Position.Y = 45.000000000000000000
-    Size.Width = 890.000000000000000000
-    Size.Height = 48.000000000000000000
-    Size.PlatformDefault = False
-    TabOrder = 8
-    Text = 'LoadFromFolder'
-    OnClick = btnLoadMP3ListClick
-  end
   object ListView1: TListView
     ItemAppearanceClassName = 'TImageListItemBottomDetailRightButtonAppearance'
     ItemEditAppearanceClassName = 'TImageListItemBottomDetailRightButtonShowCheckAppearance'
@@ -219,9 +204,9 @@ object frmMain: TfrmMain
     FooterAppearanceClassName = 'TListHeaderObjects'
     Align = Client
     Size.Width = 900.000000000000000000
-    Size.Height = 302.000000000000000000
+    Size.Height = 418.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 9
+    TabOrder = 7
     OnButtonClick = ListView1ButtonClick
   end
   object timerIsSongFinished: TTimer
@@ -229,21 +214,6 @@ object frmMain: TfrmMain
     OnTimer = timerIsSongFinishedTimer
     Left = 440
     Top = 224
-  end
-  object btnMyMusic: TButton
-    Align = Top
-    Margins.Left = 5.000000000000000000
-    Margins.Top = 5.000000000000000000
-    Margins.Right = 5.000000000000000000
-    Margins.Bottom = 5.000000000000000000
-    Position.X = 5.000000000000000000
-    Position.Y = 103.000000000000000000
-    Size.Width = 890.000000000000000000
-    Size.Height = 48.000000000000000000
-    Size.PlatformDefault = False
-    TabOrder = 7
-    Text = 'LoadFromMyMusic'
-    OnClick = btnMyMusicClick
   end
   object mvPlaylists: TMultiView
     MasterButton = btnPlaylists
@@ -253,7 +223,7 @@ object frmMain: TfrmMain
     Size.Height = 302.000000000000000000
     Size.PlatformDefault = False
     Visible = False
-    TabOrder = 14
+    TabOrder = 12
     object mvPlaylistsArea: TVertScrollBox
       Align = Client
       Size.Width = 250.000000000000000000
