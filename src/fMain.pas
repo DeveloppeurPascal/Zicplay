@@ -26,7 +26,9 @@ uses
   Zicplay.Types,
   FMX.Edit,
   FMX.ListBox,
-  uDMIcons;
+  uDMIcons,
+  FMX.MultiView,
+  FMX.Layouts;
 
 type
   TfrmMain = class(TForm)
@@ -59,6 +61,9 @@ type
     mnuPlaylist: TMenuItem;
     mnuPlaylistCreate: TMenuItem;
     mnuPlaylistSeparator: TMenuItem;
+    btnPlaylists: TSpeedButton;
+    mvPlaylists: TMultiView;
+    mvPlaylistsArea: TVertScrollBox;
     procedure FormCreate(Sender: TObject);
     procedure actAboutExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
@@ -87,6 +92,7 @@ type
     procedure SetCurrentSongsListNotFiltered(const Value: TPlaylist);
     procedure ConnectorMenuClick(Sender: TObject);
     procedure PlaylistMenuClick(Sender: TObject);
+    procedure PlaylistEnableChange(Sender: TObject);
     function SubscribeToNowPlayingMessage(AItem: TListviewItem)
       : integer; overload;
     procedure SubscribeToNowPlayingMessage; overload;
@@ -318,6 +324,7 @@ var
   mnuConnectors, mnu: TMenuItem;
   ConnectorsList: TConnectorsList;
   Connector: IConnector;
+  cb: tcheckbox;
 begin
   TConfig.Current.LoadFromFile;
 
@@ -357,14 +364,29 @@ begin
     end;
   end;
 
+  mvPlaylists.Visible := TConfig.Current.mvPlaylistsVisible;
+
   mnuPlaylistSeparator.Visible := (TConfig.Current.Playlists.Count > 0);
   for i := 0 to TConfig.Current.Playlists.Count - 1 do
   begin
     mnu := TMenuItem.Create(Self);
     mnu.Parent := mnuPlaylist;
     mnu.Text := TConfig.Current.Playlists[i].Text;
+    mnu.IsChecked := TConfig.Current.Playlists[i].enabled;
     mnu.OnClick := PlaylistMenuClick;
     mnu.TagObject := TConfig.Current.Playlists[i];
+
+    cb := tcheckbox.Create(Self);
+    cb.Parent := mvPlaylistsArea;
+    cb.Align := talignlayout.Top;
+    cb.Text := TConfig.Current.Playlists[i].Text;
+    cb.IsChecked := TConfig.Current.Playlists[i].enabled;
+    cb.OnChange := PlaylistEnableChange;
+    cb.TagObject := TConfig.Current.Playlists[i];
+    cb.Margins.Top := 10;
+    cb.Margins.right := 10;
+    cb.Margins.Bottom := 10;
+    cb.Margins.Left := 10;
   end;
   SubscribeToNewPlaylistMessage;
   SubscribeToPlaylistUpdatedMessage;
@@ -406,6 +428,27 @@ end;
 procedure TfrmMain.mnuPlaylistCreateClick(Sender: TObject);
 begin
   TfrmPlaylist.Execute(nil);
+end;
+
+procedure TfrmMain.PlaylistEnableChange(Sender: TObject);
+var
+  cb: tcheckbox;
+  Playlist: TPlaylist;
+begin
+  if (Sender is tcheckbox) then
+    cb := Sender as tcheckbox
+  else
+    exit;
+
+  if assigned(cb.TagObject) and (cb.TagObject is TPlaylist) then
+    Playlist := cb.TagObject as TPlaylist
+  else
+    exit;
+
+  Playlist.enabled := cb.IsChecked;
+  TMessageManager.DefaultManager.SendMessage(Self,
+    TPlaylistUpdatedMessage.Create(Playlist));
+  // TODO : refresh global playlist content avec on screen listview
 end;
 
 procedure TfrmMain.PlaylistMenuClick(Sender: TObject);
@@ -567,6 +610,7 @@ begin
     var
       msg: TNewPlaylistMessage;
       mnu: TMenuItem;
+      cb: tcheckbox;
       Playlist: TPlaylist;
     begin
       if (M is TNewPlaylistMessage) then
@@ -581,6 +625,18 @@ begin
           mnu.Text := Playlist.Text;
           mnu.OnClick := PlaylistMenuClick;
           mnu.TagObject := Playlist;
+
+          cb := tcheckbox.Create(Self);
+          cb.Parent := mvPlaylistsArea;
+          cb.Align := talignlayout.Top;
+          cb.Text := Playlist.Text;
+          cb.IsChecked := Playlist.enabled;
+          cb.OnChange := PlaylistEnableChange;
+          cb.TagObject := Playlist;
+          cb.Margins.Top := 10;
+          cb.Margins.right := 10;
+          cb.Margins.Bottom := 10;
+          cb.Margins.Left := 10;
         end;
       end;
     end);
@@ -647,6 +703,7 @@ begin
     var
       msg: TPlaylistUpdatedMessage;
       mnu: TMenuItem;
+      cb: tcheckbox;
       i: integer;
       Playlist: TPlaylist;
     begin
@@ -658,13 +715,29 @@ begin
           Playlist := msg.Value;
 
           if (mnuPlaylist.itemsCount > 0) then
-            for i := 0 to mnuPlaylist.ItemsCount - 1 do
+            for i := 0 to mnuPlaylist.itemsCount - 1 do
               if (mnuPlaylist.items[i] is TMenuItem) then
               begin
                 mnu := mnuPlaylist.items[i] as TMenuItem;
                 if assigned(mnu.TagObject) and (mnu.TagObject is TPlaylist) and
                   (Playlist = (mnu.TagObject as TPlaylist)) then
+                begin
                   mnu.Text := Playlist.Text;
+                  mnu.IsChecked := Playlist.enabled;
+                end;
+              end;
+
+          if (mvPlaylistsArea.Content.ChildrenCount > 0) then
+            for i := 0 to mvPlaylistsArea.Content.ChildrenCount - 1 do
+              if (mvPlaylistsArea.Content.Children[i] is tcheckbox) then
+              begin
+                cb := mvPlaylistsArea.Content.Children[i] as tcheckbox;
+                if assigned(cb.TagObject) and (cb.TagObject is TPlaylist) and
+                  (Playlist = (cb.TagObject as TPlaylist)) then
+                begin
+                  cb.Text := Playlist.Text;
+                  cb.IsChecked := Playlist.enabled;
+                end;
               end;
         end;
       end;
