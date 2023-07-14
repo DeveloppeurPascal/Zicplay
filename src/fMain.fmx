@@ -184,8 +184,8 @@ object frmMain: TfrmMain
   end
   object AboutDialog: TOlfAboutDialog
     Titre = 'Zicplay'
-    VersionNumero = '0.2'
-    VersionDate = '20230624'
+    VersionNumero = '0.6'
+    VersionDate = '20230714'
     MultiResBitmap = <
       item
       end>
@@ -220,18 +220,18 @@ object frmMain: TfrmMain
     Mode = Drawer
     NavigationPaneOptions.CollapsedWidth = 0.000000000000000000
     Size.Width = 250.000000000000000000
-    Size.Height = 302.000000000000000000
+    Size.Height = 418.000000000000000000
     Size.PlatformDefault = False
     Visible = False
     TabOrder = 12
     object mvPlaylistsArea: TVertScrollBox
       Align = Client
       Size.Width = 250.000000000000000000
-      Size.Height = 302.000000000000000000
+      Size.Height = 418.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
       Viewport.Width = 250.000000000000000000
-      Viewport.Height = 302.000000000000000000
+      Viewport.Height = 418.000000000000000000
     end
   end
   object ActionList1: TActionList
