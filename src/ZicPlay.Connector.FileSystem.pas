@@ -112,7 +112,7 @@ begin
       if (tpath.GetExtension(Files[i]).ToLower = '.mp3') then
       begin
         // TODO : get ID3 tags from the MP3 file and fill the TSong properties
-        Song := TSong.create;
+        Song := TSong.create(Playlist);
         Song.Title := tpath.GetFileNameWithoutExtension(Files[i]);
         Song.Artist := 'artists ' + Song.Title.ToLower;
         Song.Album := tpath.GetDirectoryName(ASearchFolder);
@@ -121,7 +121,6 @@ begin
         Song.Category := 'mp3';
         Song.Order := 0;
         Song.UniqID := Files[i];
-        Song.Playlist := Playlist;
         Song.FileName := Files[i];
         Song.onGetFilename := nil;
 
