@@ -46,6 +46,8 @@ type
     procedure SaveToStream(AStream: TStream);
     procedure LoadFromFile(AFilename: string = '');
     procedure SaveTofile(AFilename: string = '');
+    class function GetDefaultConfigFilePath(AConfigFileName
+      : string = ''): string;
   end;
 
 implementation
@@ -56,10 +58,8 @@ uses
   system.IOUtils,
   system.SysUtils;
 
-type
-  TZicPlayCounter = word;
-
-function GetDefaultConfigFilePath: string;
+class function TConfig.GetDefaultConfigFilePath(AConfigFileName
+  : string): string;
 var
   filename: string;
   folder: string;
@@ -81,7 +81,10 @@ begin
   if not tdirectory.Exists(folder) then
     tdirectory.CreateDirectory(folder);
 
-  result := TPath.combine(folder, filename);
+  if (AConfigFileName.IsEmpty) then
+    result := TPath.combine(folder, filename)
+  else
+    result := TPath.combine(folder, AConfigFileName);
 end;
 
 { TZicPlayConfig }
@@ -134,7 +137,7 @@ end;
 procedure TConfig.LoadFromStream(AStream: TStream);
 var
   DataVersion: word;
-  nb: TZicPlayCounter;
+  nb: TPlaylistsCounter;
   i: integer;
   Playlist: TPlaylist;
 begin
@@ -186,7 +189,7 @@ end;
 procedure TConfig.SaveToStream(AStream: TStream);
 var
   DataVersion: word;
-  nb: TZicPlayCounter;
+  nb: TPlaylistsCounter;
   Playlist: TPlaylist;
 begin
   if not assigned(AStream) then
