@@ -103,6 +103,20 @@ object frmPlaylist: TfrmPlaylist
       Text = 'Set&up'
       OnClick = btnConnectorSetupClick
     end
+    object cbEnabled: TCheckBox
+      Align = Top
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 211.000000000000000000
+      Size.Width = 620.000000000000000000
+      Size.Height = 19.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 5
+      Text = 'Available in the global playlist'
+    end
   end
   object GridPanelLayout1: TGridPanelLayout
     Align = Bottom

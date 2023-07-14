@@ -32,6 +32,7 @@ type
     edtConnector: TEdit;
     btnConnectorSelect: TButton;
     btnConnectorSetup: TButton;
+    cbEnabled: TCheckBox;
     procedure btnCancelClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -111,6 +112,7 @@ begin
   if assigned(fPlaylist) then
   begin
     fPlaylist.Text := edtPlaylistName.Text;
+    fPlaylist.Enabled := cbEnabled.IsChecked;
     fPlaylist.Connector := fPlaylistConnector;
     fPlaylist.ConnectorParams.Free;
     fPlaylist.ConnectorParams := TJSONObject.ParseJSONValue
@@ -167,6 +169,7 @@ begin
   if assigned(fPlaylist) then
   begin
     PlaylistName := fPlaylist.Text;
+    cbEnabled.IsChecked := fPlaylist.Enabled;
     PlaylistConnector := fPlaylist.Connector;
     fPlaylistParams := TJSONObject.ParseJSONValue
       (fPlaylist.ConnectorParams.ToJSON) as TJSONObject;
@@ -174,6 +177,7 @@ begin
   else
   begin
     PlaylistName := '';
+    cbEnabled.IsChecked := true;
     PlaylistConnector := nil;
     fPlaylistParams.Free;
     fPlaylistParams := TJSONObject.Create;
@@ -186,16 +190,16 @@ begin
   if assigned(Value) then
   begin
     edtConnector.Text := Value.getName;
-    btnConnectorSelect.enabled := false;
-    edtConnector.enabled := false; // disable the select button too
-    btnConnectorSetup.enabled := Value.hasPlaylistSetupDialog;
+    btnConnectorSelect.Enabled := false;
+    edtConnector.Enabled := false; // disable the select button too
+    btnConnectorSetup.Enabled := Value.hasPlaylistSetupDialog;
     fPlaylistConnector := Value;
   end
   else
   begin
     edtConnector.Text := '';
-    btnConnectorSelect.enabled := true;
-    btnConnectorSetup.enabled := false;
+    btnConnectorSelect.Enabled := true;
+    btnConnectorSetup.Enabled := false;
     fPlaylistConnector := nil;
   end;
 end;
