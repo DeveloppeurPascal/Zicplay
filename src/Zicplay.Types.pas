@@ -9,6 +9,9 @@ uses
   System.JSON;
 
 type
+  TPlaylistsCounter = word;
+  TSongsCounter = word;
+
   TPlaylist = class;
   IConnector = interface;
 
@@ -19,10 +22,18 @@ type
   TSongFileNameEvent = function(AUniqID: string): string of object;
 
   /// <summary>
+  /// Used as callback procedure between a connector and a playlist
+  /// </summary>
+  TZicPlayGetPlaylistProc = reference to procedure(APlaylist: TPlaylist);
+
+  /// <summary>
   /// Song infos (from MP3 metadata or others)
   /// </summary>
   TSong = class
-  private
+  private const
+    CDataVersion = 1;
+
+  var
     FFilename: string;
     FPlaylist: TPlaylist;
     FOrder: integer;
@@ -112,6 +123,7 @@ type
     /// </summary>
     property onGetFilename: TSongFileNameEvent read FonGetFilename
       write SetonGetFilename;
+    // TODO : (pprem) how to use it ? => plus un truc à faire au niveau du connecteur
 
     /// <summary>
     /// Load song datas from a stream
@@ -121,29 +133,34 @@ type
     /// Save song datas to a stream
     /// </summary>
     procedure SaveToStream(AStream: TStream);
+
+    constructor Create(APlaylist: TPlaylist);
   end;
 
   /// <summary>
   /// Playlist (list of songs from a connector)
   /// </summary>
-  TPlaylist = class(TList<TSong>)
+  TPlaylist = class(TThreadList<TSong>)
   private const
     CDataVersion = 2;
+    CCacheVersion = 1;
 
   var
     FEnabled: boolean;
-    function GetUniqID: string;
-    procedure SetEnabled(const Value: boolean);
-
-  var
     FConnector: IConnector;
     FText: string;
     FConnectorParams: TJSONObject;
     FUniqID: string;
+    FCacheDate: integer;
+    function GetSongsCount: integer;
     procedure SetConnector(const Value: IConnector);
     procedure SetText(const Value: string);
     procedure SetConnectorParams(const Value: TJSONObject);
+    function GetUniqID: string;
+    procedure SetEnabled(const Value: boolean);
   protected
+    procedure LoadSongsList;
+    procedure SaveSongsList;
   public
     /// <summary>
     /// Connector for this playlist
@@ -173,6 +190,16 @@ type
     /// False is it's songs are not shown on the global playlist
     /// </summary>
     property Enabled: boolean read FEnabled write SetEnabled;
+
+    /// <summary>
+    /// Returns the number of songs in the playlist
+    /// </summary>
+    property Count: integer read GetSongsCount;
+
+    /// <summary>
+    /// Return the song at index AIndex if it exists
+    /// </summary>
+    function GetSongAt(AIndex: integer): TSong;
 
     /// <summary>
     /// Sort the songs in this list by Album / Order / Title
@@ -209,14 +236,16 @@ type
     /// </summary>
     procedure SaveToStream(AStream: TStream);
 
+    /// <summary>
+    /// Load the list of song from the local cache.
+    // Start a reload from the connector if AForceReaload is True
+    /// </summary>
+    procedure RefreshSongsList(ACallbackProc: TZicPlayGetPlaylistProc;
+      AForceReload: boolean = false);
+
     constructor Create;
     destructor Destroy; override;
   end; // TODO : add a ClearAndFreeItems() method
-
-  /// <summary>
-  /// Used as callback procedure between a connector and a playlist
-  /// </summary>
-  TZicPlayGetPlaylistProc = reference to procedure(APlaylist: TPlaylist);
 
   /// <summary>
   /// Interface for Zicplay connectors (see it like a driver)
@@ -406,16 +435,35 @@ type
 implementation
 
 uses
+  System.IOUtils,
   fmx.DialogService,
   System.DateUtils,
   System.SysUtils,
   System.Generics.Defaults,
-  uConfig;
+  uConfig,
+  Olf.RTL.Streams,
+  Olf.RTL.DateAndTime;
 
-type
-  TZicPlayCounter = word;
+{ TSong }
 
-  { TSong }
+constructor TSong.Create(APlaylist: TPlaylist);
+begin
+  inherited Create;
+  FFilename := '';
+  FPlaylist := APlaylist;
+  FOrder := 0;
+  FTitle := '';
+  FTitleLowerCase := '';
+  FArtist := '';
+  FArtistLowerCase := '';
+  FCategory := '';
+  FCategoryLowerCase := '';
+  FAlbum := '';
+  FAlbumLowerCase := '';
+  FPublishedDate := 0;
+  FUniqID := '';
+  FDuration := 0;
+end;
 
 function TSong.GetDurationAsTime: string;
 begin
@@ -425,7 +473,7 @@ end;
 
 function TSong.GetFileName: string;
 begin
-  if (not FFilename.isempty) then
+  if (not FFilename.isempty) and tfile.Exists(FFilename) then
     result := FFilename
   else if assigned(onGetFilename) then
     result := onGetFilename(FUniqID)
@@ -440,15 +488,53 @@ begin
 end;
 
 procedure TSong.LoadFromStream(AStream: TStream);
+var
+  DataVersion: word;
+  guid: string;
+  JSON: string;
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
+  if not assigned(AStream) then
+    raise exception.Create
+      ('Where do you expect I load this song''s settings from ?');
+
+  AStream.Read(DataVersion, sizeof(DataVersion));
+  if (DataVersion > CDataVersion) then
+    raise exception.Create
+      ('The program is too old to read the settings for this song.');
+
+  if (DataVersion >= 1) then
+  begin
+    FileName := LoadStringFromStream(AStream);
+    AStream.Read(FOrder, sizeof(FOrder));
+    Title := LoadStringFromStream(AStream);
+    Artist := LoadStringFromStream(AStream);
+    Category := LoadStringFromStream(AStream);
+    Album := LoadStringFromStream(AStream);
+    PublishedDate := date8todate(LoadStringFromStream(AStream));
+    UniqID := LoadStringFromStream(AStream);
+    AStream.Read(FDuration, sizeof(FDuration));
+  end;
 end;
 
 procedure TSong.SaveToStream(AStream: TStream);
+var
+  DataVersion: word;
 begin
-  // TODO : à compléter
-{$MESSAGE warn 'todo'}
+  if not assigned(AStream) then
+    raise exception.Create('Where do you expect I save the settings to ?');
+
+  DataVersion := CDataVersion;
+  AStream.write(DataVersion, sizeof(DataVersion));
+
+  SaveStringToStream(FFilename, AStream);
+  AStream.write(FOrder, sizeof(FOrder));
+  SaveStringToStream(FTitle, AStream);
+  SaveStringToStream(FArtist, AStream);
+  SaveStringToStream(FCategory, AStream);
+  SaveStringToStream(FAlbum, AStream);
+  SaveStringToStream(datetostring8(FPublishedDate), AStream);
+  SaveStringToStream(FUniqID, AStream);
+  AStream.write(FDuration, sizeof(FDuration));
 end;
 
 procedure TSong.SetAlbum(const Value: string);
@@ -476,7 +562,10 @@ end;
 
 procedure TSong.SetFilename(const Value: string);
 begin
-  FFilename := Value;
+  if tfile.Exists(FFilename) then
+    FFilename := Value
+  else
+    FFilename := '';
 end;
 
 procedure TSong.SetonGetFilename(const Value: TSongFileNameEvent);
@@ -528,6 +617,36 @@ begin
   inherited;
 end;
 
+function TPlaylist.GetSongAt(AIndex: integer): TSong;
+var
+  List: TList<TSong>;
+begin
+  if (AIndex < 0) or (AIndex >= Count) then
+  begin
+    result := nil;
+    exit;
+  end;
+
+  List := LockList;
+  try
+    result := List[AIndex];
+  finally
+    UnlockList;
+  end;
+end;
+
+function TPlaylist.GetSongsCount: integer;
+var
+  List: TList<TSong>;
+begin
+  List := LockList;
+  try
+    result := List.Count;
+  finally
+    UnlockList;
+  end;
+end;
+
 function TPlaylist.GetUniqID: string;
 var
   i: integer;
@@ -549,9 +668,7 @@ end;
 procedure TPlaylist.LoadFromStream(AStream: TStream);
 var
   DataVersion: word;
-  ss: tStringStream;
-  ssLen: int64;
-  guid: string;
+  ConnectorGuid: string;
   JSON: string;
 begin
   if not assigned(AStream) then
@@ -565,48 +682,12 @@ begin
 
   if (DataVersion >= 1) then
   begin
-    AStream.Read(ssLen, sizeof(ssLen));
-    if (ssLen > 0) then
-    begin
-      ss := tStringStream.Create;
-      try
-        ss.CopyFrom(AStream, ssLen);
-        FText := ss.DataString;
-      finally
-        ss.Free;
-      end;
-    end
-    else
-      FText := '';
+    FText := LoadStringFromStream(AStream);
 
-    AStream.Read(ssLen, sizeof(ssLen));
-    if (ssLen > 0) then
-    begin
-      ss := tStringStream.Create;
-      try
-        ss.CopyFrom(AStream, ssLen);
-        guid := ss.DataString;
-      finally
-        ss.Free;
-      end;
-    end
-    else
-      guid := '';
-    FConnector := TConnectorsList.Current.GetConnectorFromUID(guid);
+    ConnectorGuid := LoadStringFromStream(AStream);
+    FConnector := TConnectorsList.Current.GetConnectorFromUID(ConnectorGuid);
 
-    AStream.Read(ssLen, sizeof(ssLen));
-    if (ssLen > 0) then
-    begin
-      ss := tStringStream.Create;
-      try
-        ss.CopyFrom(AStream, ssLen);
-        JSON := ss.DataString;
-      finally
-        ss.Free;
-      end;
-    end
-    else
-      JSON := '';
+    JSON := LoadStringFromStream(AStream);
     FConnectorParams.Free;
     FConnectorParams := TJSONObject.ParseJSONValue(JSON) as TJSONObject;
   end;
@@ -615,87 +696,138 @@ begin
   begin
     AStream.Read(FEnabled, sizeof(FEnabled));
 
-    AStream.Read(ssLen, sizeof(ssLen));
-    if (ssLen > 0) then
+    FUniqID := LoadStringFromStream(AStream);
+  end;
+end;
+
+procedure TPlaylist.LoadSongsList;
+var
+  FileName: string;
+  Stream: TFileStream;
+  song: TSong;
+  nb: TSongsCounter;
+  i: integer;
+  CacheVersion: word;
+begin
+  FileName := tconfig.GetDefaultConfigFilePath(UniqID + '.songs');
+
+  if FileName.isempty then
+    exit;
+
+  if not tfile.Exists(FileName) then
+    exit;
+
+  clear;
+  Stream := TFileStream.Create(FileName, fmOpenRead);
+  try
+    Stream.Read(CacheVersion, sizeof(CacheVersion));
+    if (CacheVersion > CCacheVersion) then
+      raise exception.Create
+        ('The program is too old to read the settings for this playlist.');
+
+    if (CacheVersion >= 1) then
     begin
-      ss := tStringStream.Create;
-      try
-        ss.CopyFrom(AStream, ssLen);
-        FUniqID := ss.DataString;
-      finally
-        ss.Free;
+      Stream.Read(FCacheDate, sizeof(FCacheDate));
+
+      Stream.Read(nb, sizeof(nb));
+      for i := 0 to nb - 1 do
+      begin
+        song := TSong.Create(self);
+        song.LoadFromStream(Stream);
+        add(song);
       end;
-    end
-    else
-      FUniqID := '';
+    end;
+  finally
+    Stream.Free;
+  end;
+end;
+
+procedure TPlaylist.RefreshSongsList(ACallbackProc: TZicPlayGetPlaylistProc;
+  AForceReload: boolean);
+begin
+  tthread.CreateAnonymousThread(
+    procedure
+    begin
+      try
+        LoadSongsList;
+        tthread.Synchronize(nil,
+          procedure
+          begin
+            ACallbackProc(self);
+          end);
+      except
+        AForceReload := true;
+      end;
+
+      if AForceReload then
+        Connector.GetPlaylist(ConnectorParams,
+          procedure(APlaylist: TPlaylist)
+          begin
+            // TODO : à compléter
+            SaveSongsList;
+            tthread.Synchronize(nil,
+              procedure
+              begin
+                ACallbackProc(self);
+              end);
+          end);
+    end).Start;
+end;
+
+procedure TPlaylist.SaveSongsList;
+var
+  FileName: string;
+  Stream: TFileStream;
+  nb: TSongsCounter;
+  i: integer;
+  CacheVersion: word;
+  List: TList<TSong>;
+begin
+  FileName := tconfig.GetDefaultConfigFilePath(UniqID + '.songs');
+
+  if FileName.isempty then
+    exit;
+
+  Stream := TFileStream.Create(FileName, fmOpenwrite + fmcreate);
+  try
+    CacheVersion := CCacheVersion;
+    Stream.write(CacheVersion, sizeof(CacheVersion));
+
+    FCacheDate := FormatDateTime('yyyymmdd', now).ToInteger;
+    Stream.write(FCacheDate, sizeof(FCacheDate));
+
+    List := LockList;
+    try
+      nb := List.Count;
+      Stream.write(nb, sizeof(nb));
+      for i := 0 to nb - 1 do
+        List[i].SaveToStream(Stream);
+    finally
+      UnlockList
+    end;
+  finally
+    Stream.Free;
   end;
 end;
 
 procedure TPlaylist.SaveToStream(AStream: TStream);
 var
   DataVersion: word;
-  ss: tStringStream;
-  ssLen: int64;
 begin
   if not assigned(AStream) then
     raise exception.Create('Where do you expect I save the settings to ?');
 
   DataVersion := CDataVersion;
-  AStream.Write(DataVersion, sizeof(DataVersion));
+  AStream.write(DataVersion, sizeof(DataVersion));
 
-  ss := tStringStream.Create(FText, tencoding.utf8);
-  try
-    ssLen := ss.Size;
-    AStream.Write(ssLen, sizeof(ssLen));
-    if (ssLen > 0) then
-    begin
-      ss.Position := 0;
-      AStream.CopyFrom(ss);
-    end;
-  finally
-    ss.Free;
-  end;
+  SaveStringToStream(FText, AStream);
 
-  ss := tStringStream.Create(FConnector.GetUniqID, tencoding.utf8);
-  try
-    ssLen := ss.Size;
-    AStream.Write(ssLen, sizeof(ssLen));
-    if (ssLen > 0) then
-    begin
-      ss.Position := 0;
-      AStream.CopyFrom(ss);
-    end;
-  finally
-    ss.Free;
-  end;
+  SaveStringToStream(FConnector.GetUniqID, AStream);
 
-  ss := tStringStream.Create(FConnectorParams.ToJSON, tencoding.utf8);
-  try
-    ssLen := ss.Size;
-    AStream.Write(ssLen, sizeof(ssLen));
-    if (ssLen > 0) then
-    begin
-      ss.Position := 0;
-      AStream.CopyFrom(ss);
-    end;
-  finally
-    ss.Free;
-  end;
+  SaveStringToStream(FConnectorParams.ToJSON, AStream);
 
-  AStream.Write(FEnabled, sizeof(FEnabled));
-
-  ss := tStringStream.Create(FUniqID, tencoding.utf8);
-  try
-    ssLen := ss.Size;
-    AStream.Write(ssLen, sizeof(ssLen));
-    if (ssLen > 0) then
-    begin
-      ss.Position := 0;
-      AStream.CopyFrom(ss);
-    end;
-  finally
-    ss.Free;
-  end;
+  AStream.write(FEnabled, sizeof(FEnabled));
+  SaveStringToStream(FUniqID, AStream);
 end;
 
 procedure TPlaylist.SetConnector(const Value: IConnector);
@@ -728,105 +860,140 @@ begin
 end;
 
 procedure TPlaylist.SortByAlbum;
+var
+  List: TList<TSong>;
 begin
-  Sort(TComparer<TSong>.Construct(
-    function(const A, B: TSong): integer
-    begin
-      if (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
-        (A.FTitleLowerCase = B.FTitleLowerCase) then
-        result := 0
-      else if (A.FAlbumLowerCase < B.FAlbumLowerCase) or
-        ((A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder < B.FOrder)) or
-        ((A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
-        (A.FTitleLowerCase < B.FTitleLowerCase)) then
-        result := -1
-      else
-        result := 1;
-    end));
+  List := LockList;
+  try
+    List.Sort(TComparer<TSong>.Construct(
+      function(const A, B: TSong): integer
+      begin
+        if (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
+          (A.FTitleLowerCase = B.FTitleLowerCase) then
+          result := 0
+        else if (A.FAlbumLowerCase < B.FAlbumLowerCase) or
+          ((A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder < B.FOrder)) or
+          ((A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
+          (A.FTitleLowerCase < B.FTitleLowerCase)) then
+          result := -1
+        else
+          result := 1;
+      end));
+  finally
+    UnlockList;
+  end;
 end;
 
 procedure TPlaylist.SortByArtist;
+var
+  List: TList<TSong>;
 begin
-  Sort(TComparer<TSong>.Construct(
-    function(const A, B: TSong): integer
-    begin
-      if (A.FArtistLowerCase = B.FArtistLowerCase) and
-        (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
-        (A.FTitleLowerCase = B.FTitleLowerCase) then
-        result := 0
-      else if (A.FArtistLowerCase < B.FArtistLowerCase) or
-        ((A.FArtistLowerCase = B.FArtistLowerCase) and
-        (A.FAlbumLowerCase < B.FAlbumLowerCase)) or
-        ((A.FArtistLowerCase = B.FArtistLowerCase) and
-        (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder < B.FOrder)) or
-        ((A.FArtistLowerCase = B.FArtistLowerCase) and
-        (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
-        (A.FTitleLowerCase < B.FTitleLowerCase)) then
-        result := -1
-      else
-        result := 1;
-    end));
+  List := LockList;
+  try
+    List.Sort(TComparer<TSong>.Construct(
+      function(const A, B: TSong): integer
+      begin
+        if (A.FArtistLowerCase = B.FArtistLowerCase) and
+          (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
+          (A.FTitleLowerCase = B.FTitleLowerCase) then
+          result := 0
+        else if (A.FArtistLowerCase < B.FArtistLowerCase) or
+          ((A.FArtistLowerCase = B.FArtistLowerCase) and
+          (A.FAlbumLowerCase < B.FAlbumLowerCase)) or
+          ((A.FArtistLowerCase = B.FArtistLowerCase) and
+          (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder < B.FOrder)) or
+          ((A.FArtistLowerCase = B.FArtistLowerCase) and
+          (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
+          (A.FTitleLowerCase < B.FTitleLowerCase)) then
+          result := -1
+        else
+          result := 1;
+      end));
+  finally
+    UnlockList;
+  end;
 end;
 
 procedure TPlaylist.SortByCategoryAlbum;
+var
+  List: TList<TSong>;
 begin
-  Sort(TComparer<TSong>.Construct(
-    function(const A, B: TSong): integer
-    begin
-      if (A.FCategoryLowerCase = B.FCategoryLowerCase) and
-        (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
-        (A.FTitleLowerCase = B.FTitleLowerCase) then
-        result := 0
-      else if (A.FCategoryLowerCase < B.FCategoryLowerCase) or
-        ((A.FCategoryLowerCase = B.FCategoryLowerCase) and
-        (A.FAlbumLowerCase < B.FAlbumLowerCase)) or
-        ((A.FCategoryLowerCase = B.FCategoryLowerCase) and
-        (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder < B.FOrder)) or
-        ((A.FCategoryLowerCase = B.FCategoryLowerCase) and
-        (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
-        (A.FTitleLowerCase < B.FTitleLowerCase)) then
-        result := -1
-      else
-        result := 1;
-    end));
+  List := LockList;
+  try
+    List.Sort(TComparer<TSong>.Construct(
+      function(const A, B: TSong): integer
+      begin
+        if (A.FCategoryLowerCase = B.FCategoryLowerCase) and
+          (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
+          (A.FTitleLowerCase = B.FTitleLowerCase) then
+          result := 0
+        else if (A.FCategoryLowerCase < B.FCategoryLowerCase) or
+          ((A.FCategoryLowerCase = B.FCategoryLowerCase) and
+          (A.FAlbumLowerCase < B.FAlbumLowerCase)) or
+          ((A.FCategoryLowerCase = B.FCategoryLowerCase) and
+          (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder < B.FOrder)) or
+          ((A.FCategoryLowerCase = B.FCategoryLowerCase) and
+          (A.FAlbumLowerCase = B.FAlbumLowerCase) and (A.FOrder = B.FOrder) and
+          (A.FTitleLowerCase < B.FTitleLowerCase)) then
+          result := -1
+        else
+          result := 1;
+      end));
+  finally
+    UnlockList;
+  end;
 end;
 
 procedure TPlaylist.SortByCategoryTitle;
+var
+  List: TList<TSong>;
 begin
-  Sort(TComparer<TSong>.Construct(
-    function(const A, B: TSong): integer
-    begin
-      if (A.FCategoryLowerCase = B.FCategoryLowerCase) and
-        (A.FTitleLowerCase = B.FTitleLowerCase) and
-        (A.FAlbumLowerCase = B.FAlbumLowerCase) then
-        result := 0
-      else if (A.FCategoryLowerCase < B.FCategoryLowerCase) or
-        ((A.FCategoryLowerCase = B.FCategoryLowerCase) and
-        (A.FTitleLowerCase < B.FTitleLowerCase)) or
-        ((A.FCategoryLowerCase = B.FCategoryLowerCase) and
-        (A.FTitleLowerCase = B.FTitleLowerCase) and
-        (A.FAlbumLowerCase < B.FAlbumLowerCase)) then
-        result := -1
-      else
-        result := 1;
-    end));
+  List := LockList;
+  try
+    List.Sort(TComparer<TSong>.Construct(
+      function(const A, B: TSong): integer
+      begin
+        if (A.FCategoryLowerCase = B.FCategoryLowerCase) and
+          (A.FTitleLowerCase = B.FTitleLowerCase) and
+          (A.FAlbumLowerCase = B.FAlbumLowerCase) then
+          result := 0
+        else if (A.FCategoryLowerCase < B.FCategoryLowerCase) or
+          ((A.FCategoryLowerCase = B.FCategoryLowerCase) and
+          (A.FTitleLowerCase < B.FTitleLowerCase)) or
+          ((A.FCategoryLowerCase = B.FCategoryLowerCase) and
+          (A.FTitleLowerCase = B.FTitleLowerCase) and
+          (A.FAlbumLowerCase < B.FAlbumLowerCase)) then
+          result := -1
+        else
+          result := 1;
+      end));
+  finally
+    UnlockList;
+  end;
 end;
 
 procedure TPlaylist.SortByTitle;
+var
+  List: TList<TSong>;
 begin
-  Sort(TComparer<TSong>.Construct(
-    function(const A, B: TSong): integer
-    begin
-      if (A.FTitleLowerCase = B.FTitleLowerCase) and
-        (A.FAlbumLowerCase = B.FAlbumLowerCase) then
-        result := 0
-      else if (A.FTitleLowerCase < B.FTitleLowerCase) or
-        ((A.FTitleLowerCase = B.FTitleLowerCase) and
-        (A.FAlbumLowerCase < B.FAlbumLowerCase)) then
-        result := -1
-      else
-        result := 1;
-    end));
+  List := LockList;
+  try
+    List.Sort(TComparer<TSong>.Construct(
+      function(const A, B: TSong): integer
+      begin
+        if (A.FTitleLowerCase = B.FTitleLowerCase) and
+          (A.FAlbumLowerCase = B.FAlbumLowerCase) then
+          result := 0
+        else if (A.FTitleLowerCase < B.FTitleLowerCase) or
+          ((A.FTitleLowerCase = B.FTitleLowerCase) and
+          (A.FAlbumLowerCase < B.FAlbumLowerCase)) then
+          result := -1
+        else
+          result := 1;
+      end));
+  finally
+    UnlockList;
+  end;
 end;
 
 { TConnectorsList }
@@ -872,7 +1039,7 @@ begin
       break;
     end;
   if not ItemFound then
-    List.Add(AConnector);
+    List.add(AConnector);
 end;
 
 procedure TConnectorsList.Sort;
