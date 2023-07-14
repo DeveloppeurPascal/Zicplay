@@ -19,15 +19,18 @@ type
 
   TConfig = class
   private const
-    CDataVersion = 1;
+    CDataVersion = 2;
 
   var
+    FmvPlaylistsVisible: boolean;
     FConfigFilename: string;
     FPlaylists: TPlaylistsList;
+    FConfigChanged: boolean;
     class var FCurrent: TConfig;
     procedure SetConfigFilename(const Value: string);
     procedure SetPlaylists(const Value: TPlaylistsList);
     class function GetCurrent: TConfig; static;
+    procedure SetmvPlaylistsVisible(const Value: boolean);
   protected
     property ConfigFilename: string read FConfigFilename
       write SetConfigFilename;
@@ -36,6 +39,9 @@ type
   public
     class property Current: TConfig read GetCurrent;
     property Playlists: TPlaylistsList read FPlaylists write SetPlaylists;
+    property mvPlaylistsVisible: boolean read FmvPlaylistsVisible
+      write SetmvPlaylistsVisible;
+    property hasConfigChanged: boolean read FConfigChanged write FConfigChanged;
     procedure LoadFromStream(AStream: TStream);
     procedure SaveToStream(AStream: TStream);
     procedure LoadFromFile(AFilename: string = '');
@@ -84,6 +90,8 @@ constructor TConfig.Create;
 begin
   inherited;
   Playlists := TPlaylistsList.Create;
+  FConfigChanged := false;
+  FmvPlaylistsVisible := false;
 end;
 
 destructor TConfig.Destroy;
@@ -150,6 +158,9 @@ begin
     end;
     Playlists.SortByName;
   end;
+
+  if (DataVersion >= 2) then
+    AStream.Read(FmvPlaylistsVisible, sizeof(FmvPlaylistsVisible));
 end;
 
 procedure TConfig.SaveTofile(AFilename: string);
@@ -189,11 +200,21 @@ begin
   if (nb > 0) then
     for Playlist in Playlists do
       Playlist.SaveToStream(AStream);
+
+  AStream.Write(FmvPlaylistsVisible, sizeof(FmvPlaylistsVisible));
+
+  FConfigChanged := false;
 end;
 
 procedure TConfig.SetConfigFilename(const Value: string);
 begin
   FConfigFilename := Value;
+end;
+
+procedure TConfig.SetmvPlaylistsVisible(const Value: boolean);
+begin
+  FmvPlaylistsVisible := Value;
+  FConfigChanged := true;
 end;
 
 procedure TConfig.SetPlaylists(const Value: TPlaylistsList);
@@ -227,6 +248,9 @@ end;
 initialization
 
 finalization
+
+if TConfig.Current.hasConfigChanged then
+  TConfig.Current.SaveTofile;
 
 TConfig.Current.Free;
 
