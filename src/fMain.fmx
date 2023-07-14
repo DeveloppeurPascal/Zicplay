@@ -9,6 +9,7 @@ object frmMain: TfrmMain
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   DesignerMasterStyle = 0
   object StatusBar1: TStatusBar
     Position.Y = 458.000000000000000000

@@ -80,6 +80,7 @@ type
     procedure AboutDialogURLClick(const AURL: string);
     procedure btnMyMusicClick(Sender: TObject);
     procedure mnuPlaylistCreateClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     FPlayedSong: TSong;
     FDefaultCaption: string;
@@ -327,6 +328,8 @@ var
 begin
   TConfig.Current.LoadFromFile;
 
+  CurrentSongsListNotFiltered := TPlaylist.Create;
+
 {$IF Defined(ANDROID) or Defined(IOS)}
   MainMenu1.Visible := false;
 {$ELSEIF Defined(MACOS) and not Defined(IOS)}
@@ -386,6 +389,17 @@ begin
     cb.Margins.right := 10;
     cb.Margins.Bottom := 10;
     cb.Margins.Left := 10;
+
+    if TConfig.Current.Playlists[i].enabled then
+      TConfig.Current.Playlists[i].RefreshSongsList(
+        procedure(APlaylist: TPlaylist)
+        var
+          i: integer;
+        begin
+          for i := 0 to APlaylist.Count - 1 do
+            CurrentSongsListNotFiltered.Add(APlaylist.GetSongAt(i));
+          RefreshListView;
+        end);
   end;
   SubscribeToNewPlaylistMessage;
   SubscribeToPlaylistUpdatedMessage;
@@ -401,6 +415,11 @@ begin
 
   edtSearch.Text := '';
   edtSearch.Tagstring := '';
+end;
+
+procedure TfrmMain.FormDestroy(Sender: TObject);
+begin
+  CurrentSongsListNotFiltered.Free;
 end;
 
 procedure TfrmMain.ListView1ButtonClick(const Sender: TObject;
@@ -636,6 +655,17 @@ begin
           cb.Margins.right := 10;
           cb.Margins.Bottom := 10;
           cb.Margins.Left := 10;
+
+          if Playlist.enabled then
+            Playlist.RefreshSongsList(
+              procedure(APlaylist: TPlaylist)
+              var
+                i: integer;
+              begin
+                for i := 0 to APlaylist.Count - 1 do
+                  CurrentSongsListNotFiltered.Add(APlaylist.GetSongAt(i));
+                RefreshListView;
+              end);
         end;
       end;
     end);
@@ -738,6 +768,28 @@ begin
                   cb.IsChecked := Playlist.enabled;
                 end;
               end;
+
+          if Playlist.enabled then
+            Playlist.RefreshSongsList(
+              procedure(APlaylist: TPlaylist)
+              var
+                i: integer;
+              begin
+                for i := 0 to APlaylist.Count - 1 do
+                  CurrentSongsListNotFiltered.Add(APlaylist.GetSongAt(i));
+                RefreshListView;
+              end)
+          else
+          begin
+            i := 0;
+            while (i < CurrentSongsListNotFiltered.Count) do
+              if CurrentSongsListNotFiltered.GetSongAt(i).Playlist = Playlist
+              then
+                CurrentSongsListNotFiltered.delete(i)
+              else
+                inc(i);
+            RefreshListView;
+          end;
         end;
       end;
     end);
