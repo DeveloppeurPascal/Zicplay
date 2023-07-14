@@ -15,7 +15,9 @@ uses
   ZicPlay.Connector.MyMusic in 'ZicPlay.Connector.MyMusic.pas',
   uConfig in 'uConfig.pas',
   fPlaylist in 'fPlaylist.pas' {frmPlaylist},
-  fSelectConnector in 'fSelectConnector.pas' {frmSelectConnector};
+  fSelectConnector in 'fSelectConnector.pas' {frmSelectConnector},
+  Olf.RTL.Streams in '..\lib-externes\librairies\Olf.RTL.Streams.pas',
+  Olf.RTL.DateAndTime in '..\lib-externes\librairies\Olf.RTL.DateAndTime.pas';
 
 {$R *.res}
 
