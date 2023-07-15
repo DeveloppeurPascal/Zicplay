@@ -19,18 +19,30 @@ type
 
   TConfig = class
   private const
-    CDataVersion = 2;
+    CDataVersion = 3;
 
   var
     FmvPlaylistsVisible: boolean;
     FConfigFilename: string;
     FPlaylists: TPlaylistsList;
     FConfigChanged: boolean;
-    class var FCurrent: TConfig;
+    FPlayRepeatAll: boolean;
+    FPlayRepeatOne: boolean;
+    FPlayIntroDuration: integer;
+    FPlayNextRandom: boolean;
+    FVolume: integer;
+    FPlayIntro: boolean;
+    procedure SetPlayIntro(const Value: boolean);
+    procedure SetPlayIntroDuration(const Value: integer);
+    procedure SetPlayNextRandom(const Value: boolean);
+    procedure SetPlayRepeatAll(const Value: boolean);
+    procedure SetPlayRepeatOne(const Value: boolean);
+    procedure SetVolume(const Value: integer);
     procedure SetConfigFilename(const Value: string);
     procedure SetPlaylists(const Value: TPlaylistsList);
-    class function GetCurrent: TConfig; static;
     procedure SetmvPlaylistsVisible(const Value: boolean);
+    class var FCurrent: TConfig;
+    class function GetCurrent: TConfig; static;
   protected
     property ConfigFilename: string read FConfigFilename
       write SetConfigFilename;
@@ -41,6 +53,14 @@ type
     property Playlists: TPlaylistsList read FPlaylists write SetPlaylists;
     property mvPlaylistsVisible: boolean read FmvPlaylistsVisible
       write SetmvPlaylistsVisible;
+    property Volume: integer read FVolume write SetVolume;
+    property PlayIntro: boolean read FPlayIntro write SetPlayIntro;
+    property PlayIntroDuration: integer read FPlayIntroDuration
+      write SetPlayIntroDuration;
+    property PlayNextRandom: boolean read FPlayNextRandom
+      write SetPlayNextRandom;
+    property PlayRepeatAll: boolean read FPlayRepeatAll write SetPlayRepeatAll;
+    property PlayRepeatOne: boolean read FPlayRepeatOne write SetPlayRepeatOne;
     property hasConfigChanged: boolean read FConfigChanged write FConfigChanged;
     procedure LoadFromStream(AStream: TStream);
     procedure SaveToStream(AStream: TStream);
@@ -95,6 +115,16 @@ begin
   Playlists := TPlaylistsList.Create;
   FConfigChanged := false;
   FmvPlaylistsVisible := false;
+  FVolume := 100;
+  FPlayIntro := false;
+{$IFDEF RELEASE}
+  FPlayIntroDuration := 30;
+{$ELSE}
+  FPlayIntroDuration := 5;
+{$ENDIF}
+  FPlayNextRandom := false;
+  FPlayRepeatAll := false;
+  FPlayRepeatOne := false;
 end;
 
 destructor TConfig.Destroy;
@@ -151,7 +181,7 @@ begin
   if (DataVersion >= 1) then
   begin
     Playlists.Clear;
-    // TODO : DANGER is the load is done on a filled playlist with played songs
+    // TODO : DANGER if the load is done on a filled playlist with played songs
     AStream.Read(nb, sizeof(nb));
     for i := 1 to nb do
     begin
@@ -164,6 +194,16 @@ begin
 
   if (DataVersion >= 2) then
     AStream.Read(FmvPlaylistsVisible, sizeof(FmvPlaylistsVisible));
+
+  if (DataVersion >= 3) then
+  begin
+    AStream.Read(FVolume, sizeof(FVolume));
+    AStream.Read(FPlayIntro, sizeof(FPlayIntro));
+    AStream.Read(FPlayIntroDuration, sizeof(FPlayIntroDuration));
+    AStream.Read(FPlayNextRandom, sizeof(FPlayNextRandom));
+    AStream.Read(FPlayRepeatAll, sizeof(FPlayRepeatAll));
+    AStream.Read(FPlayRepeatOne, sizeof(FPlayRepeatOne));
+  end;
 end;
 
 procedure TConfig.SaveTofile(AFilename: string);
@@ -195,6 +235,7 @@ begin
   if not assigned(AStream) then
     raise exception.Create('Where do you expect I save the config to ?');
 
+  // version 1 and later
   DataVersion := CDataVersion;
   AStream.Write(DataVersion, sizeof(DataVersion));
 
@@ -204,7 +245,16 @@ begin
     for Playlist in Playlists do
       Playlist.SaveToStream(AStream);
 
+  // version 2 and later
   AStream.Write(FmvPlaylistsVisible, sizeof(FmvPlaylistsVisible));
+
+  // version 3 and later
+  AStream.Write(FVolume, sizeof(FVolume));
+  AStream.Write(FPlayIntro, sizeof(FPlayIntro));
+  AStream.Write(FPlayIntroDuration, sizeof(FPlayIntroDuration));
+  AStream.Write(FPlayNextRandom, sizeof(FPlayNextRandom));
+  AStream.Write(FPlayRepeatAll, sizeof(FPlayRepeatAll));
+  AStream.Write(FPlayRepeatOne, sizeof(FPlayRepeatOne));
 
   FConfigChanged := false;
 end;
@@ -220,9 +270,45 @@ begin
   FConfigChanged := true;
 end;
 
+procedure TConfig.SetPlayIntro(const Value: boolean);
+begin
+  FPlayIntro := Value;
+  FConfigChanged := true;
+end;
+
+procedure TConfig.SetPlayIntroDuration(const Value: integer);
+begin
+  FPlayIntroDuration := Value;
+  FConfigChanged := true;
+end;
+
 procedure TConfig.SetPlaylists(const Value: TPlaylistsList);
 begin
   FPlaylists := Value;
+end;
+
+procedure TConfig.SetPlayNextRandom(const Value: boolean);
+begin
+  FPlayNextRandom := Value;
+  FConfigChanged := true;
+end;
+
+procedure TConfig.SetPlayRepeatAll(const Value: boolean);
+begin
+  FPlayRepeatAll := Value;
+  FConfigChanged := true;
+end;
+
+procedure TConfig.SetPlayRepeatOne(const Value: boolean);
+begin
+  FPlayRepeatOne := Value;
+  FConfigChanged := true;
+end;
+
+procedure TConfig.SetVolume(const Value: integer);
+begin
+  FVolume := Value;
+  FConfigChanged := true;
 end;
 
 { TPlaylistsList }
