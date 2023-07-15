@@ -30,6 +30,9 @@ uses
   FMX.MultiView,
   FMX.Layouts;
 
+const
+  CIntroDuration = 5;
+
 type
   TfrmMain = class(TForm)
     MainMenu1: TMainMenu;
@@ -70,6 +73,11 @@ type
     tbVolume: TTrackBar;
     lVolume: TLayout;
     lblVolume: TLabel;
+    GridPanelLayout1: TGridPanelLayout;
+    cbPlayIntro: TCheckBox;
+    cbRepeatAll: TCheckBox;
+    cbPlayNextRandom: TCheckBox;
+    cbRepeatCurrentSong: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure actAboutExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
@@ -93,6 +101,7 @@ type
     procedure btnNextClick(Sender: TObject);
     procedure ListView1Change(Sender: TObject);
     procedure tbVolumeTracking(Sender: TObject);
+    procedure cbRepeatAllChange(Sender: TObject);
   private
     FPlayedSong: TSong;
     FDefaultCaption: string;
@@ -113,7 +122,7 @@ type
     procedure SubscribeToPlaylistUpdatedMessage;
     procedure UpdatePlayPauseButton;
     function GetNextSong: TSong;
-    Procedure PlayNextSong;
+    Procedure PlayNextSong(ARandom: boolean = false);
     function GetPreviousSong: TSong;
     procedure PlayPreviousSong;
   public
@@ -141,14 +150,6 @@ uses
   u_urlOpen,
   uConfig,
   fPlaylist;
-
-function ReverseString(From: string): string;
-// TODO : for dev tests only, remove it
-begin
-  result := '';
-  for var i := length(From) - 1 downto 0 do
-    result := result + From.Chars[i];
-end;
 
 procedure TfrmMain.AboutDialogURLClick(const AURL: string);
 begin
@@ -202,6 +203,11 @@ procedure TfrmMain.btnStopClick(Sender: TObject);
 begin
   if assigned(PlayedSong) then
     PlayedSong := nil;
+end;
+
+procedure TfrmMain.cbRepeatAllChange(Sender: TObject);
+begin
+  UpdatePlayPauseButton;
 end;
 
 procedure TfrmMain.cbSortListChange(Sender: TObject);
@@ -263,7 +269,7 @@ var
   mnuConnectors, mnu: TMenuItem;
   ConnectorsList: TConnectorsList;
   Connector: IConnector;
-  cb: tcheckbox;
+  cb: TCheckBox;
 begin
   TConfig.Current.LoadFromFile;
 
@@ -317,7 +323,7 @@ begin
     mnu.OnClick := PlaylistMenuClick;
     mnu.TagObject := TConfig.Current.Playlists[i];
 
-    cb := tcheckbox.Create(Self);
+    cb := TCheckBox.Create(Self);
     cb.Parent := mvPlaylistsArea;
     cb.Align := talignlayout.Top;
     cb.Text := TConfig.Current.Playlists[i].Text;
@@ -407,8 +413,9 @@ begin
     end;
   if (SongIndex >= 0) and (SongIndex + 1 < CurrentSongsList.Count) then
     result := CurrentSongsList.GetSongAt(SongIndex + 1)
+  else if cbRepeatAll.IsChecked then
+    result := CurrentSongsList.GetSongAt(0)
   else
-    // TODO : if REPEAT ALL is selected, choose first song of the list
     result := nil;
 end;
 
@@ -425,8 +432,9 @@ begin
     end;
   if (SongIndex > 0) and (SongIndex < CurrentSongsList.Count) then
     result := CurrentSongsList.GetSongAt(SongIndex - 1)
+  else if cbRepeatAll.IsChecked then
+    result := CurrentSongsList.GetSongAt(CurrentSongsList.Count - 1)
   else
-    // TODO : if REPEAT ALL is selected, choose last song of the list
     result := nil;
 end;
 
@@ -465,11 +473,11 @@ end;
 
 procedure TfrmMain.PlaylistEnableChange(Sender: TObject);
 var
-  cb: tcheckbox;
+  cb: TCheckBox;
   Playlist: TPlaylist;
 begin
-  if (Sender is tcheckbox) then
-    cb := Sender as tcheckbox
+  if (Sender is TCheckBox) then
+    cb := Sender as TCheckBox
   else
     exit;
 
@@ -481,7 +489,7 @@ begin
   Playlist.enabled := cb.IsChecked;
   TMessageManager.DefaultManager.SendMessage(Self,
     TPlaylistUpdatedMessage.Create(Playlist));
-  // TODO : refresh global playlist content avec on screen listview
+  // TODO : refresh global playlist content on screen listview
 end;
 
 procedure TfrmMain.PlaylistMenuClick(Sender: TObject);
@@ -493,12 +501,15 @@ begin
     raise exception.Create('No playlist to setup !');
 end;
 
-procedure TfrmMain.PlayNextSong;
+procedure TfrmMain.PlayNextSong(ARandom: boolean);
 var
   Song: TSong;
   i: integer;
 begin
-  Song := GetNextSong;
+  if ARandom then
+    Song := CurrentSongsList.GetSongAt(random(CurrentSongsList.Count))
+  else
+    Song := GetNextSong;
   if assigned(Song) then
   begin
     for i := 0 to ListView1.items.Count - 1 do
@@ -683,7 +694,7 @@ begin
     var
       msg: TNewPlaylistMessage;
       mnu: TMenuItem;
-      cb: tcheckbox;
+      cb: TCheckBox;
       Playlist: TPlaylist;
     begin
       if (M is TNewPlaylistMessage) then
@@ -699,7 +710,7 @@ begin
           mnu.OnClick := PlaylistMenuClick;
           mnu.TagObject := Playlist;
 
-          cb := tcheckbox.Create(Self);
+          cb := TCheckBox.Create(Self);
           cb.Parent := mvPlaylistsArea;
           cb.Align := talignlayout.Top;
           cb.Text := Playlist.Text;
@@ -788,7 +799,7 @@ begin
     var
       msg: TPlaylistUpdatedMessage;
       mnu: TMenuItem;
-      cb: tcheckbox;
+      cb: TCheckBox;
       i: integer;
       Playlist: TPlaylist;
     begin
@@ -814,9 +825,9 @@ begin
 
           if (mvPlaylistsArea.Content.ChildrenCount > 0) then
             for i := 0 to mvPlaylistsArea.Content.ChildrenCount - 1 do
-              if (mvPlaylistsArea.Content.Children[i] is tcheckbox) then
+              if (mvPlaylistsArea.Content.Children[i] is TCheckBox) then
               begin
-                cb := mvPlaylistsArea.Content.Children[i] as tcheckbox;
+                cb := mvPlaylistsArea.Content.Children[i] as TCheckBox;
                 if assigned(cb.TagObject) and (cb.TagObject is TPlaylist) and
                   (Playlist = (cb.TagObject as TPlaylist)) then
                 begin
@@ -857,15 +868,26 @@ begin
 end;
 
 procedure TfrmMain.timerIsSongFinishedTimer(Sender: TObject);
+var
+  Song: TSong;
 begin
   if not assigned(PlayedSong) then
     exit;
 
   if not MusicLoop.isPlaying then // Music has finished
   begin
-    // TODO : if REPEAT 1 is selected, replay the song
-    PlayNextSong;
-  end;
+    if (cbRepeatCurrentSong.IsChecked) then
+    begin
+      Song := PlayedSong;
+      PlayedSong := nil;
+      PlayedSong := Song;
+    end
+    else
+      PlayNextSong(cbPlayNextRandom.IsChecked);
+  end
+  else if cbPlayIntro.IsChecked and
+    (MusicLoop.CurrentTimeInSecond > CIntroDuration) then
+    MusicLoop.Stop;
 end;
 
 procedure TfrmMain.UpdatePlayPauseButton;
@@ -889,5 +911,6 @@ initialization
 // ReportMemoryLeaksOnShutdown := true;
 {$ENDIF}
   TDialogService.PreferredMode := TDialogService.TPreferredMode.Sync;
+randomize;
 
 end.
