@@ -47,8 +47,6 @@ type
     actAbout: TAction;
     actExit: TAction;
     actOptions: TAction;
-    btnAbout: TSpeedButton;
-    btnOptions: TSpeedButton;
     ListView1: TListView;
     lblSongPlayed: TLabel;
     cbSortList: TComboBox;
@@ -59,9 +57,16 @@ type
     mnuPlaylist: TMenuItem;
     mnuPlaylistCreate: TMenuItem;
     mnuPlaylistSeparator: TMenuItem;
-    btnPlaylists: TSpeedButton;
     mvPlaylists: TMultiView;
     mvPlaylistsArea: TVertScrollBox;
+    lPlayPauseButtons: TLayout;
+    btnNext: TButton;
+    btnStop: TButton;
+    btnPause: TButton;
+    btnPlay: TButton;
+    btnPrevious: TButton;
+    FlowLayout1: TFlowLayout;
+    btnPlaylists: TButton;
     procedure FormCreate(Sender: TObject);
     procedure actAboutExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
@@ -77,6 +82,7 @@ type
     procedure AboutDialogURLClick(const AURL: string);
     procedure mnuPlaylistCreateClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     FPlayedSong: TSong;
     FDefaultCaption: string;
@@ -199,7 +205,7 @@ begin
 end;
 
 procedure TfrmMain.edtSearchKeyDown(Sender: TObject; var Key: Word;
-var KeyChar: Char; Shift: TShiftState);
+  var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkreturn then
     SearchEditButton1Click(Self)
@@ -304,11 +310,41 @@ begin
 
   edtSearch.Text := '';
   edtSearch.Tagstring := '';
+
+  tthread.ForceQueue(nil,procedure begin width:=width div 2; end);
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
   CurrentSongsListNotFiltered.Free;
+end;
+
+procedure TfrmMain.FormResize(Sender: TObject);
+var
+  C: tcontrol;
+  YMax: single;
+  YBottom: single;
+  i: integer;
+  HeightFlowlayout: single;
+  HeightToolbar: single;
+begin
+  YMax := 0;
+  for i := 0 to FlowLayout1.ChildrenCount - 1 do
+    if (FlowLayout1.Children[i] is tcontrol) then
+    begin
+      C := FlowLayout1.Children[i] as tcontrol;
+      YBottom := C.position.y + C.Height + C.Margins.Bottom;
+      if YMax < YBottom then
+        YMax := YBottom;
+    end;
+  HeightFlowlayout := FlowLayout1.Padding.Top + YMax +
+    FlowLayout1.Padding.Bottom;
+  if (FlowLayout1.Height <> HeightFlowlayout) then
+    FlowLayout1.Height := HeightFlowlayout; // value updated after next process message
+  HeightToolbar := ToolBar1.Padding.Top + FlowLayout1.Margins.Top +
+    HeightFlowlayout + FlowLayout1.Margins.Bottom + ToolBar1.Padding.Bottom;
+  if (ToolBar1.Height <> HeightToolbar) then
+    ToolBar1.Height := HeightToolbar;
 end;
 
 procedure TfrmMain.ListView1ButtonClick(const Sender: TObject;
@@ -395,7 +431,8 @@ begin
       item := ListView1.items.Add;
       try
         item.Text := song.Title;
-        item.Detail := song.Artist + ' / ' + song.Album; // song.FileName;
+        item.Detail := song.Artist + ' / ' + song.Album;
+        // song.FileName;
         item.TagObject := song;
         if (song = PlayedSong) then
         begin
@@ -724,7 +761,7 @@ end;
 initialization
 
 {$IFDEF DEBUG}
-  ReportMemoryLeaksOnShutdown := true;
+//  ReportMemoryLeaksOnShutdown := true;
 {$ENDIF}
 TDialogService.PreferredMode := TDialogService.TPreferredMode.Sync;
 
