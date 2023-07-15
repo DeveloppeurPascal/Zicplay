@@ -83,6 +83,12 @@ type
     procedure mnuPlaylistCreateClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure btnPreviousClick(Sender: TObject);
+    procedure btnPlayClick(Sender: TObject);
+    procedure btnPauseClick(Sender: TObject);
+    procedure btnStopClick(Sender: TObject);
+    procedure btnNextClick(Sender: TObject);
+    procedure ListView1Change(Sender: TObject);
   private
     FPlayedSong: TSong;
     FDefaultCaption: string;
@@ -96,11 +102,16 @@ type
     procedure ConnectorMenuClick(Sender: TObject);
     procedure PlaylistMenuClick(Sender: TObject);
     procedure PlaylistEnableChange(Sender: TObject);
-    function SubscribeToNowPlayingMessage(AItem: TListviewItem)
+    function SubscribeToNowPlayingMessage(AItem: TListViewItem)
       : integer; overload;
     procedure SubscribeToNowPlayingMessage; overload;
     procedure SubscribeToNewPlaylistMessage;
     procedure SubscribeToPlaylistUpdatedMessage;
+    procedure UpdatePlayPauseButton;
+    function GetNextSong: TSong;
+    Procedure PlayNextSong;
+    function GetPreviousSong: TSong;
+    procedure PlayPreviousSong;
   public
     { Déclarations publiques }
     property PlayedSong: TSong read FPlayedSong write SetPlayedSong;
@@ -158,6 +169,35 @@ begin
   showmessage('No option dialog in this release.');
   // TODO : à compléter
 {$MESSAGE warn 'todo'}
+end;
+
+procedure TfrmMain.btnNextClick(Sender: TObject);
+begin
+  PlayNextSong;
+end;
+
+procedure TfrmMain.btnPauseClick(Sender: TObject);
+begin
+  if assigned(PlayedSong) then
+    MusicLoop.Pause;
+end;
+
+procedure TfrmMain.btnPlayClick(Sender: TObject);
+begin
+  if assigned(ListView1.Selected) and
+    (ListView1.Selected.TagObject <> PlayedSong) then
+    ListView1ButtonClick(ListView1, ListView1.Selected, nil);
+end;
+
+procedure TfrmMain.btnPreviousClick(Sender: TObject);
+begin
+  PlayPreviousSong;
+end;
+
+procedure TfrmMain.btnStopClick(Sender: TObject);
+begin
+  if assigned(PlayedSong) then
+    PlayedSong := nil;
 end;
 
 procedure TfrmMain.cbSortListChange(Sender: TObject);
@@ -311,7 +351,7 @@ begin
   edtSearch.Text := '';
   edtSearch.Tagstring := '';
 
-  tthread.ForceQueue(nil,procedure begin width:=width div 2; end);
+  UpdatePlayPauseButton;
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -340,11 +380,48 @@ begin
   HeightFlowlayout := FlowLayout1.Padding.Top + YMax +
     FlowLayout1.Padding.Bottom;
   if (FlowLayout1.Height <> HeightFlowlayout) then
-    FlowLayout1.Height := HeightFlowlayout; // value updated after next process message
+    FlowLayout1.Height := HeightFlowlayout;
+  // value updated after next process message
   HeightToolbar := ToolBar1.Padding.Top + FlowLayout1.Margins.Top +
     HeightFlowlayout + FlowLayout1.Margins.Bottom + ToolBar1.Padding.Bottom;
   if (ToolBar1.Height <> HeightToolbar) then
     ToolBar1.Height := HeightToolbar;
+end;
+
+function TfrmMain.GetNextSong: TSong;
+var
+  i, SongIndex: integer;
+begin
+  SongIndex := -1;
+  for i := 0 to CurrentSongsList.Count - 1 do
+    if CurrentSongsList.GetSongAt(i) = PlayedSong then
+    begin
+      SongIndex := i;
+      break;
+    end;
+  if (SongIndex >= 0) and (SongIndex + 1 < CurrentSongsList.Count) then
+    result := CurrentSongsList.GetSongAt(SongIndex + 1)
+  else
+    // TODO : if REPEAT ALL is selected, choose first song of the list
+    result := nil;
+end;
+
+function TfrmMain.GetPreviousSong: TSong;
+var
+  i, SongIndex: integer;
+begin
+  SongIndex := -1;
+  for i := 0 to CurrentSongsList.Count - 1 do
+    if CurrentSongsList.GetSongAt(i) = PlayedSong then
+    begin
+      SongIndex := i;
+      break;
+    end;
+  if (SongIndex > 0) and (SongIndex < CurrentSongsList.Count) then
+    result := CurrentSongsList.GetSongAt(SongIndex - 1)
+  else
+    // TODO : if REPEAT ALL is selected, choose last song of the list
+    result := nil;
 end;
 
 procedure TfrmMain.ListView1ButtonClick(const Sender: TObject;
@@ -355,9 +432,9 @@ begin
   if assigned(AItem) and assigned(AItem.TagObject) and (AItem.TagObject is TSong)
   then
   begin
-    isPlaying := (AItem as TListviewItem).Tag <> 0;
-    (AItem as TListviewItem).Tag := SubscribeToNowPlayingMessage
-      (AItem as TListviewItem);
+    isPlaying := (AItem as TListViewItem).Tag <> 0;
+    (AItem as TListViewItem).Tag := SubscribeToNowPlayingMessage
+      (AItem as TListViewItem);
     if (not isPlaying) then
       PlayedSong := AItem.TagObject as TSong
     else
@@ -365,7 +442,14 @@ begin
 
     if ListView1.Selected <> AItem then
       ListView1.Selected := AItem;
+
+    UpdatePlayPauseButton;
   end;
+end;
+
+procedure TfrmMain.ListView1Change(Sender: TObject);
+begin
+  UpdatePlayPauseButton;
 end;
 
 procedure TfrmMain.mnuPlaylistCreateClick(Sender: TObject);
@@ -403,11 +487,49 @@ begin
     raise exception.Create('No playlist to setup !');
 end;
 
+procedure TfrmMain.PlayNextSong;
+var
+  Song: TSong;
+  i: integer;
+begin
+  Song := GetNextSong;
+  if assigned(Song) then
+  begin
+    for i := 0 to ListView1.items.Count - 1 do
+      if ListView1.items[i].TagObject = Song then
+      begin
+        ListView1ButtonClick(ListView1, ListView1.items[i], nil);
+        break;
+      end;
+  end
+  else
+    PlayedSong := nil;
+end;
+
+procedure TfrmMain.PlayPreviousSong;
+var
+  Song: TSong;
+  i: integer;
+begin
+  Song := GetPreviousSong;
+  if assigned(Song) then
+  begin
+    for i := 0 to ListView1.items.Count - 1 do
+      if ListView1.items[i].TagObject = Song then
+      begin
+        ListView1ButtonClick(ListView1, ListView1.items[i], nil);
+        break;
+      end;
+  end
+  else
+    PlayedSong := nil;
+end;
+
 procedure TfrmMain.RefreshListView;
 var
-  item: TListviewItem;
+  item: TListViewItem;
   i: integer;
-  song: TSong;
+  Song: TSong;
 begin
   ListView1.BeginUpdate;
   try
@@ -427,14 +549,14 @@ begin
     // Generate the new list on screen
     for i := 0 to CurrentSongsList.Count - 1 do
     begin
-      song := CurrentSongsList.GetSongAt(i);
+      Song := CurrentSongsList.GetSongAt(i);
       item := ListView1.items.Add;
       try
-        item.Text := song.Title;
-        item.Detail := song.Artist + ' / ' + song.Album;
+        item.Text := Song.Title;
+        item.Detail := Song.Artist + ' / ' + Song.Album;
         // song.FileName;
-        item.TagObject := song;
-        if (song = PlayedSong) then
+        item.TagObject := Song;
+        if (Song = PlayedSong) then
         begin
           item.ButtonText := 'Pause';
           item.Tag := SubscribeToNowPlayingMessage(item);
@@ -458,13 +580,14 @@ begin
   finally
     ListView1.EndUpdate;
   end;
+  UpdatePlayPauseButton;
 end;
 
 procedure TfrmMain.SearchEditButton1Click(Sender: TObject);
 var
   Playlist: TPlaylist;
   i: integer;
-  song: TSong;
+  Song: TSong;
   FindText: string;
 begin
   if not assigned(CurrentSongsListNotFiltered) then
@@ -490,12 +613,12 @@ begin
       for i := 0 to CurrentSongsListNotFiltered.Count - 1 do
       begin
         // TODO : change filtering method (case sensitive, keyword or full text, choose on what property, ...)
-        song := CurrentSongsListNotFiltered.GetSongAt(i);
-        if song.TitleLowerCase.Contains(FindText) or
-          song.ArtistLowerCase.Contains(FindText) or
-          song.AlbumLowerCase.Contains(FindText) or
-          song.CategoryLowerCase.Contains(FindText) then
-          Playlist.Add(song);
+        Song := CurrentSongsListNotFiltered.GetSongAt(i);
+        if Song.TitleLowerCase.Contains(FindText) or
+          Song.ArtistLowerCase.Contains(FindText) or
+          Song.AlbumLowerCase.Contains(FindText) or
+          Song.CategoryLowerCase.Contains(FindText) then
+          Playlist.Add(Song);
       end;
 
       CurrentSongsList := nil;
@@ -617,11 +740,12 @@ begin
           lblSongPlayed.Text := '';
           caption := FDefaultCaption;
         end;
+        UpdatePlayPauseButton;
       end;
     end);
 end;
 
-function TfrmMain.SubscribeToNowPlayingMessage(AItem: TListviewItem): integer;
+function TfrmMain.SubscribeToNowPlayingMessage(AItem: TListViewItem): integer;
 begin
   result := TMessageManager.DefaultManager.SubscribeToMessage
     (TNowPlayingMessage,
@@ -722,9 +846,6 @@ begin
 end;
 
 procedure TfrmMain.timerIsSongFinishedTimer(Sender: TObject);
-var
-  i: integer;
-  SongIndex: integer;
 begin
   if not assigned(PlayedSong) then
     exit;
@@ -732,37 +853,30 @@ begin
   if not MusicLoop.isPlaying then // Music has finished
   begin
     // TODO : if REPEAT 1 is selected, replay the song
-    SongIndex := -1;
-    for i := 0 to CurrentSongsList.Count - 1 do
-      if CurrentSongsList.GetSongAt(i) = PlayedSong then
-      begin
-        SongIndex := i;
-        break;
-      end;
-    if (SongIndex >= 0) and (SongIndex + 1 < CurrentSongsList.Count) then
-    begin
-      // PlayedSong := CurrentSongsList[SongIndex + 1]
-      for i := 0 to ListView1.items.Count - 1 do
-        if ListView1.items[i].TagObject = CurrentSongsList.GetSongAt
-          (SongIndex + 1) then
-        begin
-          ListView1ButtonClick(Self, ListView1.items[i], nil);
-          break;
-        end;
-    end
-    else
-    begin
-      // TODO : if REPEAT ALL is selected, play first song of the list
-      PlayedSong := nil;
-    end;
+    PlayNextSong;
   end;
+end;
+
+procedure TfrmMain.UpdatePlayPauseButton;
+var
+  Song: TSong;
+begin
+  Song := GetPreviousSong;
+  btnPrevious.enabled := assigned(Song);
+  btnPlay.enabled := assigned(ListView1.Selected) and
+    (ListView1.Selected.TagObject <> PlayedSong);
+  btnPause.enabled := assigned(PlayedSong);
+  btnPause.IsPressed := btnPause.enabled and MusicLoop.isPaused;
+  btnStop.enabled := assigned(PlayedSong);
+  Song := GetNextSong;
+  btnNext.enabled := assigned(Song);
 end;
 
 initialization
 
 {$IFDEF DEBUG}
-//  ReportMemoryLeaksOnShutdown := true;
+// ReportMemoryLeaksOnShutdown := true;
 {$ENDIF}
-TDialogService.PreferredMode := TDialogService.TPreferredMode.Sync;
+  TDialogService.PreferredMode := TDialogService.TPreferredMode.Sync;
 
 end.

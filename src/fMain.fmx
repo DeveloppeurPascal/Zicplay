@@ -135,6 +135,7 @@ object frmMain: TfrmMain
           Size.PlatformDefault = False
           TabOrder = 4
           Text = 'Next'
+          OnClick = btnNextClick
         end
         object btnStop: TButton
           Align = Left
@@ -149,8 +150,10 @@ object frmMain: TfrmMain
           Size.PlatformDefault = False
           TabOrder = 3
           Text = 'Stop'
+          OnClick = btnStopClick
         end
         object btnPause: TButton
+          StaysPressed = True
           Align = Left
           Margins.Left = 5.000000000000000000
           Margins.Top = 5.000000000000000000
@@ -163,6 +166,7 @@ object frmMain: TfrmMain
           Size.PlatformDefault = False
           TabOrder = 2
           Text = 'Pause'
+          OnClick = btnPauseClick
         end
         object btnPlay: TButton
           Align = Left
@@ -177,6 +181,7 @@ object frmMain: TfrmMain
           Size.PlatformDefault = False
           TabOrder = 1
           Text = 'Play'
+          OnClick = btnPlayClick
         end
         object btnPrevious: TButton
           Align = Left
@@ -191,6 +196,7 @@ object frmMain: TfrmMain
           Size.PlatformDefault = False
           TabOrder = 0
           Text = 'Previous'
+          OnClick = btnPreviousClick
         end
       end
     end
@@ -266,6 +272,7 @@ object frmMain: TfrmMain
     Size.Height = 400.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 7
+    OnChange = ListView1Change
     OnButtonClick = ListView1ButtonClick
   end
   object timerIsSongFinished: TTimer
