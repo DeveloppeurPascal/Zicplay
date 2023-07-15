@@ -285,6 +285,7 @@ object frmMain: TfrmMain
           Size.PlatformDefault = False
           TabOrder = 0
           Text = 'Intro'
+          OnChange = cbPlayIntroChange
         end
         object cbRepeatAll: TCheckBox
           Align = Client
@@ -306,6 +307,7 @@ object frmMain: TfrmMain
           Size.PlatformDefault = False
           TabOrder = 2
           Text = 'Random'
+          OnChange = cbPlayNextRandomChange
         end
         object cbRepeatCurrentSong: TCheckBox
           Align = Client
@@ -316,6 +318,7 @@ object frmMain: TfrmMain
           Size.PlatformDefault = False
           TabOrder = 3
           Text = 'Repeat one'
+          OnChange = cbRepeatCurrentSongChange
         end
       end
     end

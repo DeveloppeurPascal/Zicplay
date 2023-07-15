@@ -30,9 +30,6 @@ uses
   FMX.MultiView,
   FMX.Layouts;
 
-const
-  CIntroDuration = 5;
-
 type
   TfrmMain = class(TForm)
     MainMenu1: TMainMenu;
@@ -102,6 +99,9 @@ type
     procedure ListView1Change(Sender: TObject);
     procedure tbVolumeTracking(Sender: TObject);
     procedure cbRepeatAllChange(Sender: TObject);
+    procedure cbPlayIntroChange(Sender: TObject);
+    procedure cbPlayNextRandomChange(Sender: TObject);
+    procedure cbRepeatCurrentSongChange(Sender: TObject);
   private
     FPlayedSong: TSong;
     FDefaultCaption: string;
@@ -205,9 +205,25 @@ begin
     PlayedSong := nil;
 end;
 
+procedure TfrmMain.cbPlayIntroChange(Sender: TObject);
+begin
+  TConfig.Current.PlayIntro := cbPlayIntro.IsChecked;
+end;
+
+procedure TfrmMain.cbPlayNextRandomChange(Sender: TObject);
+begin
+  TConfig.Current.PlayNextRandom := cbPlayNextRandom.IsChecked;
+end;
+
 procedure TfrmMain.cbRepeatAllChange(Sender: TObject);
 begin
+  TConfig.Current.PlayRepeatAll := cbRepeatAll.IsChecked;
   UpdatePlayPauseButton;
+end;
+
+procedure TfrmMain.cbRepeatCurrentSongChange(Sender: TObject);
+begin
+  TConfig.Current.PlayRepeatOne := cbRepeatCurrentSong.IsChecked;
 end;
 
 procedure TfrmMain.cbSortListChange(Sender: TObject);
@@ -363,7 +379,13 @@ begin
 
   UpdatePlayPauseButton;
 
-  tbVolume.Value := MusicLoop.Volume;
+  tbVolume.Value := TConfig.Current.Volume;
+  MusicLoop.Volume := TConfig.Current.Volume;
+  // TODO : changing the musicloop volume does nothing until the first song is played
+  cbRepeatAll.IsChecked := TConfig.Current.PlayRepeatAll;
+  cbRepeatCurrentSong.IsChecked := TConfig.Current.PlayRepeatOne;
+  cbPlayIntro.IsChecked := TConfig.Current.PlayIntro;
+  cbPlayNextRandom.IsChecked := TConfig.Current.PlayNextRandom;
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -681,6 +703,7 @@ begin
     begin
       FPlayedSong := Value;
       MusicLoop.Play(FPlayedSong.FileName, false);
+      MusicLoop.Volume := TConfig.Current.Volume;
     end;
     TMessageManager.DefaultManager.SendMessage(Self,
       TNowPlayingMessage.Create(FPlayedSong));
@@ -863,8 +886,12 @@ begin
 end;
 
 procedure TfrmMain.tbVolumeTracking(Sender: TObject);
+var
+  Volume: integer;
 begin
-  MusicLoop.Volume := trunc(tbVolume.Value);
+  Volume := trunc(tbVolume.Value);
+  MusicLoop.Volume := Volume;
+  TConfig.Current.Volume := Volume;
 end;
 
 procedure TfrmMain.timerIsSongFinishedTimer(Sender: TObject);
@@ -886,7 +913,7 @@ begin
       PlayNextSong(cbPlayNextRandom.IsChecked);
   end
   else if cbPlayIntro.IsChecked and
-    (MusicLoop.CurrentTimeInSecond > CIntroDuration) then
+    (MusicLoop.CurrentTimeInSeconds > TConfig.Current.PlayIntroDuration) then
     MusicLoop.Stop;
 end;
 
