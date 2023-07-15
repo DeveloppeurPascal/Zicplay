@@ -67,6 +67,9 @@ type
     btnPrevious: TButton;
     FlowLayout1: TFlowLayout;
     btnPlaylists: TButton;
+    tbVolume: TTrackBar;
+    lVolume: TLayout;
+    lblVolume: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure actAboutExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
@@ -89,6 +92,7 @@ type
     procedure btnStopClick(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
     procedure ListView1Change(Sender: TObject);
+    procedure tbVolumeTracking(Sender: TObject);
   private
     FPlayedSong: TSong;
     FDefaultCaption: string;
@@ -352,6 +356,8 @@ begin
   edtSearch.Tagstring := '';
 
   UpdatePlayPauseButton;
+
+  tbVolume.Value := MusicLoop.Volume;
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -843,6 +849,11 @@ begin
         end;
       end;
     end);
+end;
+
+procedure TfrmMain.tbVolumeTracking(Sender: TObject);
+begin
+  MusicLoop.Volume := trunc(tbVolume.Value);
 end;
 
 procedure TfrmMain.timerIsSongFinishedTimer(Sender: TObject);
