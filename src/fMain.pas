@@ -127,6 +127,8 @@ type
     Procedure PlayNextSong(ARandom: boolean = false);
     function GetPreviousSong: TSong;
     procedure PlayPreviousSong;
+    procedure FilterSongsList;
+    procedure SortSongsList;
   public
     { Déclarations publiques }
     property PlayedSong: TSong read FPlayedSong write SetPlayedSong;
@@ -230,33 +232,13 @@ end;
 
 procedure TfrmMain.cbSortListChange(Sender: TObject);
 begin
-  if not assigned(CurrentSongsList) then
-    exit;
-
-  case cbSortList.ItemIndex of
-    0: // sort by title
-      CurrentSongsList.SortByTitle;
-    1: // sort by artist
-      CurrentSongsList.SortByArtist;
-    2: // sort by album
-      CurrentSongsList.SortByAlbum;
-    3: // sort by category + album
-      CurrentSongsList.SortByCategoryAlbum;
-    4: // sort by caterogy + Title
-      CurrentSongsList.SortByCategoryTitle;
-    -1: // do nothing
-      ;
-  else
-    raise exception.Create('I don''t know how to sort this list !');
-  end;
-
-  RefreshListView; // TODO : replace by a message or event from the Playlist
+  RefreshListView;
 end;
 
 procedure TfrmMain.ClearEditButton1Click(Sender: TObject);
 begin
   edtSearch.Text := '';
-  SearchEditButton1Click(Self);
+  RefreshListView;
 end;
 
 procedure TfrmMain.ConnectorMenuClick(Sender: TObject);
@@ -279,6 +261,43 @@ begin
     SearchEditButton1Click(Self)
   else if Key = vkEscape then
     ClearEditButton1Click(Self);
+end;
+
+procedure TfrmMain.FilterSongsList;
+var
+  Playlist: TPlaylist;
+  i: integer;
+  Song: TSong;
+  FindText: string;
+begin
+  if not assigned(CurrentSongsListNotFiltered) then
+    exit;
+
+  FindText := edtSearch.Text.trim.ToLower;
+
+  if FindText.IsEmpty then
+    CurrentSongsList := CurrentSongsListNotFiltered
+  else
+  begin
+    Playlist := TPlaylist.Create;
+    try
+      for i := 0 to CurrentSongsListNotFiltered.Count - 1 do
+      begin
+        // TODO : change filtering method (case sensitive, keyword or full text, choose on what property, ...)
+        Song := CurrentSongsListNotFiltered.GetSongAt(i);
+        if Song.TitleLowerCase.Contains(FindText) or
+          Song.ArtistLowerCase.Contains(FindText) or
+          Song.AlbumLowerCase.Contains(FindText) or
+          Song.CategoryLowerCase.Contains(FindText) then
+          Playlist.Add(Song);
+      end;
+
+      CurrentSongsList := Playlist;
+    except
+      Playlist.Free;
+      raise;
+    end;
+  end;
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
@@ -380,7 +399,6 @@ begin
   SubscribeToNowPlayingMessage;
 
   edtSearch.Text := '';
-  edtSearch.Tagstring := '';
 
   UpdatePlayPauseButton;
 
@@ -431,6 +449,12 @@ function TfrmMain.GetNextSong: TSong;
 var
   i, SongIndex: integer;
 begin
+  if not assigned(CurrentSongsList) then
+  begin
+    result := nil;
+    exit;
+  end;
+
   SongIndex := -1;
   for i := 0 to CurrentSongsList.Count - 1 do
     if CurrentSongsList.GetSongAt(i) = PlayedSong then
@@ -450,6 +474,12 @@ function TfrmMain.GetPreviousSong: TSong;
 var
   i, SongIndex: integer;
 begin
+  if not assigned(CurrentSongsList) then
+  begin
+    result := nil;
+    exit;
+  end;
+
   SongIndex := -1;
   for i := 0 to CurrentSongsList.Count - 1 do
     if CurrentSongsList.GetSongAt(i) = PlayedSong then
@@ -526,7 +556,6 @@ begin
   Playlist.enabled := cb.IsChecked;
   TMessageManager.DefaultManager.SendMessage(Self,
     TPlaylistUpdatedMessage.Create(Playlist));
-  // TODO : refresh global playlist content on screen listview
 end;
 
 procedure TfrmMain.PlaylistMenuClick(Sender: TObject);
@@ -585,6 +614,8 @@ var
   i: integer;
   Song: TSong;
 begin
+  FilterSongsList;
+  SortSongsList;
   ListView1.BeginUpdate;
   try
     // remove messaging subscriptions before deleting items
@@ -638,61 +669,18 @@ begin
 end;
 
 procedure TfrmMain.SearchEditButton1Click(Sender: TObject);
-var
-  Playlist: TPlaylist;
-  i: integer;
-  Song: TSong;
-  FindText: string;
 begin
-  if not assigned(CurrentSongsListNotFiltered) then
-    exit;
-
-  FindText := edtSearch.Text.trim.ToLower;
-  if FindText.Equals(edtSearch.Tagstring) then
-    exit;
-  edtSearch.Tagstring := FindText;
-
-  if FindText.IsEmpty then
-  begin
-    if (CurrentSongsList <> CurrentSongsListNotFiltered) then
-    begin
-      CurrentSongsList := nil;
-      CurrentSongsList := CurrentSongsListNotFiltered;
-    end;
-  end
-  else
-  begin
-    Playlist := TPlaylist.Create;
-    try
-      for i := 0 to CurrentSongsListNotFiltered.Count - 1 do
-      begin
-        // TODO : change filtering method (case sensitive, keyword or full text, choose on what property, ...)
-        Song := CurrentSongsListNotFiltered.GetSongAt(i);
-        if Song.TitleLowerCase.Contains(FindText) or
-          Song.ArtistLowerCase.Contains(FindText) or
-          Song.AlbumLowerCase.Contains(FindText) or
-          Song.CategoryLowerCase.Contains(FindText) then
-          Playlist.Add(Song);
-      end;
-
-      CurrentSongsList := nil;
-      CurrentSongsList := Playlist;
-    except
-      Playlist.Free;
-      raise;
-    end;
-  end;
+  RefreshListView;
 end;
 
 procedure TfrmMain.SetCurrentSongsList(const Value: TPlaylist);
 begin
-  if (Value = nil) and (FCurrentSongsList <> FCurrentSongsListNotFiltered) then
-    FCurrentSongsList.Free;
-
   if (FCurrentSongsList <> Value) then
   begin
+    if (FCurrentSongsList <> FCurrentSongsListNotFiltered) then
+      FCurrentSongsList.Free;
+
     FCurrentSongsList := Value;
-    RefreshListView;
   end;
 end;
 
@@ -701,7 +689,7 @@ begin
   if (FCurrentSongsListNotFiltered <> Value) then
   begin
     FCurrentSongsListNotFiltered := Value;
-    CurrentSongsList := FCurrentSongsListNotFiltered;
+    RefreshListView;
   end;
 end;
 
@@ -722,6 +710,29 @@ begin
     end;
     TMessageManager.DefaultManager.SendMessage(Self,
       TNowPlayingMessage.Create(FPlayedSong));
+  end;
+end;
+
+procedure TfrmMain.SortSongsList;
+begin
+  if not assigned(CurrentSongsList) then
+    exit;
+
+  case cbSortList.ItemIndex of
+    0: // sort by title
+      CurrentSongsList.SortByTitle;
+    1: // sort by artist
+      CurrentSongsList.SortByArtist;
+    2: // sort by album
+      CurrentSongsList.SortByAlbum;
+    3: // sort by category + album
+      CurrentSongsList.SortByCategoryAlbum;
+    4: // sort by caterogy + Title
+      CurrentSongsList.SortByCategoryTitle;
+    -1: // do nothing
+      ;
+  else
+    raise exception.Create('I don''t know how to sort this list !');
   end;
 end;
 
