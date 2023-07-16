@@ -240,6 +240,7 @@ end;
 procedure TfrmMain.ClearEditButton1Click(Sender: TObject);
 begin
   edtSearch.Text := '';
+  TConfig.Current.FilterText := '';
   RefreshListView;
 end;
 
@@ -311,6 +312,16 @@ var
   cb: TCheckBox;
 begin
   TConfig.Current.LoadFromFile;
+
+  edtSearch.Text := TConfig.Current.FilterText;
+  cbSortList.ItemIndex := TConfig.Current.SortType;
+  tbVolume.Value := TConfig.Current.Volume;
+  MusicLoop.Volume := TConfig.Current.Volume;
+  // TODO : changing the musicloop volume does nothing until the first song is played
+  cbRepeatAll.IsChecked := TConfig.Current.PlayRepeatAll;
+  cbRepeatCurrentSong.IsChecked := TConfig.Current.PlayRepeatOne;
+  cbPlayIntro.IsChecked := TConfig.Current.PlayIntro;
+  cbPlayNextRandom.IsChecked := TConfig.Current.PlayNextRandom;
 
   CurrentSongsListNotFiltered := TPlaylist.Create;
 
@@ -399,18 +410,6 @@ begin
 
   lblSongPlayed.Text := '';
   SubscribeToNowPlayingMessage;
-
-  edtSearch.Text := '';
-
-  UpdatePlayPauseButton;
-
-  tbVolume.Value := TConfig.Current.Volume;
-  MusicLoop.Volume := TConfig.Current.Volume;
-  // TODO : changing the musicloop volume does nothing until the first song is played
-  cbRepeatAll.IsChecked := TConfig.Current.PlayRepeatAll;
-  cbRepeatCurrentSong.IsChecked := TConfig.Current.PlayRepeatOne;
-  cbPlayIntro.IsChecked := TConfig.Current.PlayIntro;
-  cbPlayNextRandom.IsChecked := TConfig.Current.PlayNextRandom;
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -672,6 +671,7 @@ end;
 
 procedure TfrmMain.SearchEditButton1Click(Sender: TObject);
 begin
+  TConfig.Current.FilterText := edtSearch.Text;
   RefreshListView;
 end;
 
@@ -736,6 +736,7 @@ begin
   else
     raise exception.Create('I don''t know how to sort this list !');
   end;
+  TConfig.Current.SortType := cbSortList.ItemIndex;
 end;
 
 procedure TfrmMain.SubscribeToNewPlaylistMessage;
