@@ -18,9 +18,10 @@ To download this project you better should use "git" command but you also can do
 
 This project depends on :
 
-* [AboutDialog-Delphi-Component](https://github.com/DeveloppeurPascal/AboutDialog-Delphi-Component) is needed in ./lib-externes/AboutDialog-Delphi-Component
-* [librairies](https://github.com/DeveloppeurPascal/librairies) is needed in ./lib-externes/librairies
-* [Delphi Game Engine](https://github.com/DeveloppeurPascal/Delphi-Game-Engine) is needed in ./lib-externes/Delphi-Game-Engine
+* [DeveloppeurPascal/AboutDialog-Delphi-Component](https://github.com/DeveloppeurPascal/AboutDialog-Delphi-Component) is needed in ./lib-externes/AboutDialog-Delphi-Component sub folder
+* [DeveloppeurPascal/Audio-Tools-Library](https://github.com/DeveloppeurPascal/Audio-Tools-Library) is needed in ./lib-externes/Audio-Tools-Library sub folder
+* [DeveloppeurPascal/librairies](https://github.com/DeveloppeurPascal/librairies) is needed in ./lib-externes/librairies sub folder
+* [DeveloppeurPascal/Delphi Game Engine](https://github.com/DeveloppeurPascal/Delphi-Game-Engine) is needed in ./lib-externes/Delphi-Game-Engine sub folder
 
 ## How to ask a new feature, report a bug or a security issue ?
 
