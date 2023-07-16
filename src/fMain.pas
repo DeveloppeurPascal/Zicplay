@@ -102,6 +102,8 @@ type
     procedure cbPlayIntroChange(Sender: TObject);
     procedure cbPlayNextRandomChange(Sender: TObject);
     procedure cbRepeatCurrentSongChange(Sender: TObject);
+    procedure mvPlaylistsShown(Sender: TObject);
+    procedure mvPlaylistsHidden(Sender: TObject);
   private
     FPlayedSong: TSong;
     FDefaultCaption: string;
@@ -327,7 +329,10 @@ begin
     end;
   end;
 
-  mvPlaylists.Visible := TConfig.Current.mvPlaylistsVisible;
+  if TConfig.Current.mvPlaylistsVisible then
+    mvPlaylists.ShowMaster
+  else
+    mvPlaylists.HideMaster;
 
   mnuPlaylistSeparator.Visible := (TConfig.Current.Playlists.Count > 0);
   for i := 0 to TConfig.Current.Playlists.Count - 1 do
@@ -491,6 +496,16 @@ end;
 procedure TfrmMain.mnuPlaylistCreateClick(Sender: TObject);
 begin
   TfrmPlaylist.Execute(nil);
+end;
+
+procedure TfrmMain.mvPlaylistsHidden(Sender: TObject);
+begin
+  TConfig.Current.mvPlaylistsVisible := false;
+end;
+
+procedure TfrmMain.mvPlaylistsShown(Sender: TObject);
+begin
+  TConfig.Current.mvPlaylistsVisible := true;
 end;
 
 procedure TfrmMain.PlaylistEnableChange(Sender: TObject);
