@@ -597,7 +597,7 @@ begin
         item.TagObject := Song;
         if (Song = PlayedSong) then
         begin
-          item.ButtonText := 'Pause';
+          item.ButtonText := 'Stop';
           item.Tag := SubscribeToNowPlayingMessage(item);
           // 0 = not playing,
           // other = playing (value is subcription id to rtl messaging)
@@ -797,7 +797,7 @@ begin
       begin
         msg := M as TNowPlayingMessage;
         if msg.Value = AItem.TagObject then
-          AItem.ButtonText := 'Pause'
+          AItem.ButtonText := 'Stop'
         else
         begin
           AItem.ButtonText := 'Play';
