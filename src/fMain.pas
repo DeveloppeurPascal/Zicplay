@@ -639,8 +639,27 @@ begin
       item := ListView1.Items.Add;
       try
         item.Text := Song.Title;
-        item.Detail := Song.Artist + ' / ' + Song.Album;
-        // song.FileName;
+        if not Song.Album.IsEmpty then
+          item.Text := item.Text + ' (' + Song.Album + ')';
+        item.Detail := '';
+        if not Song.Artist.IsEmpty then
+        begin
+          if not item.Detail.IsEmpty then
+            item.Detail := item.Detail + ' - ';
+          item.Detail := item.Detail + Song.Artist;
+        end;
+        if not Song.Category.IsEmpty then
+        begin
+          if not item.Detail.IsEmpty then
+            item.Detail := item.Detail + ' - ';
+          item.Detail := item.Detail + Song.Category;
+        end;
+        if not Song.PublishedYear > 0 then
+        begin
+          if not item.Detail.IsEmpty then
+            item.Detail := item.Detail + ' - ';
+          item.Detail := item.Detail + Song.PublishedYear.ToString;
+        end;
         item.TagObject := Song;
         if (Song = PlayedSong) then
         begin
