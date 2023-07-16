@@ -172,11 +172,14 @@ begin
                   tpath.GetFileNameWithoutExtension(Files[i]), 'unknown',
                   tpath.GetFileNameWithoutExtension(Files[i]),
                   FormatDateTime('yyyy-mm-dd', now), 'none', 0);
-//              if (Song.Duration = 0) then
-//              begin
-//                MediaPlayer.FileName := Files[i];
-//                Song.Duration := trunc(MediaPlayer.Duration / MediaTimeScale);
-//              end;
+              if (Song.Duration = 0) then
+                try
+                  // TODO : not work as it in Windows during program startup
+                  MediaPlayer.FileName := Files[i];
+                  Song.Duration := trunc(MediaPlayer.Duration / MediaTimeScale);
+                except
+                  Song.Duration := 0;
+                end;
               Song.Order := 0;
               Song.UniqID := Files[i];
               Song.FileName := Files[i];
