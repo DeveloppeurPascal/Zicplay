@@ -735,14 +735,14 @@ begin
       FStopTimer := 1 * 1000 div timerIsSongFinished.Interval;
       // stop the timer during 1 second before detecting if the music is played or not
       FPlayedSong := Value;
-      if (MusicPlayer.Filename <> FPlayedSong.Filename) then
-      begin
+//      if (MusicPlayer.Filename <> FPlayedSong.Filename) then
+//      begin
         MusicPlayer.Free;
         MusicPlayer := TMusicLoop.Create;
         MusicPlayer.Play(FPlayedSong.Filename, false);
-      end
-      else
-        MusicPlayer.Play;
+//      end
+//      else
+//        MusicPlayer.Play;
       // TODO : restart the music, don't continue where it has been stopped
       MusicPlayer.Volume := TConfig.Current.Volume;
     end;
