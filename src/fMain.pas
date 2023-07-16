@@ -193,7 +193,9 @@ end;
 
 procedure TfrmMain.btnPlayClick(Sender: TObject);
 begin
-  if assigned(ListView1.Selected) and
+  if not assigned(ListView1.Selected) and (ListView1.Items.Count > 0) then
+    ListView1ButtonClick(ListView1, ListView1.Items[0], nil)
+  else if assigned(ListView1.Selected) and
     (ListView1.Selected.TagObject <> PlayedSong) then
     ListView1ButtonClick(ListView1, ListView1.Selected, nil);
 end;
@@ -578,10 +580,10 @@ begin
     Song := GetNextSong;
   if assigned(Song) then
   begin
-    for i := 0 to ListView1.items.Count - 1 do
-      if ListView1.items[i].TagObject = Song then
+    for i := 0 to ListView1.Items.Count - 1 do
+      if ListView1.Items[i].TagObject = Song then
       begin
-        ListView1ButtonClick(ListView1, ListView1.items[i], nil);
+        ListView1ButtonClick(ListView1, ListView1.Items[i], nil);
         break;
       end;
   end
@@ -597,10 +599,10 @@ begin
   Song := GetPreviousSong;
   if assigned(Song) then
   begin
-    for i := 0 to ListView1.items.Count - 1 do
-      if ListView1.items[i].TagObject = Song then
+    for i := 0 to ListView1.Items.Count - 1 do
+      if ListView1.Items[i].TagObject = Song then
       begin
-        ListView1ButtonClick(ListView1, ListView1.items[i], nil);
+        ListView1ButtonClick(ListView1, ListView1.Items[i], nil);
         break;
       end;
   end
@@ -620,13 +622,13 @@ begin
   try
     // remove messaging subscriptions before deleting items
     for i := 0 to ListView1.ItemCount - 1 do
-      if assigned(ListView1.items[i].TagObject) and (ListView1.items[i].Tag <> 0)
+      if assigned(ListView1.Items[i].TagObject) and (ListView1.Items[i].Tag <> 0)
       then
         TMessageManager.DefaultManager.Unsubscribe(TNowPlayingMessage,
-          ListView1.items[i].Tag, true);
+          ListView1.Items[i].Tag, true);
 
     // delete all items of the displayed list
-    ListView1.items.Clear;
+    ListView1.Items.Clear;
 
     if not assigned(CurrentSongsList) then
       exit;
@@ -635,7 +637,7 @@ begin
     for i := 0 to CurrentSongsList.Count - 1 do
     begin
       Song := CurrentSongsList.GetSongAt(i);
-      item := ListView1.items.Add;
+      item := ListView1.Items.Add;
       try
         item.Text := Song.Title;
         item.Detail := Song.Artist + ' / ' + Song.Album;
@@ -861,9 +863,9 @@ begin
 
           if (mnuPlaylist.itemsCount > 0) then
             for i := 0 to mnuPlaylist.itemsCount - 1 do
-              if (mnuPlaylist.items[i] is TMenuItem) then
+              if (mnuPlaylist.Items[i] is TMenuItem) then
               begin
-                mnu := mnuPlaylist.items[i] as TMenuItem;
+                mnu := mnuPlaylist.Items[i] as TMenuItem;
                 if assigned(mnu.TagObject) and (mnu.TagObject is TPlaylist) and
                   (Playlist = (mnu.TagObject as TPlaylist)) then
                 begin
@@ -949,8 +951,10 @@ var
 begin
   Song := GetPreviousSong;
   btnPrevious.enabled := assigned(Song);
-  btnPlay.enabled := assigned(ListView1.Selected) and
-    (ListView1.Selected.TagObject <> PlayedSong);
+  btnPlay.enabled := ((not assigned(ListView1.Selected)) and
+    (ListView1.Items.Count > 0)) or
+    (assigned(ListView1.Selected) and (ListView1.Selected.TagObject <>
+    PlayedSong));
   btnPause.enabled := assigned(PlayedSong);
   btnPause.IsPressed := btnPause.enabled and MusicLoop.isPaused;
   btnStop.enabled := assigned(PlayedSong);
