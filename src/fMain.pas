@@ -291,7 +291,8 @@ begin
         if Song.TitleLowerCase.Contains(FindText) or
           Song.ArtistLowerCase.Contains(FindText) or
           Song.AlbumLowerCase.Contains(FindText) or
-          Song.CategoryLowerCase.Contains(FindText) then
+          Song.CategoryLowerCase.Contains(FindText) or
+          Song.PublishedYear.tostring.StartsWith(FindText) then
           Playlist.Add(Song);
       end;
 
@@ -658,7 +659,7 @@ begin
         begin
           if not item.Detail.IsEmpty then
             item.Detail := item.Detail + ' - ';
-          item.Detail := item.Detail + Song.PublishedYear.ToString;
+          item.Detail := item.Detail + Song.PublishedYear.tostring;
         end;
         item.TagObject := Song;
         if (Song = PlayedSong) then
