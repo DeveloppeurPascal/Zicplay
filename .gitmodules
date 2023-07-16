@@ -7,3 +7,6 @@
 [submodule "lib-externes/Delphi-Game-Engine"]
 	path = lib-externes/Delphi-Game-Engine
 	url = https://github.com/DeveloppeurPascal/Delphi-Game-Engine.git
+[submodule "lib-externes/Audio-Tools-Library"]
+	path = lib-externes/Audio-Tools-Library
+	url = https://github.com/DeveloppeurPascal/Audio-Tools-Library.git
