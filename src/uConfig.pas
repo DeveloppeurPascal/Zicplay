@@ -19,7 +19,7 @@ type
 
   TConfig = class
   private const
-    CDataVersion = 3;
+    CDataVersion = 4;
 
   var
     FmvPlaylistsVisible: boolean;
@@ -32,6 +32,10 @@ type
     FPlayNextRandom: boolean;
     FVolume: integer;
     FPlayIntro: boolean;
+    FSortType: integer;
+    FFilterText: string;
+    procedure SetFilterText(const Value: string);
+    procedure SetSortType(const Value: integer);
     procedure SetPlayIntro(const Value: boolean);
     procedure SetPlayIntroDuration(const Value: integer);
     procedure SetPlayNextRandom(const Value: boolean);
@@ -62,6 +66,8 @@ type
     property PlayRepeatAll: boolean read FPlayRepeatAll write SetPlayRepeatAll;
     property PlayRepeatOne: boolean read FPlayRepeatOne write SetPlayRepeatOne;
     property hasConfigChanged: boolean read FConfigChanged write FConfigChanged;
+    property FilterText: string read FFilterText write SetFilterText;
+    property SortType: integer read FSortType write SetSortType;
     procedure LoadFromStream(AStream: TStream);
     procedure SaveToStream(AStream: TStream);
     procedure LoadFromFile(AFilename: string = '');
@@ -76,7 +82,8 @@ uses
   system.Generics.Defaults,
   system.JSON,
   system.IOUtils,
-  system.SysUtils;
+  system.SysUtils,
+  Olf.RTL.Streams;
 
 class function TConfig.GetDefaultConfigFilePath(AConfigFileName
   : string): string;
@@ -125,6 +132,8 @@ begin
   FPlayNextRandom := false;
   FPlayRepeatAll := false;
   FPlayRepeatOne := false;
+  FFilterText := '';
+  FSortType := -1;
 end;
 
 destructor TConfig.Destroy;
@@ -204,6 +213,12 @@ begin
     AStream.Read(FPlayRepeatAll, sizeof(FPlayRepeatAll));
     AStream.Read(FPlayRepeatOne, sizeof(FPlayRepeatOne));
   end;
+
+  if (DataVersion >= 4) then
+  begin
+    FFilterText := LoadStringFromStream(AStream);
+    AStream.Read(FSortType, sizeof(FSortType));
+  end;
 end;
 
 procedure TConfig.SaveTofile(AFilename: string);
@@ -256,6 +271,10 @@ begin
   AStream.Write(FPlayRepeatAll, sizeof(FPlayRepeatAll));
   AStream.Write(FPlayRepeatOne, sizeof(FPlayRepeatOne));
 
+  // version 4 and later
+  SaveStringToStream(FFilterText, AStream);
+  AStream.Write(FSortType, sizeof(FSortType));
+
   FConfigChanged := false;
 end;
 
@@ -264,20 +283,38 @@ begin
   FConfigFilename := Value;
 end;
 
+procedure TConfig.SetFilterText(const Value: string);
+begin
+  if (FFilterText = Value) then
+    exit;
+
+  FFilterText := Value;
+  FConfigChanged := true;
+end;
+
 procedure TConfig.SetmvPlaylistsVisible(const Value: boolean);
 begin
+  if (FmvPlaylistsVisible = Value) then
+    exit;
+
   FmvPlaylistsVisible := Value;
   FConfigChanged := true;
 end;
 
 procedure TConfig.SetPlayIntro(const Value: boolean);
 begin
+  if (FPlayIntro = Value) then
+    exit;
+
   FPlayIntro := Value;
   FConfigChanged := true;
 end;
 
 procedure TConfig.SetPlayIntroDuration(const Value: integer);
 begin
+  if (FPlayIntroDuration = Value) then
+    exit;
+
   FPlayIntroDuration := Value;
   FConfigChanged := true;
 end;
@@ -289,24 +326,45 @@ end;
 
 procedure TConfig.SetPlayNextRandom(const Value: boolean);
 begin
+  if (FPlayNextRandom = Value) then
+    exit;
+
   FPlayNextRandom := Value;
   FConfigChanged := true;
 end;
 
 procedure TConfig.SetPlayRepeatAll(const Value: boolean);
 begin
+  if (FPlayRepeatAll = Value) then
+    exit;
+
   FPlayRepeatAll := Value;
   FConfigChanged := true;
 end;
 
 procedure TConfig.SetPlayRepeatOne(const Value: boolean);
 begin
+  if (FPlayRepeatOne = Value) then
+    exit;
+
   FPlayRepeatOne := Value;
+  FConfigChanged := true;
+end;
+
+procedure TConfig.SetSortType(const Value: integer);
+begin
+  if (FSortType = Value) then
+    exit;
+
+  FSortType := Value;
   FConfigChanged := true;
 end;
 
 procedure TConfig.SetVolume(const Value: integer);
 begin
+  if (FVolume = Value) then
+    exit;
+
   FVolume := Value;
   FConfigChanged := true;
 end;
