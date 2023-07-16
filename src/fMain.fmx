@@ -407,19 +407,21 @@ object frmMain: TfrmMain
     MasterButton = btnPlaylists
     Mode = Drawer
     NavigationPaneOptions.CollapsedWidth = 0.000000000000000000
+    OnShown = mvPlaylistsShown
+    OnHidden = mvPlaylistsHidden
     Size.Width = 250.000000000000000000
-    Size.Height = 400.000000000000000000
+    Size.Height = 382.000000000000000000
     Size.PlatformDefault = False
     Visible = False
     TabOrder = 12
     object mvPlaylistsArea: TVertScrollBox
       Align = Client
       Size.Width = 250.000000000000000000
-      Size.Height = 400.000000000000000000
+      Size.Height = 382.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
       Viewport.Width = 250.000000000000000000
-      Viewport.Height = 400.000000000000000000
+      Viewport.Height = 382.000000000000000000
     end
   end
   object ActionList1: TActionList
