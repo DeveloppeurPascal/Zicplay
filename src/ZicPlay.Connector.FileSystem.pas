@@ -237,14 +237,19 @@ end;
 
 procedure TZicPlayConnectorFileSystem.PlaylistSetupDialog(AParams: TJSONObject);
 var
-  Folder: string;
+  LFolder: string;
   InSubFolders: Boolean;
 begin
-  LoadParamsFromPlaylist(AParams, Folder, InSubFolders);
-  TfrmPlaylistSetupDialog.Execute(Folder, InSubFolders,
+  LoadParamsFromPlaylist(AParams, LFolder, InSubFolders);
+  TfrmPlaylistSetupDialog.Execute(LFolder, InSubFolders,
     procedure(AFolder: string; AInSubFolders: Boolean)
     begin
       SaveParamsToPlaylist(AFolder, AInSubFolders, AParams);
+      if (LFolder <> AFolder) then
+      begin
+        // TODO : force playlist songs reload
+{$MESSAGE warn 'invalidate playlist song's list'}
+      end;
     end);
 end;
 
