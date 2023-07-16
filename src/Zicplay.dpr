@@ -17,7 +17,9 @@ uses
   fPlaylist in 'fPlaylist.pas' {frmPlaylist},
   fSelectConnector in 'fSelectConnector.pas' {frmSelectConnector},
   Olf.RTL.Streams in '..\lib-externes\librairies\Olf.RTL.Streams.pas',
-  Olf.RTL.DateAndTime in '..\lib-externes\librairies\Olf.RTL.DateAndTime.pas';
+  Olf.RTL.DateAndTime in '..\lib-externes\librairies\Olf.RTL.DateAndTime.pas',
+  ID3v1 in '..\lib-externes\Audio-Tools-Library\MP3-IDtags-Reader\ID3v1.pas',
+  ID3v2 in '..\lib-externes\Audio-Tools-Library\MP3-IDtags-Reader\ID3v2.pas';
 
 {$R *.res}
 

@@ -439,6 +439,8 @@
         </DCCReference>
         <DCCReference Include="..\lib-externes\librairies\Olf.RTL.Streams.pas"/>
         <DCCReference Include="..\lib-externes\librairies\Olf.RTL.DateAndTime.pas"/>
+        <DCCReference Include="..\lib-externes\Audio-Tools-Library\MP3-IDtags-Reader\ID3v1.pas"/>
+        <DCCReference Include="..\lib-externes\Audio-Tools-Library\MP3-IDtags-Reader\ID3v2.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
