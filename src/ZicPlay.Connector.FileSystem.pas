@@ -1,4 +1,4 @@
-unit ZicPlay.Connector.FileSystem;
+﻿unit ZicPlay.Connector.FileSystem;
 
 interface
 
@@ -11,6 +11,7 @@ type
   private const
     CConnectorName = 'File System';
     CConnectorGUID = 'B4E2E63F-EA08-4DBB-A55E-1299548C2DEB';
+    function AlphaNumFilter(s: string): string;
   protected
     procedure GetPlaylist(ASearchFolder: string; ASearchSubFolders: Boolean;
       ACallbackProc: TZicPlayGetPlaylistProc); overload; virtual;
@@ -40,6 +41,21 @@ uses
   ID3v2;
 
 { TZicPlayConnectorFileSystem }
+
+function TZicPlayConnectorFileSystem.AlphaNumFilter(s: string): string;
+var
+  i: integer;
+begin
+  result := '';
+  for i := 0 to s.Length - 1 do
+    if CharInSet(s.Chars[i], ['0' .. '9', 'a' .. 'z', 'A' .. 'Z', ' ', '''',
+      '"', ',', ';', '.', ':', '/', '+', '=', 'é', 'è', 'à', 'ù', 'ä', 'â', 'ï',
+      'î', 'û', 'ü', 'ù', 'ŷ', 'ÿ', 'ö', 'ô', 'ê', 'ë', '-', '_', '(', ')', '[',
+      ']', '{', '}', '&', '@', '#', '!', '?']) then
+      result := result + s.Chars[i];
+  // TODO : replace by UTF8 character check
+{$MESSAGE warn 'replace by UTF8 character check'}
+end;
 
 function TZicPlayConnectorFileSystem.getName: string;
 begin
@@ -78,11 +94,11 @@ ASearchSubFolders: Boolean; ACallbackProc: TZicPlayGetPlaylistProc);
   begin
     try
       fs := tdirectory.GetFiles(AFolder);
-      if length(fs) > 0 then
+      if Length(fs) > 0 then
       begin
-        j := length(AFiles);
-        setlength(AFiles, j + length(fs));
-        for i := 0 to length(fs) - 1 do
+        j := Length(AFiles);
+        setlength(AFiles, j + Length(fs));
+        for i := 0 to Length(fs) - 1 do
           AFiles[j + i] := fs[i];
       end;
 
@@ -90,8 +106,8 @@ ASearchSubFolders: Boolean; ACallbackProc: TZicPlayGetPlaylistProc);
         exit;
 
       fs := tdirectory.GetDirectories(AFolder);
-      if length(fs) > 0 then
-        for i := 0 to length(fs) - 1 do
+      if Length(fs) > 0 then
+        for i := 0 to Length(fs) - 1 do
           GetFilesFromFolder(fs[i], AInSubFoldersToo, AFiles);
     except
 
@@ -101,6 +117,11 @@ ASearchSubFolders: Boolean; ACallbackProc: TZicPlayGetPlaylistProc);
   function GetNewSong(Playlist: TPlaylist; Title, Artist, Album, Year,
     Genre: string; Duration: integer): tsong;
   begin
+    Title := AlphaNumFilter(Title);
+    Artist := AlphaNumFilter(Artist);
+    Album := AlphaNumFilter(Album);
+    Year := AlphaNumFilter(Year);
+    Genre := AlphaNumFilter(Genre);
     // TODO : add "Language" field to TSong
     // TODO : add "Url" field to TSong
     // TODO : add "TrackNumber" field to TSong
@@ -111,12 +132,12 @@ ASearchSubFolders: Boolean; ACallbackProc: TZicPlayGetPlaylistProc);
     result.Artist := Artist;
     result.Album := Album;
     try
-      if (Year.length = 4) then
+      if (Year.Length = 4) then
         result.PublishedDate := encodedate(Year.tointeger, 1, 1)
-      else if (Year.length = 010) then // hope its YYYY-MM-DD
+      else if (Year.Length = 010) then // hope its YYYY-MM-DD
         result.PublishedDate := encodedate(Year.substring(0, 4).tointeger,
           Year.substring(6, 2).tointeger, Year.substring(8, 2).tointeger)
-      else if (Year.length > 4) then
+      else if (Year.Length > 4) then
         result.PublishedDate := encodedate(Year.substring(0, 4).tointeger, 1, 1)
       else
         result.PublishedDate := now;
@@ -156,7 +177,7 @@ begin
           // TODO : add OGG files (OGG Vorbis)
           // TODO : add MID files (midi)
           // TODO : add MOD files (Module Tracker & co)
-          for i := 0 to length(Files) - 1 do
+          for i := 0 to Length(Files) - 1 do
             if (tpath.GetExtension(Files[i]).ToLower = '.mp3') then
             begin
               if ID3v2.ReadFromFile(Files[i]) and ID3v2.Exists then
