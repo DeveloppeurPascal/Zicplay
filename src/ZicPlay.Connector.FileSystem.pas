@@ -51,7 +51,7 @@ begin
     if CharInSet(s.Chars[i], ['0' .. '9', 'a' .. 'z', 'A' .. 'Z', ' ', '''',
       '"', ',', ';', '.', ':', '/', '+', '=', 'é', 'è', 'à', 'ù', 'ä', 'â', 'ï',
       'î', 'û', 'ü', 'ù', 'ŷ', 'ÿ', 'ö', 'ô', 'ê', 'ë', '-', '_', '(', ')', '[',
-      ']', '{', '}', '&', '@', '#', '!', '?']) then
+      ']', '{', '}', '&', '@', '#', '!', '?', 'ç', '*', '$', '%', '`']) then
       result := result + s.Chars[i];
   // TODO : replace by UTF8 character check
 {$MESSAGE warn 'replace by UTF8 character check'}
