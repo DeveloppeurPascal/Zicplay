@@ -587,9 +587,23 @@ procedure TfrmMain.PlayNextSong(ARandom: boolean);
 var
   Song: TSong;
   i: integer;
+  nb, num: integer;
 begin
   if ARandom then
-    Song := CurrentSongsList.GetSongAt(random(CurrentSongsList.Count))
+  begin
+    nb := CurrentSongsList.Count;
+    if (nb < 1) then
+      Song := nil
+    else
+    begin
+      num := random(nb);
+      if (num < 0) or (num >= nb) then
+        raise exception.Create('Next song found out of range in random mode.');
+      Song := CurrentSongsList.GetSongAt(num);
+      if not assigned(Song) then
+        raise exception.Create('No song found in random mode.');
+    end;
+  end
   else
     Song := GetNextSong;
   if assigned(Song) then
@@ -598,8 +612,9 @@ begin
       if ListView1.Items[i].TagObject = Song then
       begin
         ListView1ButtonClick(ListView1, ListView1.Items[i], nil);
-        break;
+        exit;
       end;
+    raise exception.Create('Next song not found in current list of songs.');
   end
   else
     PlayedSong := nil;
