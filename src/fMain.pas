@@ -28,7 +28,8 @@ uses
   FMX.ListBox,
   uDMIcons,
   FMX.MultiView,
-  FMX.Layouts;
+  FMX.Layouts,
+  Gamolf.FMX.MusicLoop;
 
 type
   TfrmMain = class(TForm)
@@ -109,6 +110,8 @@ type
     FDefaultCaption: string;
     FCurrentSongsList: TPlaylist;
     FCurrentSongsListNotFiltered: TPlaylist;
+    FStopTimer: integer;
+    MusicPlayer: TMusicLoop;
     procedure SetPlayedSong(const Value: TSong);
     procedure SetCurrentSongsList(const Value: TPlaylist);
     { Déclarations privées }
@@ -150,7 +153,6 @@ uses
   System.JSON,
   System.IOUtils,
   System.Messaging,
-  Gamolf.FMX.MusicLoop,
   u_urlOpen,
   uConfig,
   fPlaylist;
@@ -188,7 +190,7 @@ end;
 procedure TfrmMain.btnPauseClick(Sender: TObject);
 begin
   if assigned(PlayedSong) then
-    MusicLoop.Pause;
+    MusicPlayer.Pause;
 end;
 
 procedure TfrmMain.btnPlayClick(Sender: TObject);
@@ -314,10 +316,12 @@ var
 begin
   TConfig.Current.LoadFromFile;
 
+  MusicPlayer := TMusicLoop.Create;
+
   edtSearch.Text := TConfig.Current.FilterText;
   cbSortList.ItemIndex := TConfig.Current.SortType;
   tbVolume.Value := TConfig.Current.Volume;
-  MusicLoop.Volume := TConfig.Current.Volume;
+  MusicPlayer.Volume := TConfig.Current.Volume;
   // TODO : changing the musicloop volume does nothing until the first song is played
   cbRepeatAll.IsChecked := TConfig.Current.PlayRepeatAll;
   cbRepeatCurrentSong.IsChecked := TConfig.Current.PlayRepeatOne;
@@ -415,6 +419,7 @@ end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
+  MusicPlayer.Free;
   CurrentSongsListNotFiltered.Free;
 end;
 
@@ -721,14 +726,25 @@ begin
   begin
     if (Value = nil) then
     begin
-      MusicLoop.Stop;
+      MusicPlayer.Stop;
       FPlayedSong := nil;
+      FStopTimer := 0;
     end
     else
     begin
+      FStopTimer := 1 * 1000 div timerIsSongFinished.Interval;
+      // stop the timer during 1 second before detecting if the music is played or not
       FPlayedSong := Value;
-      MusicLoop.Play(FPlayedSong.FileName, false);
-      MusicLoop.Volume := TConfig.Current.Volume;
+      if (MusicPlayer.Filename <> FPlayedSong.Filename) then
+      begin
+        MusicPlayer.Free;
+        MusicPlayer := TMusicLoop.Create;
+        MusicPlayer.Play(FPlayedSong.Filename, false);
+      end
+      else
+        MusicPlayer.Play;
+      // TODO : restart the music, don't continue where it has been stopped
+      MusicPlayer.Volume := TConfig.Current.Volume;
     end;
     TMessageManager.DefaultManager.SendMessage(Self,
       TNowPlayingMessage.Create(FPlayedSong));
@@ -939,7 +955,7 @@ var
   Volume: integer;
 begin
   Volume := trunc(tbVolume.Value);
-  MusicLoop.Volume := Volume;
+  MusicPlayer.Volume := Volume;
   TConfig.Current.Volume := Volume;
 end;
 
@@ -950,7 +966,13 @@ begin
   if not assigned(PlayedSong) then
     exit;
 
-  if not MusicLoop.isPlaying then // Music has finished
+  if FStopTimer > 0 then
+  begin
+    FStopTimer := FStopTimer - 1;
+    exit;
+  end;
+
+  if not MusicPlayer.isPlaying then // Music has finished
   begin
     if (cbRepeatCurrentSong.IsChecked) then
     begin
@@ -962,8 +984,8 @@ begin
       PlayNextSong(cbPlayNextRandom.IsChecked);
   end
   else if cbPlayIntro.IsChecked and
-    (MusicLoop.CurrentTimeInSeconds > TConfig.Current.PlayIntroDuration) then
-    MusicLoop.Stop;
+    (MusicPlayer.CurrentTimeInSeconds > TConfig.Current.PlayIntroDuration) then
+    MusicPlayer.Stop;
 end;
 
 procedure TfrmMain.UpdatePlayPauseButton;
@@ -977,7 +999,7 @@ begin
     (assigned(ListView1.Selected) and (ListView1.Selected.TagObject <>
     PlayedSong));
   btnPause.enabled := assigned(PlayedSong);
-  btnPause.IsPressed := btnPause.enabled and MusicLoop.isPaused;
+  btnPause.IsPressed := btnPause.enabled and MusicPlayer.isPaused;
   btnStop.enabled := assigned(PlayedSong);
   Song := GetNextSong;
   btnNext.enabled := assigned(Song);
