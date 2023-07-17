@@ -43,6 +43,7 @@ type
     fPlaylist: tplaylist;
     fPlaylistConnector: IConnector;
     fPlaylistParams: TJSONObject;
+    FNeedAPlaylistRefresh: boolean;
     procedure SetPlaylistConnector(const Value: IConnector);
     procedure SetPlaylistName(const Value: string);
     procedure SetPlaylist(const Value: tplaylist);
@@ -83,7 +84,11 @@ end;
 procedure TfrmPlaylist.btnConnectorSetupClick(Sender: TObject);
 begin
   if fPlaylistConnector.hasPlaylistSetupDialog then
-    fPlaylistConnector.PlaylistSetupDialog(fPlaylistParams)
+    fPlaylistConnector.PlaylistSetupDialog(fPlaylistParams,
+      procedure
+      begin
+        FNeedAPlaylistRefresh := true;
+      end)
   else
     raise exception.Create('No setup dialog for this connector.');
 end;
@@ -121,10 +126,13 @@ begin
     if InsertMode then
       TConfig.Current.Playlists.Add(fPlaylist);
 
-    TMessageManager.DefaultManager.SendMessage(Self,
-      TPlaylistupdatedMessage.Create(fPlaylist));
-
     TConfig.Current.SaveTofile;
+
+    if FNeedAPlaylistRefresh then
+      fPlaylist.RefreshSongsList(true)
+    else
+      TMessageManager.DefaultManager.SendMessage(Self,
+        TPlaylistupdatedMessage.Create(fPlaylist));
   end;
 
   close;
@@ -161,6 +169,7 @@ end;
 procedure TfrmPlaylist.FormCreate(Sender: TObject);
 begin
   Playlist := nil;
+  FNeedAPlaylistRefresh := false;
 end;
 
 procedure TfrmPlaylist.SetPlaylist(const Value: tplaylist);
