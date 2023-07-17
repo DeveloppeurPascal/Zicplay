@@ -12,6 +12,7 @@ type
     CConnectorName = 'File System';
     CConnectorGUID = 'B4E2E63F-EA08-4DBB-A55E-1299548C2DEB';
     function AlphaNumFilter(s: string): string;
+    function NumFilter(s: string): string;
   protected
     procedure GetPlaylist(ASearchFolder: string; ASearchSubFolders: Boolean;
       ACallbackProc: TZicPlayGetPlaylistProc); overload; virtual;
@@ -37,6 +38,7 @@ uses
   System.Types,
   ZicPlay.Connector.FileSystem.PlaylistSetupDialog,
   FMX.Media,
+  System.DateUtils,
   ID3v1,
   ID3v2;
 
@@ -120,7 +122,7 @@ ASearchSubFolders: Boolean; ACallbackProc: TZicPlayGetPlaylistProc);
     Title := AlphaNumFilter(Title);
     Artist := AlphaNumFilter(Artist);
     Album := AlphaNumFilter(Album);
-    Year := AlphaNumFilter(Year);
+    Year := NumFilter(Year);
     Genre := AlphaNumFilter(Genre);
     // TODO : add "Language" field to TSong
     // TODO : add "Url" field to TSong
@@ -134,16 +136,18 @@ ASearchSubFolders: Boolean; ACallbackProc: TZicPlayGetPlaylistProc);
     try
       if (Year.Length = 4) then
         result.PublishedDate := encodedate(Year.tointeger, 1, 1)
-      else if (Year.Length = 010) then // hope its YYYY-MM-DD
+      else if (Year.Length = 6) then // hope it was YYYY-MM or YYYYMM
         result.PublishedDate := encodedate(Year.substring(0, 4).tointeger,
-          Year.substring(6, 2).tointeger, Year.substring(8, 2).tointeger)
+          Year.substring(4, 2).tointeger, 0)
+      else if (Year.Length = 8) then // hope it was YYYY-MM-DD or YYYYMMDD
+        result.PublishedDate := encodedate(Year.substring(0, 4).tointeger,
+          Year.substring(4, 2).tointeger, Year.substring(6, 2).tointeger)
       else if (Year.Length > 4) then
         result.PublishedDate := encodedate(Year.substring(0, 4).tointeger, 1, 1)
       else
-        result.PublishedDate := now;
+        result.PublishedDate := now.Year;
     except
-      // TODO : list all values in libraries or add a log somewhere to see how to handle it
-      result.PublishedDate := now;
+      result.PublishedDate := now.Year;
     end;
     result.Category := Genre;
     result.Duration := Duration;
@@ -284,6 +288,16 @@ begin
 
   if not AParams.TryGetValue<Boolean>('sub', SearchSubFolders) then
     SearchSubFolders := false;
+end;
+
+function TZicPlayConnectorFileSystem.NumFilter(s: string): string;
+var
+  i: integer;
+begin
+  result := '';
+  for i := 0 to s.Length - 1 do
+    if CharInSet(s.Chars[i], ['0' .. '9']) then
+      result := result + s.Chars[i];
 end;
 
 initialization
