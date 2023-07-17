@@ -156,64 +156,71 @@ var
   Playlist: TPlaylist;
   ID3v1: TID3v1;
   ID3v2: TID3V2;
-  MediaPlayer: TMediaPlayer;
 begin
   ID3v1 := TID3v1.create;
   try
     ID3v2 := TID3V2.create;
     try
-      MediaPlayer := TMediaPlayer.create(nil);
+      Playlist := TPlaylist.create;
       try
-        Playlist := TPlaylist.create;
-        try
-          Playlist.Connector := self;
+        Playlist.Connector := self;
 
-          setlength(Files, 0);
-          GetFilesFromFolder(ASearchFolder, ASearchSubFolders, Files);
+        setlength(Files, 0);
+        GetFilesFromFolder(ASearchFolder, ASearchSubFolders, Files);
 
-          // TODO : add WAV files (wav)
-          // TODO : add WMA files (Windows Media Player)
-          // TODO : add M4A files (QuickTime)
-          // TODO : add OGG files (OGG Vorbis)
-          // TODO : add MID files (midi)
-          // TODO : add MOD files (Module Tracker & co)
-          for i := 0 to Length(Files) - 1 do
-            if (tpath.GetExtension(Files[i]).ToLower = '.mp3') then
-            begin
-              if ID3v2.ReadFromFile(Files[i]) and ID3v2.Exists then
-                // TODO : get song duration
-                Song := GetNewSong(Playlist, ID3v2.Title, ID3v2.Artist,
-                  ID3v2.Album, ID3v2.Year, ID3v2.Genre, 0)
-              else if ID3v1.ReadFromFile(Files[i]) and ID3v1.Exists then
-                // TODO : get song duration
-                Song := GetNewSong(Playlist, ID3v1.Title, ID3v1.Artist,
-                  ID3v1.Album, ID3v1.Year, ID3v1.Genre, 0)
-              else
-                Song := GetNewSong(Playlist,
-                  tpath.GetFileNameWithoutExtension(Files[i]), 'unknown',
-                  tpath.GetFileNameWithoutExtension(Files[i]),
-                  FormatDateTime('yyyy-mm-dd', now), 'none', 0);
-              if (Song.Duration = 0) then
-                try
-                  // TODO : not work as it in Windows during program startup
-                  MediaPlayer.FileName := Files[i];
-                  Song.Duration := trunc(MediaPlayer.Duration / MediaTimeScale);
-                except
-                  Song.Duration := 0;
-                end;
-              Song.Order := 0;
-              Song.UniqID := Files[i];
-              Song.FileName := Files[i];
-              Song.onGetFilename := nil;
+        // TODO : add WAV files (wav)
+        // TODO : add WMA files (Windows Media Player)
+        // TODO : add M4A files (QuickTime)
+        // TODO : add OGG files (OGG Vorbis)
+        // TODO : add MID files (midi)
+        // TODO : add MOD files (Module Tracker & co)
+        for i := 0 to Length(Files) - 1 do
+          if (tpath.GetExtension(Files[i]).ToLower = '.mp3') then
+          begin
+            if ID3v2.ReadFromFile(Files[i]) and ID3v2.Exists then
+              // TODO : get song duration
+              Song := GetNewSong(Playlist, ID3v2.Title, ID3v2.Artist,
+                ID3v2.Album, ID3v2.Year, ID3v2.Genre, 0)
+            else if ID3v1.ReadFromFile(Files[i]) and ID3v1.Exists then
+              // TODO : get song duration
+              Song := GetNewSong(Playlist, ID3v1.Title, ID3v1.Artist,
+                ID3v1.Album, ID3v1.Year, ID3v1.Genre, 0)
+            else
+              Song := GetNewSong(Playlist,
+                tpath.GetFileNameWithoutExtension(Files[i]), 'unknown',
+                tpath.GetFileNameWithoutExtension(Files[i]),
+                FormatDateTime('yyyy-mm-dd', now), 'none', 0);
+            Song.Order := 0;
+            Song.UniqID := Files[i];
+            Song.FileName := Files[i];
+            Song.onGetFilename := nil;
+            Playlist.Add(Song);
+            if (Song.Duration = 0) then
+              tthread.ForceQueue(nil,
+                procedure
+                var
+                  MediaPlayer: TMediaPlayer;
+                begin
+                  if not assigned(Song) then
+                    exit;
 
-              Playlist.Add(Song);
-            end;
-        except
-          Playlist.Free;
-          raise;
-        end;
-      finally
-        MediaPlayer.Free;
+                  MediaPlayer := TMediaPlayer.create(nil);
+                  try
+                    try
+                      MediaPlayer.FileName := Song.FileName;
+                      Song.Duration := trunc(MediaPlayer.Duration /
+                        MediaTimeScale);
+                    except
+                      Song.Duration := 0;
+                    end;
+                  finally
+                    MediaPlayer.Free;
+                  end;
+                end);
+          end;
+      except
+        Playlist.Free;
+        raise;
       end;
     finally
       ID3v2.Free;
