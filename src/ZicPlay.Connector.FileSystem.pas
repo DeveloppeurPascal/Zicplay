@@ -3,6 +3,7 @@
 interface
 
 uses
+  System.SysUtils,
   System.JSON,
   ZicPlay.Types;
 
@@ -26,19 +27,19 @@ type
       ACallbackProc: TZicPlayGetPlaylistProc); overload; override;
     function getUniqID: string; override;
     function hasPlaylistSetupDialog: Boolean; override;
-    procedure PlaylistSetupDialog(AParams: TJSONObject); override;
+    procedure PlaylistSetupDialog(AParams: TJSONObject;
+      AOnChangedProc: TProc = nil); override;
   end;
 
 implementation
 
 uses
   System.Classes,
-  System.SysUtils,
   System.IOUtils,
   System.Types,
   ZicPlay.Connector.FileSystem.PlaylistSetupDialog,
-  FMX.Media,
   System.DateUtils,
+  System.Messaging,
   ID3v1,
   ID3v2;
 
@@ -161,14 +162,13 @@ var
   ID3v1: TID3v1;
   ID3v2: TID3V2;
 begin
-  ID3v1 := TID3v1.create;
+  Playlist := TPlaylist.create;
   try
-    ID3v2 := TID3V2.create;
+    Playlist.Connector := self;
+    ID3v1 := TID3v1.create;
     try
-      Playlist := TPlaylist.create;
+      ID3v2 := TID3V2.create;
       try
-        Playlist.Connector := self;
-
         setlength(Files, 0);
         GetFilesFromFolder(ASearchFolder, ASearchSubFolders, Files);
 
@@ -184,56 +184,33 @@ begin
             if ID3v2.ReadFromFile(Files[i]) and ID3v2.Exists then
               // TODO : get song duration
               Song := GetNewSong(Playlist, ID3v2.Title, ID3v2.Artist,
-                ID3v2.Album, ID3v2.Year, ID3v2.Genre, 0)
+                ID3v2.Album, ID3v2.Year, ID3v2.Genre, -1)
             else if ID3v1.ReadFromFile(Files[i]) and ID3v1.Exists then
               // TODO : get song duration
               Song := GetNewSong(Playlist, ID3v1.Title, ID3v1.Artist,
-                ID3v1.Album, ID3v1.Year, ID3v1.Genre, 0)
+                ID3v1.Album, ID3v1.Year, ID3v1.Genre, -1)
             else
               Song := GetNewSong(Playlist,
                 tpath.GetFileNameWithoutExtension(Files[i]), 'unknown',
                 tpath.GetFileNameWithoutExtension(Files[i]),
-                FormatDateTime('yyyy-mm-dd', now), 'none', 0);
+                FormatDateTime('yyyy-mm-dd', now), 'none', -1);
             Song.Order := 0;
             Song.UniqID := Files[i];
             Song.FileName := Files[i];
             Song.onGetFilename := nil;
             Playlist.Add(Song);
-            if (Song.Duration = 0) then
-              tthread.ForceQueue(nil,
-                procedure
-                var
-                  MediaPlayer: TMediaPlayer;
-                begin
-                  if not assigned(Song) then
-                    exit;
-
-                  MediaPlayer := TMediaPlayer.create(nil);
-                  try
-                    try
-                      MediaPlayer.FileName := Song.FileName;
-                      Song.Duration := trunc(MediaPlayer.Duration /
-                        MediaTimeScale);
-                    except
-                      Song.Duration := 0;
-                    end;
-                  finally
-                    MediaPlayer.Free;
-                  end;
-                end);
           end;
-      except
-        Playlist.Free;
-        raise;
+      finally
+        ID3v2.Free;
       end;
     finally
-      ID3v2.Free;
+      ID3v1.Free;
     end;
+    if assigned(ACallbackProc) then
+      ACallbackProc(Playlist);
   finally
-    ID3v1.Free;
+    Playlist.Free;
   end;
-  if assigned(ACallbackProc) then
-    ACallbackProc(Playlist);
 end;
 
 function TZicPlayConnectorFileSystem.getUniqID: string;
@@ -246,20 +223,21 @@ begin
   result := true;
 end;
 
-procedure TZicPlayConnectorFileSystem.PlaylistSetupDialog(AParams: TJSONObject);
+procedure TZicPlayConnectorFileSystem.PlaylistSetupDialog(AParams: TJSONObject;
+AOnChangedProc: TProc);
 var
   LFolder: string;
-  InSubFolders: Boolean;
+  LInSubFolders: Boolean;
 begin
-  LoadParamsFromPlaylist(AParams, LFolder, InSubFolders);
-  TfrmPlaylistSetupDialog.Execute(LFolder, InSubFolders,
+  LoadParamsFromPlaylist(AParams, LFolder, LInSubFolders);
+  TfrmPlaylistSetupDialog.Execute(LFolder, LInSubFolders,
     procedure(AFolder: string; AInSubFolders: Boolean)
     begin
       SaveParamsToPlaylist(AFolder, AInSubFolders, AParams);
-      if (LFolder <> AFolder) then
+      if (LFolder <> AFolder) or (LInSubFolders <> AInSubFolders) then
       begin
-        // TODO : force playlist songs reload
-{$MESSAGE warn 'invalidate playlist song's list'}
+        if assigned(AOnChangedProc) then
+          AOnChangedProc;
       end;
     end);
 end;
