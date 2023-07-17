@@ -25,7 +25,7 @@ x - écran de configuration (choix du dossier à parcourir, fréquence de rafrai
 
 x => Liste de sources
 x => Liste de musiques d'un source
-=> Données d'une musique
+x => Données d'une musique
 
 - ajouter une description de la licence dans la boite de dialogue "à propos"
 - ajouter une description du logiciel dans la boite de dialogue "à propos"
@@ -39,3 +39,6 @@ x - gestion du volume
 x - lecture des intro d'une play List
 x - gestion des playlist et des sources
 x - ajout du connecteur "arborescence de fichiers"
+
+- optimiser le rafraichissement d'une liste depuis son controleur (en comparant la version actuelle à la nouvelle)
+x - optimiser le premier chargement d'une liste depuis un contrôleur (en envoyant des infos au fur et à mesure du chargement)
