@@ -117,6 +117,7 @@ type
     procedure SetCurrentSongsList(const Value: TPlaylist);
     { Déclarations privées }
     procedure RefreshListView;
+    procedure RefreshListItem(Item: TListViewItem; Song: TSong);
     procedure SetCurrentSongsListNotFiltered(const Value: TPlaylist);
     procedure ConnectorMenuClick(Sender: TObject);
     procedure PlaylistMenuClick(Sender: TObject);
@@ -150,6 +151,7 @@ implementation
 {$R *.fmx}
 
 uses
+  FMX.Media,
   System.Threading,
   FMX.DialogService,
   System.JSON,
@@ -345,6 +347,7 @@ begin
   cbPlayIntro.IsChecked := TConfig.Current.PlayIntro;
   cbPlayNextRandom.IsChecked := TConfig.Current.PlayNextRandom;
 
+  FCurrentSongsList := nil;
   CurrentSongsListNotFiltered := TPlaylist.Create;
 
 {$IF Defined(ANDROID) or Defined(IOS)}
@@ -419,16 +422,7 @@ begin
       tparallel.For(0, TConfig.Current.Playlists.Count - 1,
         procedure(i: integer)
         begin
-          if TConfig.Current.Playlists[i].enabled then
-            TConfig.Current.Playlists[i].RefreshSongsList(
-              procedure(APlaylist: TPlaylist)
-              var
-                i: integer;
-              begin
-                for i := 0 to APlaylist.Count - 1 do
-                  CurrentSongsListNotFiltered.Add(APlaylist.GetSongAt(i));
-                RefreshListView;
-              end);
+          TConfig.Current.Playlists[i].RefreshSongsList;
         end);
     end);
 
@@ -440,6 +434,68 @@ begin
 
   lblSongPlayed.Text := '';
   SubscribeToNowPlayingMessage;
+
+  tthread.CreateAnonymousThread(
+    procedure
+    var
+      i: integer;
+      Song: TSong;
+    begin
+      sleep(1000);
+      exit;
+      // duration not initialized for macOS before playing the file
+      // it works on Windows for refresh the list in background
+
+      // TODO : optimize this code : don't loop undefinitly on the same list is nothing has changed
+      // TODO : add a parameter to allow or not this feature (disable it in platforms not compatible like macOS)
+      i := 0;
+      while (not tthread.CheckTerminated) do
+      begin
+        sleep(200 + random(500));
+
+        if not assigned(CurrentSongsList) then
+          continue;
+
+        Song := CurrentSongsList.GetSongAt(i);
+        if not assigned(Song) then
+        begin
+          i := 0;
+          continue;
+        end;
+        if (Song.Duration < 0) then
+          tthread.Synchronize(nil,
+            procedure
+            var
+              MediaPlayer: TMediaPlayer;
+              j: integer;
+              NewDuration: integer;
+            begin
+              try
+                MediaPlayer := TMediaPlayer.Create(nil);
+                try
+                  MediaPlayer.FileName := Song.FileName;
+                  // duration not initialized for macOS before playing the file
+                  NewDuration := trunc(MediaPlayer.Duration / MediaTimeScale);
+                  if NewDuration > 0 then
+                  begin
+                    Song.Duration := NewDuration;
+                    for j := 0 to ListView1.ItemCount - 1 do
+                      if ListView1.Items[i].TagObject = Song then
+                      begin
+                        RefreshListItem(ListView1.Items[i], Song);
+                        exit;
+                      end;
+                  end;
+                finally
+                  MediaPlayer.Free;
+                end;
+              except
+                Song.Duration := -1;
+              end;
+            end);
+        inc(i);
+      end;
+    end).start;
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -655,9 +711,46 @@ begin
     PlayedSong := nil;
 end;
 
+procedure TfrmMain.RefreshListItem(Item: TListViewItem; Song: TSong);
+begin
+  if not assigned(Item) then
+    raise exception.Create('No item to refresh !');
+  if not assigned(Song) then
+    raise exception.Create('No song to attach to this item !');
+  Item.Text := Song.Title;
+  if not Song.Album.IsEmpty then
+    Item.Text := Item.Text + ' (' + Song.Album + ')';
+  Item.Detail := '';
+  if not Song.Artist.IsEmpty then
+  begin
+    if not Item.Detail.IsEmpty then
+      Item.Detail := Item.Detail + ' - ';
+    Item.Detail := Item.Detail + Song.Artist;
+  end;
+  if not Song.Category.IsEmpty then
+  begin
+    if not Item.Detail.IsEmpty then
+      Item.Detail := Item.Detail + ' - ';
+    Item.Detail := Item.Detail + Song.Category;
+  end;
+  if Song.PublishedYear > 0 then
+  begin
+    if not Item.Detail.IsEmpty then
+      Item.Detail := Item.Detail + ' - ';
+    Item.Detail := Item.Detail + Song.PublishedYear.tostring;
+  end;
+  if Song.Duration > 0 then
+  begin
+    if not Item.Detail.IsEmpty then
+      Item.Detail := Item.Detail + ' - ';
+    Item.Detail := Item.Detail + Song.DurationAsTime;
+  end;
+  Item.TagObject := Song;
+end;
+
 procedure TfrmMain.RefreshListView;
 var
-  item: TListViewItem;
+  Item: TListViewItem;
   i: integer;
   Song: TSong;
 begin
@@ -682,49 +775,27 @@ begin
     for i := 0 to CurrentSongsList.Count - 1 do
     begin
       Song := CurrentSongsList.GetSongAt(i);
-      item := ListView1.Items.Add;
+      Item := ListView1.Items.Add;
       try
-        item.Text := Song.Title;
-        if not Song.Album.IsEmpty then
-          item.Text := item.Text + ' (' + Song.Album + ')';
-        item.Detail := '';
-        if not Song.Artist.IsEmpty then
-        begin
-          if not item.Detail.IsEmpty then
-            item.Detail := item.Detail + ' - ';
-          item.Detail := item.Detail + Song.Artist;
-        end;
-        if not Song.Category.IsEmpty then
-        begin
-          if not item.Detail.IsEmpty then
-            item.Detail := item.Detail + ' - ';
-          item.Detail := item.Detail + Song.Category;
-        end;
-        if not Song.PublishedYear > 0 then
-        begin
-          if not item.Detail.IsEmpty then
-            item.Detail := item.Detail + ' - ';
-          item.Detail := item.Detail + Song.PublishedYear.tostring;
-        end;
-        item.TagObject := Song;
+        RefreshListItem(Item, Song);
         if (Song = PlayedSong) then
         begin
-          item.ButtonText := 'Stop';
-          item.Tag := SubscribeToNowPlayingMessage(item);
+          Item.ButtonText := 'Stop';
+          Item.Tag := SubscribeToNowPlayingMessage(Item);
           // 0 = not playing,
           // other = playing (value is subcription id to rtl messaging)
 
-          ListView1.Selected := item;
+          ListView1.Selected := Item;
         end
         else
         begin
-          item.ButtonText := 'Play';
-          item.Tag := 0;
+          Item.ButtonText := 'Play';
+          Item.Tag := 0;
           // 0 = not playing,
           // other = playing (value is subcription id to rtl messaging)
         end;
       except
-        item.Free;
+        Item.Free;
         raise;
       end;
     end;
@@ -762,6 +833,11 @@ end;
 
 procedure TfrmMain.SetPlayedSong(const Value: TSong);
 begin
+  // update song's duration if needed
+  if assigned(FPlayedSong) and (MusicPlayer.DurationInSeconds > 0) and
+    (FPlayedSong.Duration <> MusicPlayer.DurationInSeconds) then
+    FPlayedSong.Duration := MusicPlayer.DurationInSeconds;
+
   if FPlayedSong <> Value then
   begin
     if (Value = nil) then
@@ -779,7 +855,7 @@ begin
       // begin
       MusicPlayer.Free;
       MusicPlayer := TMusicLoop.Create;
-      MusicPlayer.Play(FPlayedSong.Filename, false);
+      MusicPlayer.Play(FPlayedSong.FileName, false);
       // end
       // else
       // MusicPlayer.Play;
@@ -850,16 +926,7 @@ begin
           cb.Margins.Bottom := 10;
           cb.Margins.Left := 10;
 
-          if Playlist.enabled then
-            Playlist.RefreshSongsList(
-              procedure(APlaylist: TPlaylist)
-              var
-                i: integer;
-              begin
-                for i := 0 to APlaylist.Count - 1 do
-                  CurrentSongsListNotFiltered.Add(APlaylist.GetSongAt(i));
-                RefreshListView;
-              end);
+          Playlist.RefreshSongsList;
         end;
       end;
     end);
@@ -901,6 +968,11 @@ begin
       if (M is TNowPlayingMessage) then
       begin
         msg := M as TNowPlayingMessage;
+        // refresh current item in the TListView
+        if assigned(AItem) and assigned(AItem.TagObject) and
+          (AItem.TagObject is TSong) then
+          RefreshListItem(AItem, AItem.TagObject as TSong);
+        // update item's button text
         if msg.Value = AItem.TagObject then
           AItem.ButtonText := 'Stop'
         else
@@ -930,6 +1002,8 @@ begin
       cb: TCheckBox;
       i: integer;
       Playlist: TPlaylist;
+      GlobalPlaylistHasChanged: boolean;
+      Song: TSong;
     begin
       if (M is TPlaylistUpdatedMessage) then
       begin
@@ -964,27 +1038,50 @@ begin
                 end;
               end;
 
-          if Playlist.enabled then
-            Playlist.RefreshSongsList(
-              procedure(APlaylist: TPlaylist)
-              var
-                i: integer;
-              begin
-                for i := 0 to APlaylist.Count - 1 do
-                  CurrentSongsListNotFiltered.Add(APlaylist.GetSongAt(i));
-                RefreshListView;
-              end)
-          else
-          begin
+          GlobalPlaylistHasChanged := false;
+          if not Playlist.enabled then
+          begin // remove songs from gobal playlist
             i := 0;
             while (i < CurrentSongsListNotFiltered.Count) do
               if CurrentSongsListNotFiltered.GetSongAt(i).Playlist = Playlist
               then
-                CurrentSongsListNotFiltered.delete(i)
+              begin
+                CurrentSongsListNotFiltered.delete(i);
+                GlobalPlaylistHasChanged := true;
+              end
               else
                 inc(i);
-            RefreshListView;
+          end
+          else
+          begin // add songs from global playlist if needed
+            // remove not available songs
+            i := 0;
+            while (i < CurrentSongsListNotFiltered.Count) do
+            begin
+              Song := CurrentSongsListNotFiltered.GetSongAt(i);
+              if (Song.Playlist = Playlist) and (not Playlist.HasSong(Song))
+              then
+              begin
+                CurrentSongsListNotFiltered.delete(i);
+                GlobalPlaylistHasChanged := true;
+              end
+              else
+                inc(i);
+            end;
+            // add new songs
+            for i := 0 to Playlist.Count - 1 do
+            begin
+              Song := Playlist.GetSongAt(i);
+              if not CurrentSongsListNotFiltered.HasSong(Song) then
+              begin
+                CurrentSongsListNotFiltered.Add(Song);
+                GlobalPlaylistHasChanged := true;
+              end;
+            end;
           end;
+          // refresh the vue if any change to global playlist
+          if GlobalPlaylistHasChanged then
+            RefreshListView;
         end;
       end;
     end);
