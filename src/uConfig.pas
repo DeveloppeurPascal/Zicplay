@@ -100,7 +100,7 @@ begin
     'OlfSoftware-DEBUG'), app_name + '-debug');
 {$ELSE if Defined(RELEASE)}
   filename := app_name + '.par';
-  folder := TPath.combine(TPath.combine(TPath.GetDocumentsPath, 'OlfSoftware'),
+  folder := TPath.combine(TPath.combine(TPath.GetHomePath, 'OlfSoftware'),
     app_name);
 {$ELSE}
 {$MESSAGE FATAL 'setup problem'}
