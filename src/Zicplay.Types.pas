@@ -64,6 +64,7 @@ type
     procedure SetDuration(const Value: integer);
     function GetDurationAsTime: string;
   protected
+    FIsLoading: boolean;
   public
     /// <summary>
     /// Song title
@@ -152,6 +153,8 @@ type
     FConnectorParams: TJSONObject;
     FUniqID: string;
     FCacheDate: integer;
+    FhasChanged: boolean;
+    procedure SethasChanged(const Value: boolean);
     function GetSongsCount: integer;
     procedure SetConnector(const Value: IConnector);
     procedure SetText(const Value: string);
@@ -195,6 +198,11 @@ type
     /// Returns the number of songs in the playlist
     /// </summary>
     property Count: integer read GetSongsCount;
+
+    /// <summary>
+    /// Is True if a song or the list itself has changed
+    /// </summary>
+    property hasChanged: boolean read FhasChanged write SethasChanged;
 
     /// <summary>
     /// Return the song at index AIndex if it exists
@@ -242,8 +250,13 @@ type
     procedure SaveToStream(AStream: TStream);
 
     /// <summary>
+    /// Save playlist data (songs, ...) when they are not linked to the program settings
+    /// </summary>
+    procedure Save;
+
+    /// <summary>
     /// Load the list of song from the local cache.
-    // Start a reload from the connector if AForceReaload is True
+    /// Start a reload from the connector if AForceReaload is True
     /// </summary>
     procedure RefreshSongsList(ACallbackProc: TZicPlayGetPlaylistProc;
       AForceReload: boolean = false);
@@ -464,6 +477,7 @@ uses
 
 constructor TSong.Create(APlaylist: TPlaylist);
 begin
+  FIsLoading := true;
   inherited Create;
   FFilename := '';
   FPlaylist := APlaylist;
@@ -479,6 +493,7 @@ begin
   FPublishedDate := 0;
   FUniqID := '';
   FDuration := 0;
+  FIsLoading := false;
 end;
 
 function TSong.GetDurationAsTime: string;
@@ -511,23 +526,27 @@ begin
   if not assigned(AStream) then
     raise exception.Create
       ('Where do you expect I load this song''s settings from ?');
+  FIsLoading := true;
+  try
+    AStream.Read(DataVersion, sizeof(DataVersion));
+    if (DataVersion > CDataVersion) then
+      raise exception.Create
+        ('The program is too old to read the settings for this song.');
 
-  AStream.Read(DataVersion, sizeof(DataVersion));
-  if (DataVersion > CDataVersion) then
-    raise exception.Create
-      ('The program is too old to read the settings for this song.');
-
-  if (DataVersion >= 1) then
-  begin
-    FileName := LoadStringFromStream(AStream);
-    AStream.Read(FOrder, sizeof(FOrder));
-    Title := LoadStringFromStream(AStream);
-    Artist := LoadStringFromStream(AStream);
-    Category := LoadStringFromStream(AStream);
-    Album := LoadStringFromStream(AStream);
-    PublishedDate := date8todate(LoadStringFromStream(AStream));
-    UniqID := LoadStringFromStream(AStream);
-    AStream.Read(FDuration, sizeof(FDuration));
+    if (DataVersion >= 1) then
+    begin
+      FileName := LoadStringFromStream(AStream);
+      AStream.Read(FOrder, sizeof(FOrder));
+      Title := LoadStringFromStream(AStream);
+      Artist := LoadStringFromStream(AStream);
+      Category := LoadStringFromStream(AStream);
+      Album := LoadStringFromStream(AStream);
+      PublishedDate := date8todate(LoadStringFromStream(AStream));
+      UniqID := LoadStringFromStream(AStream);
+      AStream.Read(FDuration, sizeof(FDuration));
+    end;
+  finally
+    FIsLoading := false;
   end;
 end;
 
@@ -554,33 +573,53 @@ end;
 
 procedure TSong.SetAlbum(const Value: string);
 begin
+  if FAlbum = Value then
+    exit;
   FAlbum := Value;
   FAlbumLowerCase := FAlbum.ToLower;
+  if (not FIsLoading) and assigned(FPlaylist) then
+    FPlaylist.hasChanged := true;
 end;
 
 procedure TSong.SetArtist(const Value: string);
 begin
+  if FArtist = Value then
+    exit;
   FArtist := Value;
   FArtistLowerCase := FArtist.ToLower;
+  if (not FIsLoading) and assigned(FPlaylist) then
+    FPlaylist.hasChanged := true;
 end;
 
 procedure TSong.SetCategory(const Value: string);
 begin
+  if FCategory = Value then
+    exit;
   FCategory := Value;
   FCategoryLowerCase := FCategory.ToLower;
+  if (not FIsLoading) and assigned(FPlaylist) then
+    FPlaylist.hasChanged := true;
 end;
 
 procedure TSong.SetDuration(const Value: integer);
 begin
+  if FDuration = Value then
+    exit;
   FDuration := Value;
+  if (not FIsLoading) and assigned(FPlaylist) then
+    FPlaylist.hasChanged := true;
 end;
 
 procedure TSong.SetFilename(const Value: string);
 begin
+  if FFilename = Value then
+    exit;
   if tfile.Exists(Value) then
     FFilename := Value
   else
     FFilename := '';
+  if (not FIsLoading) and assigned(FPlaylist) then
+    FPlaylist.hasChanged := true;
 end;
 
 procedure TSong.SetonGetFilename(const Value: TSongFileNameEvent);
@@ -590,12 +629,20 @@ end;
 
 procedure TSong.SetOrder(const Value: integer);
 begin
+  if FOrder = Value then
+    exit;
   FOrder := Value;
+  if (not FIsLoading) and assigned(FPlaylist) then
+    FPlaylist.hasChanged := true;
 end;
 
 procedure TSong.SetPublishedDate(const Value: TDate);
 begin
+  if FPublishedDate = Value then
+    exit;
   FPublishedDate := Value;
+  if (not FIsLoading) and assigned(FPlaylist) then
+    FPlaylist.hasChanged := true;
 end;
 
 procedure TSong.SetPlaylist(const Value: TPlaylist);
@@ -605,13 +652,21 @@ end;
 
 procedure TSong.SetTitle(const Value: string);
 begin
+  if FTitle = Value then
+    exit;
   FTitle := Value;
   FTitleLowerCase := FTitle.ToLower;
+  if (not FIsLoading) and assigned(FPlaylist) then
+    FPlaylist.hasChanged := true;
 end;
 
 procedure TSong.SetUniqID(const Value: string);
 begin
+  if FUniqID = Value then
+    exit;
   FUniqID := Value;
+  if (not FIsLoading) and assigned(FPlaylist) then
+    FPlaylist.hasChanged := true;
 end;
 
 { TPlaylist }
@@ -804,6 +859,12 @@ begin
     end).Start;
 end;
 
+procedure TPlaylist.Save;
+begin
+  SaveSongsList;
+  hasChanged := false;
+end;
+
 procedure TPlaylist.SaveSongsList;
 var
   FileName: string;
@@ -818,25 +879,25 @@ begin
   if FileName.isempty then
     exit;
 
-  Stream := TFileStream.Create(FileName, fmOpenwrite + fmcreate);
+  List := LockList;
   try
-    CacheVersion := CCacheVersion;
-    Stream.write(CacheVersion, sizeof(CacheVersion));
-
-    FCacheDate := FormatDateTime('yyyymmdd', now).ToInteger;
-    Stream.write(FCacheDate, sizeof(FCacheDate));
-
-    List := LockList;
+    Stream := TFileStream.Create(FileName, fmOpenwrite + fmcreate);
     try
+      CacheVersion := CCacheVersion;
+      Stream.write(CacheVersion, sizeof(CacheVersion));
+
+      FCacheDate := FormatDateTime('yyyymmdd', now).ToInteger;
+      Stream.write(FCacheDate, sizeof(FCacheDate));
+
       nb := List.Count;
       Stream.write(nb, sizeof(nb));
       for i := 0 to nb - 1 do
         List[i].SaveToStream(Stream);
     finally
-      UnlockList
+      Stream.Free;
     end;
   finally
-    Stream.Free;
+    UnlockList
   end;
 end;
 
@@ -862,30 +923,65 @@ end;
 
 procedure TPlaylist.SetConnector(const Value: IConnector);
 begin
-  FConnector := Value;
+  if FConnector = Value then
+    exit;
+  LockList;
+  try
+    FConnector := Value;
+  finally
+    UnlockList;
+  end;
   tconfig.Current.hasConfigChanged := true;
 end;
 
 procedure TPlaylist.SetConnectorParams(const Value: TJSONObject);
 begin
-  FConnectorParams := Value;
+  if FConnectorParams = Value then
+    exit;
+  LockList;
+  try
+    FConnectorParams := Value;
+  finally
+    UnlockList;
+  end;
+  tconfig.Current.hasConfigChanged := true;
 end;
 
 procedure TPlaylist.SetEnabled(const Value: boolean);
 begin
-  if (FEnabled = Value) then
+  if FEnabled = Value then
     exit;
-
-  FEnabled := Value;
+  LockList;
+  try
+    FEnabled := Value;
+  finally
+    UnlockList;
+  end;
   tconfig.Current.hasConfigChanged := true;
+end;
+
+procedure TPlaylist.SethasChanged(const Value: boolean);
+begin
+  if FhasChanged = Value then
+    exit;
+  LockList;
+  try
+    FhasChanged := Value;
+  finally
+    UnlockList;
+  end;
 end;
 
 procedure TPlaylist.SetText(const Value: string);
 begin
-  if (FText = Value) then
+  if FText = Value then
     exit;
-
-  FText := Value;
+  LockList;
+  try
+    FText := Value;
+  finally
+    UnlockList;
+  end;
   tconfig.Current.hasConfigChanged := true;
 end;
 
