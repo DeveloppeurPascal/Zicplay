@@ -6,6 +6,7 @@ uses
   System.Generics.Collections,
   System.Messaging,
   System.Classes,
+  System.SysUtils,
   System.JSON;
 
 type
@@ -210,6 +211,12 @@ type
     function GetSongAt(AIndex: integer): TSong;
 
     /// <summary>
+    /// Check if the playlist has a song
+    /// </summary>
+    function HasSong(ASong: TSong): boolean; overload;
+    function HasSong(ASongUniqID: string): boolean; overload;
+
+    /// <summary>
     /// Sort the songs in this list by Album / Order / Title
     /// </summary>
     procedure SortByAlbum;
@@ -256,10 +263,10 @@ type
 
     /// <summary>
     /// Load the list of song from the local cache.
-    /// Start a reload from the connector if AForceReaload is True
+    /// Start a reload from the connector if AForceReaload is True.
+    /// After loading the song's list, TPlaylistUpdatedMessage is sent to its subscribers.
     /// </summary>
-    procedure RefreshSongsList(ACallbackProc: TZicPlayGetPlaylistProc;
-      AForceReload: boolean = false);
+    procedure RefreshSongsList(AForceReload: boolean = false);
 
     /// <summary>
     /// Update current list from APlaylist
@@ -294,7 +301,8 @@ type
     /// <summary>
     /// Display setup dialog for a playlist using this connector
     /// </summary>
-    procedure PlaylistSetupDialog(AParams: TJSONObject);
+    procedure PlaylistSetupDialog(AParams: TJSONObject;
+      AOnChangedProc: TProc = nil);
 
     /// <summary>
     /// True if the PlaylistSetupDialog procedure can be called to display a dialog box from the playlist options
@@ -394,7 +402,8 @@ type
     /// <summary>
     /// Display setup dialog for a playlist using this connector
     /// </summary>
-    procedure PlaylistSetupDialog(AParams: TJSONObject); virtual; abstract;
+    procedure PlaylistSetupDialog(AParams: TJSONObject;
+      AOnChangedProc: TProc = nil); virtual; abstract;
 
     /// <summary>
     /// True if the PlaylistSetupDialog procedure can be called to display a dialog box from the playlist options
@@ -467,7 +476,6 @@ uses
   System.IOUtils,
   fmx.DialogService,
   System.DateUtils,
-  System.SysUtils,
   System.Generics.Defaults,
   uConfig,
   Olf.RTL.Streams,
@@ -492,18 +500,46 @@ begin
   FAlbumLowerCase := '';
   FPublishedDate := 0;
   FUniqID := '';
-  FDuration := 0;
+  FDuration := -1;
   FIsLoading := false;
 end;
 
 function TSong.GetDurationAsTime: string;
+var
+  h, m, s: integer;
 begin
-  result := SecToHMS(FDuration);
+  if Duration < 0 then
+  begin
+    result := '0:00:00';
+    exit;
+  end;
+
+  SecToHMS(Duration, h, m, s);
+  result := '';
+  if (h > 0) then
+    result := result + h.ToString + ':';
+  if (m > 0) then
+  begin
+    if (m < 10) and (not result.IsEmpty) then
+      result := result + '0' + m.ToString + ':'
+    else
+      result := result + m.ToString + ':';
+  end
+  else if (not result.IsEmpty) then
+    result := result + '00:'
+  else
+    result := '0:';
+  if (s = 0) then
+    result := result + '00'
+  else if (s < 10) then
+    result := result + '0' + s.ToString
+  else
+    result := result + s.ToString;
 end;
 
 function TSong.GetFileName: string;
 begin
-  if (not FFilename.isempty) and tfile.Exists(FFilename) then
+  if (not FFilename.IsEmpty) and tfile.Exists(FFilename) then
     result := FFilename
   else if assigned(onGetFilename) then
     result := onGetFilename(FUniqID)
@@ -737,7 +773,7 @@ var
   i: integer;
   LGuid: string;
 begin
-  if FUniqID.isempty then
+  if FUniqID.IsEmpty then
   begin
     LGuid := TGUID.NewGuid.ToString;
     for i := 0 to length(LGuid) - 1 do
@@ -748,6 +784,37 @@ begin
     tconfig.Current.hasConfigChanged := true;
   end;
   result := FUniqID;
+end;
+
+function TPlaylist.HasSong(ASongUniqID: string): boolean;
+var
+  List: TList<TSong>;
+  i: integer;
+begin
+  result := false;
+  List := LockList;
+  try
+    for i := 0 to List.Count - 1 do
+      if List[i].UniqID = ASongUniqID then
+      begin
+        result := true;
+        break;
+      end;
+  finally
+    UnlockList;
+  end;
+end;
+
+function TPlaylist.HasSong(ASong: TSong): boolean;
+var
+  List: TList<TSong>;
+begin
+  List := LockList;
+  try
+    result := List.IndexOf(ASong) >= 0;
+  finally
+    UnlockList;
+  end;
 end;
 
 procedure TPlaylist.LoadFromStream(AStream: TStream);
@@ -796,7 +863,7 @@ var
 begin
   FileName := tconfig.GetDefaultConfigFilePath(UniqID + '.songs');
 
-  if FileName.isempty then
+  if FileName.IsEmpty then
     exit;
 
   if not tfile.Exists(FileName) then
@@ -827,34 +894,28 @@ begin
   end;
 end;
 
-procedure TPlaylist.RefreshSongsList(ACallbackProc: TZicPlayGetPlaylistProc;
-  AForceReload: boolean);
+procedure TPlaylist.RefreshSongsList(AForceReload: boolean);
 begin
   tthread.CreateAnonymousThread(
     procedure
     begin
-      try
-        LoadSongsList;
-        tthread.Synchronize(nil,
-          procedure
-          begin
-            ACallbackProc(self);
-          end);
-      except
-        AForceReload := true;
-      end;
+      if not AForceReload then
+        try
+          LoadSongsList;
+          TMessageManager.DefaultManager.SendMessage(self,
+            TPlaylistUpdatedMessage.Create(self));
+        except
+          AForceReload := true;
+        end;
 
       if AForceReload then
         Connector.GetPlaylist(ConnectorParams,
           procedure(APlaylist: TPlaylist)
           begin
             UpdateAsAMirrorOf(APlaylist);
-            SaveSongsList;
-            tthread.Synchronize(nil,
-              procedure
-              begin
-                ACallbackProc(self);
-              end);
+            Save;
+            TMessageManager.DefaultManager.SendMessage(self,
+              TPlaylistUpdatedMessage.Create(self));
           end);
     end).Start;
 end;
@@ -876,7 +937,7 @@ var
 begin
   FileName := tconfig.GetDefaultConfigFilePath(UniqID + '.songs');
 
-  if FileName.isempty then
+  if FileName.IsEmpty then
     exit;
 
   List := LockList;
@@ -1160,17 +1221,21 @@ begin
         idxMirror := 0;
         while true do
         begin
+          // log.d(idxLocal.ToString + '/' + LocalList.Count.ToString + '/' +
+          // idxMirror.ToString + '/' + MirrorList.Count.ToString);
           if (idxLocal >= LocalList.Count) and (idxMirror >= MirrorList.Count)
           then
             break
           else if (idxLocal >= LocalList.Count) or
-            (LocalList[idxLocal].UniqID > MirrorList[idxMirror].UniqID) then
+            ((idxMirror < MirrorList.Count) and
+            (LocalList[idxLocal].UniqID > MirrorList[idxMirror].UniqID)) then
           begin
             TempList.add(MirrorList[idxMirror]);
             inc(idxMirror);
           end
           else if (idxMirror >= MirrorList.Count) or
-            (LocalList[idxLocal].UniqID < MirrorList[idxMirror].UniqID) then
+            ((idxLocal < LocalList.Count) and
+            (LocalList[idxLocal].UniqID < MirrorList[idxMirror].UniqID)) then
           begin
             // TODO : get the TSong instance, remove it from other playlists and the memory
             LocalList.Delete(idxLocal);
