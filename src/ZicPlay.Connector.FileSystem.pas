@@ -199,6 +199,11 @@ begin
             Song.FileName := Files[i];
             Song.onGetFilename := nil;
             Playlist.Add(Song);
+
+            // update the calling playlist each 50 songs
+            if (Playlist.Count mod 50 = 0) and assigned(ACallbackProc) then
+              ACallbackProc(Playlist);
+            // TODO : do it only if the calling playlist is empty for first load to avoid removing songs
           end;
       finally
         ID3v2.Free;
