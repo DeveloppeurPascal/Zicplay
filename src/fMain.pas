@@ -314,6 +314,13 @@ begin
   // Saving the settings here will fix the problem.
   if TConfig.Current.hasConfigChanged then
     TConfig.Current.SaveTofile;
+
+  tparallel.For(0, TConfig.Current.Playlists.Count - 1,
+    procedure(i: integer)
+    begin
+      if TConfig.Current.Playlists[i].hasChanged then
+        TConfig.Current.Playlists[i].Save;
+    end);
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
