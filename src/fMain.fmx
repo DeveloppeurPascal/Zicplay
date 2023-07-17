@@ -26,11 +26,25 @@ object frmMain: TfrmMain
       Margins.Top = 5.000000000000000000
       Margins.Right = 5.000000000000000000
       Margins.Bottom = 5.000000000000000000
-      Size.Width = 1206.000000000000000000
+      Size.Width = 1096.000000000000000000
       Size.Height = 30.000000000000000000
       Size.PlatformDefault = False
       Text = 'lblSongPlayed'
       TabOrder = 1
+    end
+    object lblNbSongs: TLabel
+      Align = Right
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 1111.000000000000000000
+      Position.Y = 5.000000000000000000
+      Size.Width = 100.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'lblNbSongs'
+      TabOrder = 3
     end
   end
   object ToolBar1: TToolBar

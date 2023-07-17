@@ -76,6 +76,7 @@ type
     cbRepeatAll: TCheckBox;
     cbPlayNextRandom: TCheckBox;
     cbRepeatCurrentSong: TCheckBox;
+    lblNbSongs: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure actAboutExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
@@ -337,6 +338,14 @@ begin
 
   MusicPlayer := TMusicLoop.Create;
 
+  caption := AboutDialog.Titre + ' ' + AboutDialog.VersionNumero;
+{$IFDEF DEBUG}
+  caption := caption + ' [DEBUG MODE]';
+{$ENDIF}
+  FDefaultCaption := caption;
+  lblSongPlayed.Text := '';
+  lblNbSongs.Text := '';
+
   edtSearch.Text := TConfig.Current.FilterText;
   cbSortList.ItemIndex := TConfig.Current.SortType;
   tbVolume.Value := TConfig.Current.Volume;
@@ -426,13 +435,6 @@ begin
         end);
     end);
 
-  caption := AboutDialog.Titre + ' ' + AboutDialog.VersionNumero;
-{$IFDEF DEBUG}
-  caption := caption + ' [DEBUG MODE]';
-{$ENDIF}
-  FDefaultCaption := caption;
-
-  lblSongPlayed.Text := '';
   SubscribeToNowPlayingMessage;
 
   tthread.CreateAnonymousThread(
@@ -802,6 +804,10 @@ begin
   finally
     ListView1.EndUpdate;
   end;
+  if (ListView1.ItemCount > 1) then
+    lblNbSongs.Text := ListView1.ItemCount.tostring + ' songs'
+  else
+    lblNbSongs.Text := ListView1.ItemCount.tostring + ' song';
   UpdatePlayPauseButton;
 end;
 
