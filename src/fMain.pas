@@ -150,6 +150,7 @@ implementation
 {$R *.fmx}
 
 uses
+  System.Threading,
   FMX.DialogService,
   System.JSON,
   System.IOUtils,
@@ -401,20 +402,28 @@ begin
     cb.Margins.right := 10;
     cb.Margins.Bottom := 10;
     cb.Margins.Left := 10;
-
-    if TConfig.Current.Playlists[i].enabled then
-      TConfig.Current.Playlists[i].RefreshSongsList(
-        procedure(APlaylist: TPlaylist)
-        var
-          i: integer;
-        begin
-          for i := 0 to APlaylist.Count - 1 do
-            CurrentSongsListNotFiltered.Add(APlaylist.GetSongAt(i));
-          RefreshListView;
-        end);
   end;
   SubscribeToNewPlaylistMessage;
   SubscribeToPlaylistUpdatedMessage;
+
+  tthread.ForceQueue(nil,
+    procedure
+    begin
+      tparallel.For(0, TConfig.Current.Playlists.Count - 1,
+        procedure(i: integer)
+        begin
+          if TConfig.Current.Playlists[i].enabled then
+            TConfig.Current.Playlists[i].RefreshSongsList(
+              procedure(APlaylist: TPlaylist)
+              var
+                i: integer;
+              begin
+                for i := 0 to APlaylist.Count - 1 do
+                  CurrentSongsListNotFiltered.Add(APlaylist.GetSongAt(i));
+                RefreshListView;
+              end);
+        end);
+    end);
 
   caption := AboutDialog.Titre + ' ' + AboutDialog.VersionNumero;
 {$IFDEF DEBUG}
