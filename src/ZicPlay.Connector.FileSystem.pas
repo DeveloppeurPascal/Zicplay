@@ -22,10 +22,10 @@ type
     procedure SaveParamsToPlaylist(ASearchFolder: string;
       ASearchSubFolders: Boolean; Params: TJSONObject); virtual;
   public
-    function getName: string; override;
+    function GetName: string; override;
     procedure GetPlaylist(AParams: TJSONObject;
       ACallbackProc: TZicPlayGetPlaylistProc); overload; override;
-    function getUniqID: string; override;
+    function GetUniqID: string; override;
     function hasPlaylistSetupDialog: Boolean; override;
     procedure PlaylistSetupDialog(AParams: TJSONObject;
       AOnChangedProc: TProc = nil); override;
@@ -60,7 +60,7 @@ begin
 {$MESSAGE warn 'replace by UTF8 character check'}
 end;
 
-function TZicPlayConnectorFileSystem.getName: string;
+function TZicPlayConnectorFileSystem.GetName: string;
 begin
   result := CConnectorName;
 end;
@@ -218,7 +218,7 @@ begin
   end;
 end;
 
-function TZicPlayConnectorFileSystem.getUniqID: string;
+function TZicPlayConnectorFileSystem.GetUniqID: string;
 begin
   result := CConnectorGUID;
 end;

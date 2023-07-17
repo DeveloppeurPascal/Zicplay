@@ -18,8 +18,8 @@ type
     procedure SaveParamsToPlaylist(ASearchFolder: string;
       ASearchSubFolders: Boolean; Params: TJSONObject); override;
   public
-    function getName: string; override;
-    function getUniqID: string; override;
+    function GetName: string; override;
+    function GetUniqID: string; override;
     function hasPlaylistSetupDialog: Boolean; override;
   end;
 
@@ -30,12 +30,12 @@ uses
 
 { TZicPlayConnectorMyMusic }
 
-function TZicPlayConnectorMyMusic.getName: string;
+function TZicPlayConnectorMyMusic.GetName: string;
 begin
   result := CConnectorName;
 end;
 
-function TZicPlayConnectorMyMusic.getUniqID: string;
+function TZicPlayConnectorMyMusic.GetUniqID: string;
 begin
   result := CConnectorGUID;
 end;

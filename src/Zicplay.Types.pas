@@ -291,7 +291,7 @@ type
     /// <summary>
     /// Name of this connector (displayed to the users)
     /// </summary>
-    function getName: string;
+    function GetName: string;
 
     /// <summary>
     /// Uniq ID (a GUID is fine) for this connector
@@ -392,7 +392,7 @@ type
     /// <summary>
     /// Name of this connector (displayed to the users)
     /// </summary>
-    function getName: string; virtual; abstract;
+    function GetName: string; virtual; abstract;
 
     /// <summary>
     /// Uniq ID (a GUID is fine) for this connector
@@ -556,8 +556,6 @@ end;
 procedure TSong.LoadFromStream(AStream: TStream);
 var
   DataVersion: word;
-  guid: string;
-  JSON: string;
 begin
   if not assigned(AStream) then
     raise exception.Create
@@ -1315,9 +1313,9 @@ begin
   List.Sort(TComparer<IConnector>.Construct(
     function(const A, B: IConnector): integer
     begin
-      if A.getName = B.getName then
+      if A.GetName = B.GetName then
         result := 0
-      else if A.getName < B.getName then
+      else if A.GetName < B.GetName then
         result := -1
       else
         result := 1;
@@ -1381,7 +1379,7 @@ end;
 
 procedure TConnector.SetupDialog;
 begin
-  tdialogservice.ShowMessage(getName);
+  tdialogservice.ShowMessage(GetName);
 end;
 
 initialization
