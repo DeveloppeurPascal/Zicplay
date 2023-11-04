@@ -386,8 +386,8 @@ object frmMain: TfrmMain
   end
   object AboutDialog: TOlfAboutDialog
     Titre = 'Zicplay'
-    VersionNumero = '1.1'
-    VersionDate = '20230717'
+    VersionNumero = '1.2'
+    VersionDate = '20231104'
     MultiResBitmap = <
       item
       end>

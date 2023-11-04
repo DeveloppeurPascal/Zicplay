@@ -338,9 +338,10 @@ begin
 
   MusicPlayer := TMusicLoop.Create;
 
-  caption := AboutDialog.Titre + ' ' + AboutDialog.VersionNumero;
 {$IFDEF DEBUG}
-  caption := caption + ' [DEBUG MODE]';
+  caption := '[DEBUG] ' + AboutDialog.Titre + ' v' + AboutDialog.VersionNumero;
+{$ELSE}
+  caption := AboutDialog.Titre + ' v' + AboutDialog.VersionNumero;
 {$ENDIF}
   FDefaultCaption := caption;
   lblSongPlayed.Text := '';
@@ -1155,5 +1156,7 @@ initialization
 {$ENDIF}
   TDialogService.PreferredMode := TDialogService.TPreferredMode.Sync;
 randomize;
+
+globalusemetal := true;
 
 end.
