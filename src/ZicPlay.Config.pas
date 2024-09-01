@@ -1,4 +1,4 @@
-unit uConfig;
+unit ZicPlay.Config;
 
 interface
 
@@ -17,7 +17,7 @@ type
     procedure SortByName;
   end;
 
-  TConfig = class
+  TZPConfig = class
   private const
     CDataVersion = 4;
 
@@ -45,15 +45,15 @@ type
     procedure SetConfigFilename(const Value: string);
     procedure SetPlaylists(const Value: TPlaylistsList);
     procedure SetmvPlaylistsVisible(const Value: boolean);
-    class var FCurrent: TConfig;
-    class function GetCurrent: TConfig; static;
+    class var FCurrent: TZPConfig;
+    class function GetCurrent: TZPConfig; static;
   protected
     property ConfigFilename: string read FConfigFilename
       write SetConfigFilename;
     constructor Create;
     destructor Destroy; override;
   public
-    class property Current: TConfig read GetCurrent;
+    class property Current: TZPConfig read GetCurrent;
     property Playlists: TPlaylistsList read FPlaylists write SetPlaylists;
     property mvPlaylistsVisible: boolean read FmvPlaylistsVisible
       write SetmvPlaylistsVisible;
@@ -85,7 +85,7 @@ uses
   system.SysUtils,
   Olf.RTL.Streams;
 
-class function TConfig.GetDefaultConfigFilePath(AConfigFileName
+class function TZPConfig.GetDefaultConfigFilePath(AConfigFileName
   : string): string;
 var
   filename: string;
@@ -116,7 +116,7 @@ end;
 
 { TZicPlayConfig }
 
-constructor TConfig.Create;
+constructor TZPConfig.Create;
 begin
   inherited;
   Playlists := TPlaylistsList.Create;
@@ -136,21 +136,21 @@ begin
   FSortType := -1;
 end;
 
-destructor TConfig.Destroy;
+destructor TZPConfig.Destroy;
 begin
   Playlists.Free;
   inherited;
 end;
 
-class function TConfig.GetCurrent: TConfig;
+class function TZPConfig.GetCurrent: TZPConfig;
 begin
   if not assigned(FCurrent) then
-    FCurrent := TConfig.Create;
+    FCurrent := TZPConfig.Create;
 
   result := FCurrent;
 end;
 
-procedure TConfig.LoadFromFile(AFilename: string);
+procedure TZPConfig.LoadFromFile(AFilename: string);
 var
   Stream: TFileStream;
 begin
@@ -173,7 +173,7 @@ begin
   end;
 end;
 
-procedure TConfig.LoadFromStream(AStream: TStream);
+procedure TZPConfig.LoadFromStream(AStream: TStream);
 var
   DataVersion: word;
   nb: TPlaylistsCounter;
@@ -221,7 +221,7 @@ begin
   end;
 end;
 
-procedure TConfig.SaveTofile(AFilename: string);
+procedure TZPConfig.SaveTofile(AFilename: string);
 var
   Stream: TFileStream;
 begin
@@ -241,7 +241,7 @@ begin
   end;
 end;
 
-procedure TConfig.SaveToStream(AStream: TStream);
+procedure TZPConfig.SaveToStream(AStream: TStream);
 var
   DataVersion: word;
   nb: TPlaylistsCounter;
@@ -278,12 +278,12 @@ begin
   FConfigChanged := false;
 end;
 
-procedure TConfig.SetConfigFilename(const Value: string);
+procedure TZPConfig.SetConfigFilename(const Value: string);
 begin
   FConfigFilename := Value;
 end;
 
-procedure TConfig.SetFilterText(const Value: string);
+procedure TZPConfig.SetFilterText(const Value: string);
 begin
   if (FFilterText = Value) then
     exit;
@@ -292,7 +292,7 @@ begin
   FConfigChanged := true;
 end;
 
-procedure TConfig.SetmvPlaylistsVisible(const Value: boolean);
+procedure TZPConfig.SetmvPlaylistsVisible(const Value: boolean);
 begin
   if (FmvPlaylistsVisible = Value) then
     exit;
@@ -301,7 +301,7 @@ begin
   FConfigChanged := true;
 end;
 
-procedure TConfig.SetPlayIntro(const Value: boolean);
+procedure TZPConfig.SetPlayIntro(const Value: boolean);
 begin
   if (FPlayIntro = Value) then
     exit;
@@ -310,7 +310,7 @@ begin
   FConfigChanged := true;
 end;
 
-procedure TConfig.SetPlayIntroDuration(const Value: integer);
+procedure TZPConfig.SetPlayIntroDuration(const Value: integer);
 begin
   if (FPlayIntroDuration = Value) then
     exit;
@@ -319,12 +319,12 @@ begin
   FConfigChanged := true;
 end;
 
-procedure TConfig.SetPlaylists(const Value: TPlaylistsList);
+procedure TZPConfig.SetPlaylists(const Value: TPlaylistsList);
 begin
   FPlaylists := Value;
 end;
 
-procedure TConfig.SetPlayNextRandom(const Value: boolean);
+procedure TZPConfig.SetPlayNextRandom(const Value: boolean);
 begin
   if (FPlayNextRandom = Value) then
     exit;
@@ -333,7 +333,7 @@ begin
   FConfigChanged := true;
 end;
 
-procedure TConfig.SetPlayRepeatAll(const Value: boolean);
+procedure TZPConfig.SetPlayRepeatAll(const Value: boolean);
 begin
   if (FPlayRepeatAll = Value) then
     exit;
@@ -342,7 +342,7 @@ begin
   FConfigChanged := true;
 end;
 
-procedure TConfig.SetPlayRepeatOne(const Value: boolean);
+procedure TZPConfig.SetPlayRepeatOne(const Value: boolean);
 begin
   if (FPlayRepeatOne = Value) then
     exit;
@@ -351,7 +351,7 @@ begin
   FConfigChanged := true;
 end;
 
-procedure TConfig.SetSortType(const Value: integer);
+procedure TZPConfig.SetSortType(const Value: integer);
 begin
   if (FSortType = Value) then
     exit;
@@ -360,7 +360,7 @@ begin
   FConfigChanged := true;
 end;
 
-procedure TConfig.SetVolume(const Value: integer);
+procedure TZPConfig.SetVolume(const Value: integer);
 begin
   if (FVolume = Value) then
     exit;
@@ -396,9 +396,9 @@ initialization
 
 finalization
 
-if TConfig.Current.hasConfigChanged then
-  TConfig.Current.SaveTofile;
+if TZPConfig.Current.hasConfigChanged then
+  TZPConfig.Current.SaveTofile;
 
-TConfig.Current.Free;
+TZPConfig.Current.Free;
 
 end.
