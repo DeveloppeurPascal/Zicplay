@@ -131,6 +131,9 @@ ASearchSubFolders: Boolean; ACallbackProc: TZicPlayGetPlaylistProc);
     fs: TStringDynArray;
     i, j: integer;
   begin
+    if not tdirectory.Exists(AFolder) then
+      exit;
+
     try
       fs := tdirectory.GetFiles(AFolder);
       if Length(fs) > 0 then
