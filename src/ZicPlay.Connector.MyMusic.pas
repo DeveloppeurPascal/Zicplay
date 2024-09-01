@@ -64,9 +64,6 @@ TConnectorsList.current.Register(TZicPlayConnectorMyMusic.create);
 
 finalization
 
-// if assigned(TZicPlayConnectorMyMusic.current) then
-// TZicPlayConnectorMyMusic.current.Free;
-
 // TODO : find a way to free the instance if Delphi don't do it by itself
 
 end.
