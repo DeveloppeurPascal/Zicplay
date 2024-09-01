@@ -1,4 +1,4 @@
-# Icon assets copyright
+# Pictogrammers icons
 
 The file "playlist-music-outline.svg" has been created by Google and is distributed under Apache2.0 license (at the moment it is used there).
 
