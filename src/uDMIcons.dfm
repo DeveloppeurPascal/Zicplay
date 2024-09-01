@@ -277,7 +277,7 @@ object DMIcons: TDMIcons
               17BA6C6005E2F60000000049454E44AE426082}
             FileName = 
               'C:\Users\patrickpremartin\Documents\Embarcadero\Studio\Projets\Z' +
-              'icplay\design\icons\zicplay-512x512.png'
+              'icplay\assets\icons\zicplay-512x512.png'
           end
           item
             Width = 256
@@ -385,7 +385,7 @@ object DMIcons: TDMIcons
               A72F02C109FC1716DE3FDDA75BFDDB0000000049454E44AE426082}
             FileName = 
               'C:\Users\patrickpremartin\Documents\Embarcadero\Studio\Projets\Z' +
-              'icplay\design\icons\zicplay-256x256.png'
+              'icplay\assets\icons\zicplay-256x256.png'
           end>
         Name = 'Icon'
       end>
