@@ -1,9 +1,9 @@
 ﻿/// <summary>
 /// ***************************************************************************
 ///
-/// FMX Tools Starter Kit
+/// ZicPlay
 ///
-/// Copyright 2024 Patrick Prémartin under AGPL 3.0 license.
+/// Copyright 2023-2024 Patrick Prémartin under AGPL 3.0 license.
 ///
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -15,18 +15,22 @@
 ///
 /// ***************************************************************************
 ///
+/// ZicPlay is a MP3 player based on playlists from multiple sources.
+///
+/// ***************************************************************************
+///
 /// Author(s) :
 /// Patrick PREMARTIN
 ///
 /// Site :
-/// https://fmxtoolsstarterkit.developpeur-pascal.fr/
+/// https://zicplay.olfsoftware.fr/
 ///
 /// Project site :
-/// https://github.com/DeveloppeurPascal/FMX-Tools-Starter-Kit
+/// https://github.com/DeveloppeurPascal/Zicplay
 ///
 /// ***************************************************************************
-/// File last update : 2024-08-28T12:19:24.000+02:00
-/// Signature : bb1284c79b6f8a793c5705af597b6bed59268b69
+/// File last update : 2024-09-01T11:29:24.000+02:00
+/// Signature : 1c00e38c0fe539a2355363322dc0ce73dfb91eff
 /// ***************************************************************************
 /// </summary>
 
