@@ -440,8 +440,8 @@
             <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="Zicplay.Types.pas"/>
-        <DCCReference Include="..\lib-externes\AboutDialog-Delphi-Component\sources\Olf.FMX.AboutDialog.pas"/>
-        <DCCReference Include="..\lib-externes\AboutDialog-Delphi-Component\sources\Olf.FMX.AboutDialogForm.pas">
+        <DCCReference Include="..\lib-externes\AboutDialog-Delphi-Component\src\Olf.FMX.AboutDialog.pas"/>
+        <DCCReference Include="..\lib-externes\AboutDialog-Delphi-Component\src\Olf.FMX.AboutDialogForm.pas">
             <Form>OlfAboutDialogForm</Form>
             <FormType>fmx</FormType>
         </DCCReference>
