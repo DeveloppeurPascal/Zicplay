@@ -550,7 +550,7 @@ begin
             end);
         inc(i);
       end;
-    end).start;
+    end)//.start;
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
