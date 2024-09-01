@@ -451,7 +451,7 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\lib-externes\librairies\u_urlOpen.pas"/>
+        <DCCReference Include="..\lib-externes\librairies\src\u_urlOpen.pas"/>
         <DCCReference Include="ZicPlay.Connector.FileSystem.pas"/>
         <DCCReference Include="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.pas">
             <Form>frmPlaylistSetupDialog</Form>
@@ -467,8 +467,8 @@
             <Form>frmSelectConnector</Form>
             <FormType>fmx</FormType>
         </DCCReference>
-        <DCCReference Include="..\lib-externes\librairies\Olf.RTL.Streams.pas"/>
-        <DCCReference Include="..\lib-externes\librairies\Olf.RTL.DateAndTime.pas"/>
+        <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.Streams.pas"/>
+        <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.DateAndTime.pas"/>
         <DCCReference Include="..\lib-externes\Audio-Tools-Library\MP3-IDtags-Reader\ID3v1.pas"/>
         <DCCReference Include="..\lib-externes\Audio-Tools-Library\MP3-IDtags-Reader\ID3v2.pas"/>
         <BuildConfiguration Include="Base">
