@@ -64,6 +64,18 @@
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Android' and '$(Cfg_1)'=='true') or '$(Cfg_1_Android)'!=''">
+        <Cfg_1_Android>true</Cfg_1_Android>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Android64' and '$(Cfg_1)'=='true') or '$(Cfg_1_Android64)'!=''">
+        <Cfg_1_Android64>true</Cfg_1_Android64>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='OSXARM64' and '$(Cfg_1)'=='true') or '$(Cfg_1_OSXARM64)'!=''">
         <Cfg_1_OSXARM64>true</Cfg_1_OSXARM64>
         <CfgParent>Cfg_1</CfgParent>
@@ -161,54 +173,79 @@
         <VerInfo_Keys>package=fr.olfsoftware.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.0.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <Android_LauncherIcon36>..\assets\icons\zicplay-36x36.png</Android_LauncherIcon36>
-        <Android_LauncherIcon48>..\assets\icons\zicplay-48x48.png</Android_LauncherIcon48>
-        <Android_LauncherIcon72>..\assets\icons\zicplay-72x72.png</Android_LauncherIcon72>
-        <Android_LauncherIcon96>..\assets\icons\zicplay-96x96.png</Android_LauncherIcon96>
-        <Android_LauncherIcon144>..\assets\icons\zicplay-144x144.png</Android_LauncherIcon144>
-        <Android_LauncherIcon192>..\assets\icons\zicplay-192x192.png</Android_LauncherIcon192>
-        <Android_SplashImage426>..\assets\icons\zicplay-426x320.png</Android_SplashImage426>
-        <Android_SplashImage470>..\assets\icons\zicplay-470x320.png</Android_SplashImage470>
-        <Android_SplashImage640>..\assets\icons\zicplay-640x480.png</Android_SplashImage640>
-        <Android_SplashImage960>..\assets\icons\zicplay-960x720.png</Android_SplashImage960>
-        <Android_NotificationIcon24>..\assets\icons\zicplay-24x24.png</Android_NotificationIcon24>
-        <Android_NotificationIcon36>..\assets\icons\zicplay-36x36.png</Android_NotificationIcon36>
-        <Android_NotificationIcon48>..\assets\icons\zicplay-48x48.png</Android_NotificationIcon48>
-        <Android_NotificationIcon72>..\assets\icons\zicplay-72x72.png</Android_NotificationIcon72>
-        <Android_NotificationIcon96>..\assets\icons\zicplay-96x96.png</Android_NotificationIcon96>
+        <Android_LauncherIcon36>$(ProjectName).Artwork\Android\FM_LauncherIcon_36x36.png</Android_LauncherIcon36>
+        <Android_LauncherIcon48>$(ProjectName).Artwork\Android\FM_LauncherIcon_48x48.png</Android_LauncherIcon48>
+        <Android_LauncherIcon72>$(ProjectName).Artwork\Android\FM_LauncherIcon_72x72.png</Android_LauncherIcon72>
+        <Android_LauncherIcon96>$(ProjectName).Artwork\Android\FM_LauncherIcon_96x96.png</Android_LauncherIcon96>
+        <Android_LauncherIcon144>$(ProjectName).Artwork\Android\FM_LauncherIcon_144x144.png</Android_LauncherIcon144>
+        <Android_LauncherIcon192>$(ProjectName).Artwork\Android\FM_LauncherIcon_192x192.png</Android_LauncherIcon192>
+        <Android_SplashImage426>$(ProjectName).Artwork\Android\FM_SplashImage_426x320.png</Android_SplashImage426>
+        <Android_SplashImage470>$(ProjectName).Artwork\Android\FM_SplashImage_470x320.png</Android_SplashImage470>
+        <Android_SplashImage640>$(ProjectName).Artwork\Android\FM_SplashImage_640x480.png</Android_SplashImage640>
+        <Android_SplashImage960>$(ProjectName).Artwork\Android\FM_SplashImage_960x720.png</Android_SplashImage960>
+        <Android_NotificationIcon24>$(ProjectName).Artwork\Android\FM_NotificationIcon_24x24.png</Android_NotificationIcon24>
+        <Android_NotificationIcon36>$(ProjectName).Artwork\Android\FM_NotificationIcon_36x36.png</Android_NotificationIcon36>
+        <Android_NotificationIcon48>$(ProjectName).Artwork\Android\FM_NotificationIcon_48x48.png</Android_NotificationIcon48>
+        <Android_NotificationIcon72>$(ProjectName).Artwork\Android\FM_NotificationIcon_72x72.png</Android_NotificationIcon72>
+        <Android_NotificationIcon96>$(ProjectName).Artwork\Android\FM_NotificationIcon_96x96.png</Android_NotificationIcon96>
         <EnabledSysJars>activity-1.1.0.dex.jar;annotation-1.2.0.dex.jar;appcompat-1.2.0.dex.jar;appcompat-resources-1.2.0.dex.jar;asynclayoutinflater-1.0.0.dex.jar;billing-4.0.0.dex.jar;biometric-1.1.0.dex.jar;browser-1.0.0.dex.jar;cloud-messaging.dex.jar;collection-1.1.0.dex.jar;coordinatorlayout-1.0.0.dex.jar;core-1.5.0-rc02.dex.jar;core-common-2.1.0.dex.jar;core-runtime-2.1.0.dex.jar;cursoradapter-1.0.0.dex.jar;customview-1.0.0.dex.jar;documentfile-1.0.0.dex.jar;drawerlayout-1.0.0.dex.jar;firebase-annotations-16.0.0.dex.jar;firebase-common-20.0.0.dex.jar;firebase-components-17.0.0.dex.jar;firebase-datatransport-18.0.0.dex.jar;firebase-encoders-17.0.0.dex.jar;firebase-encoders-json-18.0.0.dex.jar;firebase-iid-interop-17.1.0.dex.jar;firebase-installations-17.0.0.dex.jar;firebase-installations-interop-17.0.0.dex.jar;firebase-measurement-connector-19.0.0.dex.jar;firebase-messaging-22.0.0.dex.jar;fmx.dex.jar;fragment-1.2.5.dex.jar;google-play-licensing.dex.jar;interpolator-1.0.0.dex.jar;javax.inject-1.dex.jar;legacy-support-core-ui-1.0.0.dex.jar;legacy-support-core-utils-1.0.0.dex.jar;lifecycle-common-2.2.0.dex.jar;lifecycle-livedata-2.0.0.dex.jar;lifecycle-livedata-core-2.2.0.dex.jar;lifecycle-runtime-2.2.0.dex.jar;lifecycle-service-2.0.0.dex.jar;lifecycle-viewmodel-2.2.0.dex.jar;lifecycle-viewmodel-savedstate-2.2.0.dex.jar;listenablefuture-1.0.dex.jar;loader-1.0.0.dex.jar;localbroadcastmanager-1.0.0.dex.jar;play-services-ads-20.1.0.dex.jar;play-services-ads-base-20.1.0.dex.jar;play-services-ads-identifier-17.0.0.dex.jar;play-services-ads-lite-20.1.0.dex.jar;play-services-base-17.5.0.dex.jar;play-services-basement-17.6.0.dex.jar;play-services-cloud-messaging-16.0.0.dex.jar;play-services-drive-17.0.0.dex.jar;play-services-games-21.0.0.dex.jar;play-services-location-18.0.0.dex.jar;play-services-maps-17.0.1.dex.jar;play-services-measurement-base-18.0.0.dex.jar;play-services-measurement-sdk-api-18.0.0.dex.jar;play-services-places-placereport-17.0.0.dex.jar;play-services-stats-17.0.0.dex.jar;play-services-tasks-17.2.0.dex.jar;print-1.0.0.dex.jar;room-common-2.1.0.dex.jar;room-runtime-2.1.0.dex.jar;savedstate-1.0.0.dex.jar;slidingpanelayout-1.0.0.dex.jar;sqlite-2.0.1.dex.jar;sqlite-framework-2.0.1.dex.jar;swiperefreshlayout-1.0.0.dex.jar;transport-api-3.0.0.dex.jar;transport-backend-cct-3.0.0.dex.jar;transport-runtime-3.0.0.dex.jar;user-messaging-platform-1.0.0.dex.jar;vectordrawable-1.1.0.dex.jar;vectordrawable-animated-1.1.0.dex.jar;versionedparcelable-1.1.1.dex.jar;viewpager-1.0.0.dex.jar;work-runtime-2.1.0.dex.jar</EnabledSysJars>
         <VerInfo_Build>1</VerInfo_Build>
         <Android_SplashTileMode>disabled</Android_SplashTileMode>
         <Android_SplashGravity>center</Android_SplashGravity>
         <Android_NotificationAccentColor>#000000</Android_NotificationAccentColor>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
+        <Android_BackgroundColor>#FDFB95</Android_BackgroundColor>
+        <Android_DarkBackgroundColor>#FDFB95</Android_DarkBackgroundColor>
+        <IncludeAndroid_VectorizedNotificationIcon>True</IncludeAndroid_VectorizedNotificationIcon>
+        <Android_VectorizedNotificationIcon>$(ProjectName).Artwork\Android\FM_VectorizedNotificationIcon.xml</Android_VectorizedNotificationIcon>
+        <IncludeAndroid_AdaptiveIcon>True</IncludeAndroid_AdaptiveIcon>
+        <Android_AdaptiveIconBackground>$(ProjectName).Artwork\Android\FM_AdaptiveIcon_Background.xml</Android_AdaptiveIconBackground>
+        <Android_AdaptiveIconForeground>$(ProjectName).Artwork\Android\FM_AdaptiveIcon_Foreground.xml</Android_AdaptiveIconForeground>
+        <Android_AdaptiveIconMonochrome>$(ProjectName).Artwork\Android\FM_AdaptiveIcon_Monochrome.xml</Android_AdaptiveIconMonochrome>
+        <IncludeAndroid_VectorizedSplash>True</IncludeAndroid_VectorizedSplash>
+        <Android_VectorizedSplash>$(ProjectName).Artwork\Android\FM_VectorizedSplash.xml</Android_VectorizedSplash>
+        <Android_VectorizedSplashV31>$(ProjectName).Artwork\Android\FM_VectorizedSplashV31.xml</Android_VectorizedSplashV31>
+        <Android_VectorizedSplashDark>$(ProjectName).Artwork\Android\FM_VectorizedSplashDark.xml</Android_VectorizedSplashDark>
+        <Android_VectorizedSplashV31Dark>$(ProjectName).Artwork\Android\FM_VectorizedSplashV31Dark.xml</Android_VectorizedSplashV31Dark>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android64)'!=''">
         <DCC_UsePackage>fmx;DbxCommonDriver;bindengine;IndyIPCommon;emsclient;FireDACCommonDriver;IndyProtocols;RadiantShapesFmx_Design;IndyIPClient;dbxcds;FmxTeeUI;bindcompfmx;Olf.FMX.AboutBoxPackage;ibmonitor;FireDACSqliteDriver;DbxClientDriver;soapmidas;fmxFireDAC;dbexpress;inet;DataSnapCommon;DzHTMLText_FMX;dbrtl;FireDACDBXDriver;CustomIPTransport;DBXInterBaseDriver;IndySystem;RadiantShapesFmx;ibxbindings;bindcomp;FireDACCommon;IndyCore;RESTBackendComponents;bindcompdbx;rtl;RESTComponents;DBXSqliteDriver;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;DataSnapFireDAC;emsclientfiredac;FireDAC;FireDACDSDriver;xmlrtl;tethering;ibxpress;dsnap;CloudService;FMXTee;DataSnapNativeClient;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_Keys>package=fr.olfsoftware.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.0.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <Android_LauncherIcon36>..\assets\icons\zicplay-36x36.png</Android_LauncherIcon36>
-        <Android_LauncherIcon48>..\assets\icons\zicplay-48x48.png</Android_LauncherIcon48>
-        <Android_LauncherIcon72>..\assets\icons\zicplay-72x72.png</Android_LauncherIcon72>
-        <Android_LauncherIcon96>..\assets\icons\zicplay-96x96.png</Android_LauncherIcon96>
-        <Android_LauncherIcon144>..\assets\icons\zicplay-144x144.png</Android_LauncherIcon144>
-        <Android_LauncherIcon192>..\assets\icons\zicplay-192x192.png</Android_LauncherIcon192>
-        <Android_SplashImage426>..\assets\icons\zicplay-426x320.png</Android_SplashImage426>
-        <Android_SplashImage470>..\assets\icons\zicplay-470x320.png</Android_SplashImage470>
-        <Android_SplashImage640>..\assets\icons\zicplay-640x480.png</Android_SplashImage640>
-        <Android_SplashImage960>..\assets\icons\zicplay-960x720.png</Android_SplashImage960>
-        <Android_NotificationIcon24>..\assets\icons\zicplay-24x24.png</Android_NotificationIcon24>
-        <Android_NotificationIcon36>..\assets\icons\zicplay-36x36.png</Android_NotificationIcon36>
-        <Android_NotificationIcon48>..\assets\icons\zicplay-48x48.png</Android_NotificationIcon48>
-        <Android_NotificationIcon72>..\assets\icons\zicplay-72x72.png</Android_NotificationIcon72>
-        <Android_NotificationIcon96>..\assets\icons\zicplay-96x96.png</Android_NotificationIcon96>
+        <Android_LauncherIcon36>$(ProjectName).Artwork\Android\FM_LauncherIcon_36x36.png</Android_LauncherIcon36>
+        <Android_LauncherIcon48>$(ProjectName).Artwork\Android\FM_LauncherIcon_48x48.png</Android_LauncherIcon48>
+        <Android_LauncherIcon72>$(ProjectName).Artwork\Android\FM_LauncherIcon_72x72.png</Android_LauncherIcon72>
+        <Android_LauncherIcon96>$(ProjectName).Artwork\Android\FM_LauncherIcon_96x96.png</Android_LauncherIcon96>
+        <Android_LauncherIcon144>$(ProjectName).Artwork\Android\FM_LauncherIcon_144x144.png</Android_LauncherIcon144>
+        <Android_LauncherIcon192>$(ProjectName).Artwork\Android\FM_LauncherIcon_192x192.png</Android_LauncherIcon192>
+        <Android_SplashImage426>$(ProjectName).Artwork\Android\FM_SplashImage_426x320.png</Android_SplashImage426>
+        <Android_SplashImage470>$(ProjectName).Artwork\Android\FM_SplashImage_470x320.png</Android_SplashImage470>
+        <Android_SplashImage640>$(ProjectName).Artwork\Android\FM_SplashImage_640x480.png</Android_SplashImage640>
+        <Android_SplashImage960>$(ProjectName).Artwork\Android\FM_SplashImage_960x720.png</Android_SplashImage960>
+        <Android_NotificationIcon24>$(ProjectName).Artwork\Android\FM_NotificationIcon_24x24.png</Android_NotificationIcon24>
+        <Android_NotificationIcon36>$(ProjectName).Artwork\Android\FM_NotificationIcon_36x36.png</Android_NotificationIcon36>
+        <Android_NotificationIcon48>$(ProjectName).Artwork\Android\FM_NotificationIcon_48x48.png</Android_NotificationIcon48>
+        <Android_NotificationIcon72>$(ProjectName).Artwork\Android\FM_NotificationIcon_72x72.png</Android_NotificationIcon72>
+        <Android_NotificationIcon96>$(ProjectName).Artwork\Android\FM_NotificationIcon_96x96.png</Android_NotificationIcon96>
         <EnabledSysJars>activity-1.1.0.dex.jar;annotation-1.2.0.dex.jar;appcompat-1.2.0.dex.jar;appcompat-resources-1.2.0.dex.jar;asynclayoutinflater-1.0.0.dex.jar;billing-4.0.0.dex.jar;biometric-1.1.0.dex.jar;browser-1.0.0.dex.jar;cloud-messaging.dex.jar;collection-1.1.0.dex.jar;coordinatorlayout-1.0.0.dex.jar;core-1.5.0-rc02.dex.jar;core-common-2.1.0.dex.jar;core-runtime-2.1.0.dex.jar;cursoradapter-1.0.0.dex.jar;customview-1.0.0.dex.jar;documentfile-1.0.0.dex.jar;drawerlayout-1.0.0.dex.jar;firebase-annotations-16.0.0.dex.jar;firebase-common-20.0.0.dex.jar;firebase-components-17.0.0.dex.jar;firebase-datatransport-18.0.0.dex.jar;firebase-encoders-17.0.0.dex.jar;firebase-encoders-json-18.0.0.dex.jar;firebase-iid-interop-17.1.0.dex.jar;firebase-installations-17.0.0.dex.jar;firebase-installations-interop-17.0.0.dex.jar;firebase-measurement-connector-19.0.0.dex.jar;firebase-messaging-22.0.0.dex.jar;fmx.dex.jar;fragment-1.2.5.dex.jar;google-play-licensing.dex.jar;interpolator-1.0.0.dex.jar;javax.inject-1.dex.jar;legacy-support-core-ui-1.0.0.dex.jar;legacy-support-core-utils-1.0.0.dex.jar;lifecycle-common-2.2.0.dex.jar;lifecycle-livedata-2.0.0.dex.jar;lifecycle-livedata-core-2.2.0.dex.jar;lifecycle-runtime-2.2.0.dex.jar;lifecycle-service-2.0.0.dex.jar;lifecycle-viewmodel-2.2.0.dex.jar;lifecycle-viewmodel-savedstate-2.2.0.dex.jar;listenablefuture-1.0.dex.jar;loader-1.0.0.dex.jar;localbroadcastmanager-1.0.0.dex.jar;play-services-ads-20.1.0.dex.jar;play-services-ads-base-20.1.0.dex.jar;play-services-ads-identifier-17.0.0.dex.jar;play-services-ads-lite-20.1.0.dex.jar;play-services-base-17.5.0.dex.jar;play-services-basement-17.6.0.dex.jar;play-services-cloud-messaging-16.0.0.dex.jar;play-services-drive-17.0.0.dex.jar;play-services-games-21.0.0.dex.jar;play-services-location-18.0.0.dex.jar;play-services-maps-17.0.1.dex.jar;play-services-measurement-base-18.0.0.dex.jar;play-services-measurement-sdk-api-18.0.0.dex.jar;play-services-places-placereport-17.0.0.dex.jar;play-services-stats-17.0.0.dex.jar;play-services-tasks-17.2.0.dex.jar;print-1.0.0.dex.jar;room-common-2.1.0.dex.jar;room-runtime-2.1.0.dex.jar;savedstate-1.0.0.dex.jar;slidingpanelayout-1.0.0.dex.jar;sqlite-2.0.1.dex.jar;sqlite-framework-2.0.1.dex.jar;swiperefreshlayout-1.0.0.dex.jar;transport-api-3.0.0.dex.jar;transport-backend-cct-3.0.0.dex.jar;transport-runtime-3.0.0.dex.jar;user-messaging-platform-1.0.0.dex.jar;vectordrawable-1.1.0.dex.jar;vectordrawable-animated-1.1.0.dex.jar;versionedparcelable-1.1.1.dex.jar;viewpager-1.0.0.dex.jar;work-runtime-2.1.0.dex.jar</EnabledSysJars>
         <VerInfo_Build>1</VerInfo_Build>
         <Android_SplashGravity>center</Android_SplashGravity>
         <Android_NotificationAccentColor>#000000</Android_NotificationAccentColor>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <DCC_GenerateAndroidAppBundleFile>true</DCC_GenerateAndroidAppBundleFile>
+        <Android_BackgroundColor>#FDFB95</Android_BackgroundColor>
+        <IncludeAndroid_VectorizedNotificationIcon>True</IncludeAndroid_VectorizedNotificationIcon>
+        <Android_DarkBackgroundColor>#FDFB95</Android_DarkBackgroundColor>
+        <Android_VectorizedNotificationIcon>$(ProjectName).Artwork\Android\FM_VectorizedNotificationIcon.xml</Android_VectorizedNotificationIcon>
+        <IncludeAndroid_AdaptiveIcon>True</IncludeAndroid_AdaptiveIcon>
+        <Android_AdaptiveIconBackground>$(ProjectName).Artwork\Android\FM_AdaptiveIcon_Background.xml</Android_AdaptiveIconBackground>
+        <Android_AdaptiveIconForeground>$(ProjectName).Artwork\Android\FM_AdaptiveIcon_Foreground.xml</Android_AdaptiveIconForeground>
+        <Android_AdaptiveIconMonochrome>$(ProjectName).Artwork\Android\FM_AdaptiveIcon_Monochrome.xml</Android_AdaptiveIconMonochrome>
+        <IncludeAndroid_VectorizedSplash>True</IncludeAndroid_VectorizedSplash>
+        <Android_VectorizedSplash>$(ProjectName).Artwork\Android\FM_VectorizedSplash.xml</Android_VectorizedSplash>
+        <Android_VectorizedSplashV31>$(ProjectName).Artwork\Android\FM_VectorizedSplashV31.xml</Android_VectorizedSplashV31>
+        <Android_VectorizedSplashDark>$(ProjectName).Artwork\Android\FM_VectorizedSplashDark.xml</Android_VectorizedSplashDark>
+        <Android_VectorizedSplashV31Dark>$(ProjectName).Artwork\Android\FM_VectorizedSplashV31Dark.xml</Android_VectorizedSplashV31Dark>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_iOSDevice64)'!=''">
         <DCC_UsePackage>fmx;DbxCommonDriver;bindengine;IndyIPCommon;emsclient;FireDACCommonDriver;IndyProtocols;RadiantShapesFmx_Design;IndyIPClient;dbxcds;FmxTeeUI;bindcompfmx;Olf.FMX.AboutBoxPackage;ibmonitor;FireDACSqliteDriver;DbxClientDriver;soapmidas;fmxFireDAC;dbexpress;inet;DataSnapCommon;fmxase;DzHTMLText_FMX;dbrtl;FireDACDBXDriver;CustomIPTransport;DBXInterBaseDriver;IndySystem;RadiantShapesFmx;ibxbindings;bindcomp;FireDACCommon;IndyCore;RESTBackendComponents;bindcompdbx;rtl;RSVclImpact;RESTComponents;DBXSqliteDriver;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;DataSnapFireDAC;emsclientfiredac;FireDAC;FireDACDSDriver;xmlrtl;tethering;ibxpress;dsnap;CloudService;FMXTee;DataSnapNativeClient;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -217,27 +254,27 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_BundleId>fr.olfsoftware.$(ModuleName)</VerInfo_BundleId>
-        <iOS_AppStore1024>..\assets\icons\zicplay-1024x1024.png</iOS_AppStore1024>
-        <iPhone_AppIcon120>..\assets\icons\zicplay-120x120.png</iPhone_AppIcon120>
-        <iPhone_AppIcon180>..\assets\icons\zicplay-180x180.png</iPhone_AppIcon180>
-        <iPhone_Launch2x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_2x.png</iPhone_Launch2x>
-        <iPhone_LaunchDark2x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_2x.png</iPhone_LaunchDark2x>
-        <iPhone_Launch3x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_3x.png</iPhone_Launch3x>
-        <iPhone_LaunchDark3x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_3x.png</iPhone_LaunchDark3x>
-        <iPhone_Spotlight80>..\assets\icons\zicplay-80x80.png</iPhone_Spotlight80>
-        <iPhone_Spotlight120>..\assets\icons\zicplay-120x120.png</iPhone_Spotlight120>
-        <iPhone_Setting58>..\assets\icons\zicplay-58x58.png</iPhone_Setting58>
-        <iPhone_Setting87>..\assets\icons\zicplay-87x87.png</iPhone_Setting87>
-        <iPhone_Notification40>..\assets\icons\zicplay-40x40.png</iPhone_Notification40>
-        <iPhone_Notification60>..\assets\icons\zicplay-60x60.png</iPhone_Notification60>
-        <iPad_AppIcon152>..\assets\icons\zicplay-152x152.png</iPad_AppIcon152>
-        <iPad_AppIcon167>..\assets\icons\zicplay-167x167.png</iPad_AppIcon167>
-        <iPad_Launch2x>$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImage_2x.png</iPad_Launch2x>
-        <iPad_LaunchDark2x>$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageDark_2x.png</iPad_LaunchDark2x>
-        <iPad_SpotLight80>..\assets\icons\zicplay-80x80.png</iPad_SpotLight80>
-        <iPad_Setting58>..\assets\icons\zicplay-58x58.png</iPad_Setting58>
-        <iPad_Notification40>..\assets\icons\zicplay-40x40.png</iPad_Notification40>
-        <iOS_BackgroundColor>FF9A0404</iOS_BackgroundColor>
+        <iOS_AppStore1024>$(ProjectName).Artwork\iOS\iPhone\FM_ApplicationIcon_1024x1024.png</iOS_AppStore1024>
+        <iPhone_AppIcon120>$(ProjectName).Artwork\iOS\iPhone\FM_ApplicationIcon_120x120.png</iPhone_AppIcon120>
+        <iPhone_AppIcon180>$(ProjectName).Artwork\iOS\iPhone\FM_ApplicationIcon_180x180.png</iPhone_AppIcon180>
+        <iPhone_Launch2x>$(ProjectName).Artwork\iOS\iPhone\FM_LaunchImage_2x.png</iPhone_Launch2x>
+        <iPhone_LaunchDark2x>$(ProjectName).Artwork\iOS\iPhone\FM_LaunchImageDark_2x.png</iPhone_LaunchDark2x>
+        <iPhone_Launch3x>$(ProjectName).Artwork\iOS\iPhone\FM_LaunchImage_3x.png</iPhone_Launch3x>
+        <iPhone_LaunchDark3x>$(ProjectName).Artwork\iOS\iPhone\FM_LaunchImageDark_3x.png</iPhone_LaunchDark3x>
+        <iPhone_Spotlight80>$(ProjectName).Artwork\iOS\iPhone\FM_SpotlightSearchIcon_80x80.png</iPhone_Spotlight80>
+        <iPhone_Spotlight120>$(ProjectName).Artwork\iOS\iPhone\FM_SpotlightSearchIcon_120x120.png</iPhone_Spotlight120>
+        <iPhone_Setting58>$(ProjectName).Artwork\iOS\iPhone\FM_SettingIcon_58x58.png</iPhone_Setting58>
+        <iPhone_Setting87>$(ProjectName).Artwork\iOS\iPhone\FM_SettingIcon_87x87.png</iPhone_Setting87>
+        <iPhone_Notification40>$(ProjectName).Artwork\iOS\iPhone\FM_NotificationIcon_40x40.png</iPhone_Notification40>
+        <iPhone_Notification60>$(ProjectName).Artwork\iOS\iPhone\FM_NotificationIcon_60x60.png</iPhone_Notification60>
+        <iPad_AppIcon152>$(ProjectName).Artwork\iOS\iPad\FM_ApplicationIcon_152x152.png</iPad_AppIcon152>
+        <iPad_AppIcon167>$(ProjectName).Artwork\iOS\iPad\FM_ApplicationIcon_167x167.png</iPad_AppIcon167>
+        <iPad_Launch2x>$(ProjectName).Artwork\iOS\iPad\FM_LaunchImage_2x.png</iPad_Launch2x>
+        <iPad_LaunchDark2x>$(ProjectName).Artwork\iOS\iPad\FM_LaunchImageDark_2x.png</iPad_LaunchDark2x>
+        <iPad_SpotLight80>$(ProjectName).Artwork\iOS\iPad\FM_SpotlightSearchIcon_80x80.png</iPad_SpotLight80>
+        <iPad_Setting58>$(ProjectName).Artwork\iOS\iPad\FM_SettingIcon_58x58.png</iPad_Setting58>
+        <iPad_Notification40>$(ProjectName).Artwork\iOS\iPad\FM_NotificationIcon_40x40.png</iPad_Notification40>
+        <iOS_BackgroundColor>FFFDFB95</iOS_BackgroundColor>
         <iOS_DarkBackgroundColor>FFFDFB95</iOS_DarkBackgroundColor>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
     </PropertyGroup>
@@ -246,26 +283,28 @@
         <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDevelopmentRegion=fr;CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=$(MSBuildProjectName);CFBundleInfoDictionaryVersion=7.1;CFBundleVersion=1.0.0;CFBundleShortVersionString=1.0.0;CFBundlePackageType=APPL;CFBundleSignature=????;LSRequiresIPhoneOS=true;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);UIDeviceFamily=iPhone &amp; iPad;NSLocationAlwaysUsageDescription=The reason for accessing the location information of the user;NSLocationWhenInUseUsageDescription=The reason for accessing the location information of the user;NSLocationAlwaysAndWhenInUseUsageDescription=The reason for accessing the location information of the user;UIBackgroundModes=;NSContactsUsageDescription=The reason for accessing the contacts;NSPhotoLibraryUsageDescription=The reason for accessing the photo library;NSPhotoLibraryAddUsageDescription=The reason for adding to the photo library;NSCameraUsageDescription=The reason for accessing the camera;NSFaceIDUsageDescription=The reason for accessing the face id;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSSiriUsageDescription=The reason for accessing Siri;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing bluetooth;NSBluetoothPeripheralUsageDescription=The reason for accessing bluetooth peripherals;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSMotionUsageDescription=The reason for accessing the accelerometer;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers</VerInfo_Keys>
         <VerInfo_UIDeviceFamily>iPhoneAndiPad</VerInfo_UIDeviceFamily>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <iOS_AppStore1024>$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_1024x1024.png</iOS_AppStore1024>
-        <iPhone_AppIcon120>$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_120x120.png</iPhone_AppIcon120>
-        <iPhone_AppIcon180>$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_180x180.png</iPhone_AppIcon180>
-        <iPhone_Launch2x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_2x.png</iPhone_Launch2x>
-        <iPhone_LaunchDark2x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_2x.png</iPhone_LaunchDark2x>
-        <iPhone_Launch3x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_3x.png</iPhone_Launch3x>
-        <iPhone_LaunchDark3x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_3x.png</iPhone_LaunchDark3x>
-        <iPhone_Spotlight80>$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_80x80.png</iPhone_Spotlight80>
-        <iPhone_Spotlight120>$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_120x120.png</iPhone_Spotlight120>
-        <iPhone_Setting58>$(BDS)\bin\Artwork\iOS\iPhone\FM_SettingIcon_58x58.png</iPhone_Setting58>
-        <iPhone_Setting87>$(BDS)\bin\Artwork\iOS\iPhone\FM_SettingIcon_87x87.png</iPhone_Setting87>
-        <iPhone_Notification40>$(BDS)\bin\Artwork\iOS\iPhone\FM_NotificationIcon_40x40.png</iPhone_Notification40>
-        <iPhone_Notification60>$(BDS)\bin\Artwork\iOS\iPhone\FM_NotificationIcon_60x60.png</iPhone_Notification60>
-        <iPad_AppIcon152>$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_152x152.png</iPad_AppIcon152>
-        <iPad_AppIcon167>$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_167x167.png</iPad_AppIcon167>
-        <iPad_Launch2x>$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImage_2x.png</iPad_Launch2x>
-        <iPad_LaunchDark2x>$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageDark_2x.png</iPad_LaunchDark2x>
-        <iPad_SpotLight80>$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_80x80.png</iPad_SpotLight80>
-        <iPad_Setting58>$(BDS)\bin\Artwork\iOS\iPad\FM_SettingIcon_58x58.png</iPad_Setting58>
-        <iPad_Notification40>$(BDS)\bin\Artwork\iOS\iPad\FM_NotificationIcon_40x40.png</iPad_Notification40>
+        <iOS_AppStore1024>$(ProjectName).Artwork\iOS\iPhone\FM_ApplicationIcon_1024x1024.png</iOS_AppStore1024>
+        <iPhone_AppIcon120>$(ProjectName).Artwork\iOS\iPhone\FM_ApplicationIcon_120x120.png</iPhone_AppIcon120>
+        <iPhone_AppIcon180>$(ProjectName).Artwork\iOS\iPhone\FM_ApplicationIcon_180x180.png</iPhone_AppIcon180>
+        <iPhone_Launch2x>$(ProjectName).Artwork\iOS\iPhone\FM_LaunchImage_2x.png</iPhone_Launch2x>
+        <iPhone_LaunchDark2x>$(ProjectName).Artwork\iOS\iPhone\FM_LaunchImageDark_2x.png</iPhone_LaunchDark2x>
+        <iPhone_Launch3x>$(ProjectName).Artwork\iOS\iPhone\FM_LaunchImage_3x.png</iPhone_Launch3x>
+        <iPhone_LaunchDark3x>$(ProjectName).Artwork\iOS\iPhone\FM_LaunchImageDark_3x.png</iPhone_LaunchDark3x>
+        <iPhone_Spotlight80>$(ProjectName).Artwork\iOS\iPhone\FM_SpotlightSearchIcon_80x80.png</iPhone_Spotlight80>
+        <iPhone_Spotlight120>$(ProjectName).Artwork\iOS\iPhone\FM_SpotlightSearchIcon_120x120.png</iPhone_Spotlight120>
+        <iPhone_Setting58>$(ProjectName).Artwork\iOS\iPhone\FM_SettingIcon_58x58.png</iPhone_Setting58>
+        <iPhone_Setting87>$(ProjectName).Artwork\iOS\iPhone\FM_SettingIcon_87x87.png</iPhone_Setting87>
+        <iPhone_Notification40>$(ProjectName).Artwork\iOS\iPhone\FM_NotificationIcon_40x40.png</iPhone_Notification40>
+        <iPhone_Notification60>$(ProjectName).Artwork\iOS\iPhone\FM_NotificationIcon_60x60.png</iPhone_Notification60>
+        <iPad_AppIcon152>$(ProjectName).Artwork\iOS\iPad\FM_ApplicationIcon_152x152.png</iPad_AppIcon152>
+        <iPad_AppIcon167>$(ProjectName).Artwork\iOS\iPad\FM_ApplicationIcon_167x167.png</iPad_AppIcon167>
+        <iPad_Launch2x>$(ProjectName).Artwork\iOS\iPad\FM_LaunchImage_2x.png</iPad_Launch2x>
+        <iPad_LaunchDark2x>$(ProjectName).Artwork\iOS\iPad\FM_LaunchImageDark_2x.png</iPad_LaunchDark2x>
+        <iPad_SpotLight80>$(ProjectName).Artwork\iOS\iPad\FM_SpotlightSearchIcon_80x80.png</iPad_SpotLight80>
+        <iPad_Setting58>$(ProjectName).Artwork\iOS\iPad\FM_SettingIcon_58x58.png</iPad_Setting58>
+        <iPad_Notification40>$(ProjectName).Artwork\iOS\iPad\FM_NotificationIcon_40x40.png</iPad_Notification40>
+        <iOS_BackgroundColor>FFFDFB95</iOS_BackgroundColor>
+        <iOS_DarkBackgroundColor>FFFDFB95</iOS_DarkBackgroundColor>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Linux64)'!=''">
         <DCC_UsePackage>DataSnapServer;fmx;emshosting;DbxCommonDriver;bindengine;FireDACCommonODBC;emsclient;FireDACCommonDriver;IndyProtocols;RadiantShapesFmx_Design;dbxcds;emsedge;Olf.FMX.AboutBoxPackage;inetdb;FireDACSqliteDriver;DbxClientDriver;FireDACASADriver;soapmidas;dbexpress;FireDACInfxDriver;inet;DataSnapCommon;dbrtl;FireDACOracleDriver;CustomIPTransport;FireDACMSSQLDriver;DataSnapIndy10ServerTransport;DataSnapConnectors;FireDACMongoDBDriver;IndySystem;RadiantShapesFmx;FireDACTDataDriver;bindcomp;FireDACCommon;DataSnapServerMidas;FireDACODBCDriver;emsserverresource;IndyCore;RESTBackendComponents;rtl;FireDACMySQLDriver;FireDACADSDriver;RESTComponents;dsnapxml;DataSnapClient;DataSnapFireDAC;emsclientfiredac;FireDACPgDriver;FireDAC;xmlrtl;dsnap;CloudService;FireDACDb2Driver;DataSnapNativeClient;DatasnapConnectorsFreePascal;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -281,8 +320,8 @@
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <Debugger_Launcher>/usr/X11/bin/xterm -e &quot;%debuggee%&quot;</Debugger_Launcher>
-        <Icon_MainIcon>..\assets\icons\zicplay.ico</Icon_MainIcon>
-        <Icns_MainIcns>..\assets\icons\zicplay.icns</Icns_MainIcns>
+        <Icon_MainIcon>$(ProjectName).Artwork\macOS\AppIcon.ico</Icon_MainIcon>
+        <Icns_MainIcns>$(ProjectName).Artwork\macOS\AppIcon.icns</Icns_MainIcns>
         <Manifest_File>(vide)</Manifest_File>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
@@ -293,12 +332,11 @@
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <Debugger_Launcher>/usr/X11/bin/xterm -e &quot;%debuggee%&quot;</Debugger_Launcher>
-        <Icon_MainIcon>..\assets\icons\zicplay.ico</Icon_MainIcon>
-        <Icns_MainIcns>..\assets\icons\zicplay.icns</Icns_MainIcns>
+        <Icon_MainIcon>$(ProjectName).Artwork\macOS\AppIcon.ico</Icon_MainIcon>
+        <Icns_MainIcns>$(ProjectName).Artwork\macOS\AppIcon.icns</Icns_MainIcns>
         <Manifest_File>(vide)</Manifest_File>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <DCC_GenerateOSXUniversalBinaryFile>true</DCC_GenerateOSXUniversalBinaryFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_UsePackage>vclwinx;DataSnapServer;bdertl;fmx;emshosting;vclie;DbxCommonDriver;bindengine;IndyIPCommon;VCLRESTComponents;DBXMSSQLDriver;FireDACCommonODBC;emsclient;FireDACCommonDriver;appanalytics;IndyProtocols;vclx;RadiantShapesFmx_Design;IndyIPClient;dbxcds;vcledge;bindcompvclwinx;FmxTeeUI;emsedge;bindcompfmx;WP.CaptionFrameDemoPlugin;DBXFirebirdDriver;Olf.FMX.AboutBoxPackage;inetdb;ibmonitor;FireDACSqliteDriver;DbxClientDriver;FireDACASADriver;RSVclSVG;Tee;soapmidas;vclactnband;TeeUI;fmxFireDAC;dbexpress;FireDACInfxDriver;DBXMySQLDriver;VclSmp;inet;DataSnapCommon;vcltouch;fmxase;RSVML;DBXOdbcDriver;DzHTMLText_FMX;dbrtl;FireDACDBXDriver;FireDACOracleDriver;fmxdae;TeeDB;FireDACMSAccDriver;CustomIPTransport;FireDACMSSQLDriver;DataSnapIndy10ServerTransport;RSFMXSVG;DataSnapConnectors;vcldsnap;DBXInterBaseDriver;FireDACMongoDBDriver;IndySystem;RadiantShapesFmx;FireDACTDataDriver;WP.DemoPlugin;vcldb;ibxbindings;WP.BasicDemoPlugin;vclFireDAC;FMXAppWizard;bindcomp;FireDACCommon;DataSnapServerMidas;FireDACODBCDriver;emsserverresource;IndyCore;RESTBackendComponents;DOSCommandDR;bindcompdbx;DzHTMLText_VCL;rtl;FireDACMySQLDriver;RSVclImpact;FireDACADSDriver;RESTComponents;DBXSqliteDriver;vcl;IndyIPServer;dsnapxml;dsnapcon;DataSnapClient;DataSnapProviderClient;adortl;RSVclCommon;DBXSybaseASEDriver;DBXDb2Driver;vclimg;DataSnapFireDAC;emsclientfiredac;FireDACPgDriver;FireDAC;FireDACDSDriver;inetdbxpress;xmlrtl;tethering;RSFMXImpact;ibxpress;RSCommon;Olf.VCL.AboutBoxPackage;bindcompvcl;dsnap;CloudService;DBXSybaseASADriver;DBXOracleDriver;FireDACDb2Driver;DBXInformixDriver;vclib;fmxobj;bindcompvclsmp;FMXTee;DataSnapNativeClient;DatasnapConnectorsFreePascal;soaprtl;vcldbx;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -308,10 +346,10 @@
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=2023 Patrick Prémartin;LegalTrademarks=;OriginalFilename=;ProgramID=fr.olfsoftware.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-        <UWP_DelphiLogo44>..\assets\icons\zicplay-44x44.png</UWP_DelphiLogo44>
-        <UWP_DelphiLogo150>..\assets\icons\zicplay-150x150.png</UWP_DelphiLogo150>
-        <Icon_MainIcon>..\assets\icons\zicplay.ico</Icon_MainIcon>
-        <Icns_MainIcns>..\assets\icons\zicplay.icns</Icns_MainIcns>
+        <UWP_DelphiLogo44>$(ProjectName).Artwork\Windows\Uwp_44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>$(ProjectName).Artwork\Windows\Uwp_150.png</UWP_DelphiLogo150>
+        <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
+        <Icns_MainIcns>$(ProjectName).Artwork\Windows\AppIcon.icns</Icns_MainIcns>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
     </PropertyGroup>
@@ -323,10 +361,10 @@
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=2023 Patrick Prémartin;LegalTrademarks=;OriginalFilename=;ProgramID=fr.olfsoftware.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-        <UWP_DelphiLogo44>..\assets\icons\zicplay-44x44.png</UWP_DelphiLogo44>
-        <UWP_DelphiLogo150>..\assets\icons\zicplay-150x150.png</UWP_DelphiLogo150>
-        <Icon_MainIcon>..\assets\icons\zicplay.ico</Icon_MainIcon>
-        <Icns_MainIcns>..\assets\icons\zicplay.icns</Icns_MainIcns>
+        <UWP_DelphiLogo44>$(ProjectName).Artwork\Windows\Uwp_44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>$(ProjectName).Artwork\Windows\Uwp_150.png</UWP_DelphiLogo150>
+        <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
+        <Icns_MainIcns>$(ProjectName).Artwork\Windows\AppIcon.icns</Icns_MainIcns>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
     </PropertyGroup>
@@ -340,22 +378,33 @@
         <DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
         <DCC_RangeChecking>true</DCC_RangeChecking>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Android)'!=''">
+        <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
+        <VerInfo_Build>1</VerInfo_Build>
+        <IncludeAndroid_AdaptiveIcon>true</IncludeAndroid_AdaptiveIcon>
+        <IncludeAndroid_VectorizedSplash>true</IncludeAndroid_VectorizedSplash>
+        <Android_BackgroundColor>#FDFB95</Android_BackgroundColor>
+        <Android_DarkBackgroundColor>#FDFB95</Android_DarkBackgroundColor>
+        <IncludeAndroid_VectorizedNotificationIcon>true</IncludeAndroid_VectorizedNotificationIcon>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Android64)'!=''">
+        <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
+        <VerInfo_Build>1</VerInfo_Build>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_OSXARM64)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <Icon_MainIcon>..\assets\icons\zicplay.ico</Icon_MainIcon>
-        <Icns_MainIcns>..\assets\icons\zicplay.icns</Icns_MainIcns>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <Icon_MainIcon>..\assets\icons\zicplay.ico</Icon_MainIcon>
-        <Icns_MainIcns>..\assets\icons\zicplay.icns</Icns_MainIcns>
         <VerInfo_Build>1</VerInfo_Build>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.1;InternalName=;LegalCopyright=2023 Patrick Prémartin;LegalTrademarks=;OriginalFilename=;ProgramID=fr.olfsoftware.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0;Comments=</VerInfo_Keys>
+        <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
+        <Icns_MainIcns>$(ProjectName).Artwork\Windows\AppIcon.icns</Icns_MainIcns>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -370,20 +419,31 @@
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_Build>1</VerInfo_Build>
         <VerInfo_Keys>package=fr.olfsoftware.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.1;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <IncludeAndroid_AdaptiveIcon>true</IncludeAndroid_AdaptiveIcon>
+        <IncludeAndroid_VectorizedSplash>true</IncludeAndroid_VectorizedSplash>
+        <Android_BackgroundColor>#FDFB95</Android_BackgroundColor>
+        <Android_DarkBackgroundColor>#FDFB95</Android_DarkBackgroundColor>
+        <IncludeAndroid_VectorizedNotificationIcon>true</IncludeAndroid_VectorizedNotificationIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Android64)'!=''">
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_Build>1</VerInfo_Build>
         <VerInfo_Keys>package=fr.olfsoftware.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.1;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <IncludeAndroid_AdaptiveIcon>true</IncludeAndroid_AdaptiveIcon>
+        <DCC_GenerateAndroidAppBundleFile>true</DCC_GenerateAndroidAppBundleFile>
+        <IncludeAndroid_VectorizedSplash>true</IncludeAndroid_VectorizedSplash>
+        <Android_BackgroundColor>#FDFB95</Android_BackgroundColor>
+        <Android_DarkBackgroundColor>#FDFB95</Android_DarkBackgroundColor>
+        <IncludeAndroid_VectorizedNotificationIcon>true</IncludeAndroid_VectorizedNotificationIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_iOSDevice64)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_UIDeviceFamily>iPhoneAndiPad</VerInfo_UIDeviceFamily>
         <VerInfo_BundleId>fr.olfsoftware.$(ModuleName)</VerInfo_BundleId>
-        <iOS_BackgroundColor>FF9A0404</iOS_BackgroundColor>
-        <iOS_DarkBackgroundColor>FFFDFB95</iOS_DarkBackgroundColor>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
+        <iOS_BackgroundColor>FFFDFB95</iOS_BackgroundColor>
+        <iOS_DarkBackgroundColor>FFFDFB95</iOS_DarkBackgroundColor>
         <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDevelopmentRegion=fr;CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=fr.olfsoftware.$(MSBuildProjectName);CFBundleInfoDictionaryVersion=7.1;CFBundleVersion=1.1.0;CFBundleShortVersionString=1.1;CFBundlePackageType=APPL;CFBundleSignature=????;LSRequiresIPhoneOS=true;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);UIDeviceFamily=iPhone &amp; iPad;NSLocationAlwaysUsageDescription=The reason for accessing the location information of the user;NSLocationWhenInUseUsageDescription=The reason for accessing the location information of the user;NSLocationAlwaysAndWhenInUseUsageDescription=The reason for accessing the location information of the user;UIBackgroundModes=;NSContactsUsageDescription=The reason for accessing the contacts;NSPhotoLibraryUsageDescription=The reason for accessing the photo library;NSPhotoLibraryAddUsageDescription=The reason for adding to the photo library;NSCameraUsageDescription=The reason for accessing the camera;NSFaceIDUsageDescription=The reason for accessing the face id;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSSiriUsageDescription=The reason for accessing Siri;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing bluetooth;NSBluetoothPeripheralUsageDescription=The reason for accessing bluetooth peripherals;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSMotionUsageDescription=The reason for accessing the accelerometer;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Linux64)'!=''">
@@ -393,44 +453,44 @@
     <PropertyGroup Condition="'$(Cfg_2_OSX64)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <Icon_MainIcon>..\assets\icons\zicplay.ico</Icon_MainIcon>
-        <Icns_MainIcns>..\assets\icons\zicplay.icns</Icns_MainIcns>
         <VerInfo_Build>4</VerInfo_Build>
         <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=fr.olfsoftware.$(MSBuildProjectName);CFBundleVersion=1.1.4;CFBundleShortVersionString=1.1;CFBundlePackageType=APPL;CFBundleSignature=????;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);NSHighResolutionCapable=true;LSApplicationCategoryType=public.app-category.utilities;NSLocationUsageDescription=The reason for accessing the location information of the user;NSContactsUsageDescription=The reason for accessing the contacts;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSCameraUsageDescription=The reason for accessing the camera;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSMotionUsageDescription=The reason for accessing the accelerometer;NSDesktopFolderUsageDescription=The reason for accessing the Desktop folder;NSDocumentsFolderUsageDescription=The reason for accessing the Documents folder;NSDownloadsFolderUsageDescription=The reason for accessing the Downloads folder;NSNetworkVolumesUsageDescription=The reason for accessing files on a network volume;NSRemovableVolumesUsageDescription=The reason for accessing files on a removable volume;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing the Bluetooth interface</VerInfo_Keys>
+        <Icon_MainIcon>$(ProjectName).Artwork\macOS\AppIcon.ico</Icon_MainIcon>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
+        <Icns_MainIcns>$(ProjectName).Artwork\macOS\AppIcon.icns</Icns_MainIcns>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_OSXARM64)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <Icon_MainIcon>..\assets\icons\zicplay.ico</Icon_MainIcon>
-        <Icns_MainIcns>..\assets\icons\zicplay.icns</Icns_MainIcns>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <DCC_GenerateOSXUniversalBinaryFile>true</DCC_GenerateOSXUniversalBinaryFile>
         <VerInfo_Build>4</VerInfo_Build>
         <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=fr.olfsoftware.$(MSBuildProjectName);CFBundleVersion=1.2.4;CFBundleShortVersionString=1.2;CFBundlePackageType=APPL;CFBundleSignature=????;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);NSHighResolutionCapable=true;LSApplicationCategoryType=public.app-category.utilities;NSLocationUsageDescription=The reason for accessing the location information of the user;NSContactsUsageDescription=The reason for accessing the contacts;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSCameraUsageDescription=The reason for accessing the camera;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSMotionUsageDescription=The reason for accessing the accelerometer;NSDesktopFolderUsageDescription=The reason for accessing the Desktop folder;NSDocumentsFolderUsageDescription=The reason for accessing the Documents folder;NSDownloadsFolderUsageDescription=The reason for accessing the Downloads folder;NSNetworkVolumesUsageDescription=The reason for accessing files on a network volume;NSRemovableVolumesUsageDescription=The reason for accessing files on a removable volume;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing the Bluetooth interface</VerInfo_Keys>
-        <BT_BuildType>DeveloperID</BT_BuildType>
+        <Icon_MainIcon>$(ProjectName).Artwork\macOS\AppIcon.ico</Icon_MainIcon>
         <VerInfo_MinorVer>2</VerInfo_MinorVer>
+        <BT_BuildType>DeveloperID</BT_BuildType>
+        <Icns_MainIcns>$(ProjectName).Artwork\macOS\AppIcon.icns</Icns_MainIcns>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <Icon_MainIcon>..\assets\icons\zicplay.ico</Icon_MainIcon>
-        <Icns_MainIcns>..\assets\icons\zicplay.icns</Icns_MainIcns>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
+        <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.1.0.0;InternalName=;LegalCopyright=2023 Patrick Prémartin;LegalTrademarks=;OriginalFilename=;ProgramID=fr.olfsoftware.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.1;Comments=</VerInfo_Keys>
+        <Icns_MainIcns>$(ProjectName).Artwork\Windows\AppIcon.icns</Icns_MainIcns>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <Icon_MainIcon>..\assets\icons\zicplay.ico</Icon_MainIcon>
-        <Icns_MainIcns>..\assets\icons\zicplay.icns</Icns_MainIcns>
         <VerInfo_Build>4</VerInfo_Build>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.1.0.4;InternalName=;LegalCopyright=2023 Patrick Prémartin;LegalTrademarks=;OriginalFilename=;ProgramID=fr.olfsoftware.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.1;Comments=</VerInfo_Keys>
+        <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <BT_BuildType>AppStore</BT_BuildType>
+        <Icns_MainIcns>$(ProjectName).Artwork\Windows\AppIcon.icns</Icns_MainIcns>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -494,10 +554,10 @@
                     <Source Name="MainSource">Zicplay.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k280.bpl">Package Serveurs Office 2000 Embarcadero C++Builder</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp280.bpl">Package Serveurs Office XP Embarcadero C++Builder</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Composants Microsoft Office 2000 Sample Automation Server Wrapper</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Composants Microsoft Office XP Sample Automation Server Wrapper</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k290.bpl">Package Serveurs Office 2000 Embarcadero C++Builder</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp290.bpl">Package Serveurs Office XP Embarcadero C++Builder</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k290.bpl">Composants Microsoft Office 2000 Sample Automation Server Wrapper</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp290.bpl">Composants Microsoft Office XP Sample Automation Server Wrapper</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
@@ -518,12 +578,26 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\delphi_PROJECTICNS.icns" Configuration="Debug" Class="ProjectOSXResource">
                     <Platform Name="OSXARM64">
+                        <Enabled>false</Enabled>
                         <RemoteName>Zicplay.icns</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\delphi_PROJECTICNS.icns" Configuration="Release" Class="ProjectOSXResource">
                     <Platform Name="OSXARM64">
+                        <Enabled>false</Enabled>
+                        <RemoteName>Zicplay.icns</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(ProjectName).Artwork\macOS\AppIcon.icns" Configuration="Debug" Class="ProjectOSXResource">
+                    <Platform Name="OSXARM64">
+                        <RemoteName>Zicplay.icns</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(ProjectName).Artwork\macOS\AppIcon.icns" Configuration="Release" Class="ProjectOSXResource">
+                    <Platform Name="OSXARM64">
                         <RemoteName>Zicplay.icns</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -531,6 +605,7 @@
                 <DeployFile LocalName="..\assets\icons\zicplay-150x150.png" Configuration="Debug" Class="UWP_DelphiLogo150">
                     <Platform Name="Win32">
                         <RemoteDir>Assets\</RemoteDir>
+                        <Enabled>false</Enabled>
                         <RemoteName>Logo150x150.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -538,12 +613,14 @@
                 <DeployFile LocalName="..\assets\icons\zicplay-150x150.png" Configuration="Debug" Class="UWP_DelphiLogo150">
                     <Platform Name="Win64">
                         <RemoteDir>Assets\</RemoteDir>
+                        <Enabled>false</Enabled>
                         <RemoteName>Logo150x150.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="..\assets\icons\zicplay-150x150.png" Configuration="Release" Class="UWP_DelphiLogo150">
                     <Platform Name="Win64">
+                        <Enabled>false</Enabled>
                         <RemoteName>Logo150x150.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -551,6 +628,7 @@
                 <DeployFile LocalName="..\assets\icons\zicplay-44x44.png" Configuration="Debug" Class="UWP_DelphiLogo44">
                     <Platform Name="Win32">
                         <RemoteDir>Assets\</RemoteDir>
+                        <Enabled>false</Enabled>
                         <RemoteName>Logo44x44.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -558,25 +636,15 @@
                 <DeployFile LocalName="..\assets\icons\zicplay-44x44.png" Configuration="Debug" Class="UWP_DelphiLogo44">
                     <Platform Name="Win64">
                         <RemoteDir>Assets\</RemoteDir>
+                        <Enabled>false</Enabled>
                         <RemoteName>Logo44x44.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="..\assets\icons\zicplay-44x44.png" Configuration="Release" Class="UWP_DelphiLogo44">
                     <Platform Name="Win64">
+                        <Enabled>false</Enabled>
                         <RemoteName>Logo44x44.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\assets\icons\zicplay.icns" Configuration="Debug" Class="ProjectOSXResource">
-                    <Platform Name="OSXARM64">
-                        <RemoteName>Zicplay.icns</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\assets\icons\zicplay.icns" Configuration="Release" Class="ProjectOSXResource">
-                    <Platform Name="OSXARM64">
-                        <RemoteName>Zicplay.icns</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
