@@ -8,7 +8,6 @@ uses
   Olf.FMX.AboutDialog in '..\lib-externes\AboutDialog-Delphi-Component\src\Olf.FMX.AboutDialog.pas',
   Olf.FMX.AboutDialogForm in '..\lib-externes\AboutDialog-Delphi-Component\src\Olf.FMX.AboutDialogForm.pas' {OlfAboutDialogForm},
   Gamolf.FMX.MusicLoop in '..\lib-externes\Delphi-Game-Engine\src\Gamolf.FMX.MusicLoop.pas',
-  uDMIcons in 'uDMIcons.pas' {DMIcons: TDataModule},
   u_urlOpen in '..\lib-externes\librairies\src\u_urlOpen.pas',
   ZicPlay.Connector.FileSystem in 'ZicPlay.Connector.FileSystem.pas',
   ZicPlay.Connector.FileSystem.PlaylistSetupDialog in 'ZicPlay.Connector.FileSystem.PlaylistSetupDialog.pas' {frmPlaylistSetupDialog},
@@ -44,7 +43,6 @@ uses
 
 begin
   Application.Initialize;
-  Application.CreateForm(TDMIcons, DMIcons);
   Application.CreateForm(TfrmMain, frmMain);
   Application.Run;
 end.
