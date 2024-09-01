@@ -179,7 +179,11 @@ begin
         // TODO : add MID files (midi)
         // TODO : add MOD files (Module Tracker & co)
         for i := 0 to Length(Files) - 1 do
-          if (tpath.GetExtension(Files[i]).ToLower = '.mp3') then
+          if (tpath.GetExtension(Files[i]).ToLower = '.mp3')
+{$IFDEF MACOS}
+            or (tpath.GetExtension(Files[i]).ToLower = '.m4a')
+{$ENDIF}
+          then
           begin
             if ID3v2.ReadFromFile(Files[i]) and ID3v2.Exists then
               // TODO : get song duration
@@ -288,9 +292,6 @@ initialization
 TConnectorsList.current.Register(TZicPlayConnectorFileSystem.create);
 
 finalization
-
-// if assigned(TZicPlayConnectorFileSystem.current) then
-// TZicPlayConnectorFileSystem.current.Free;
 
 // TODO : find a way to free the instance if Delphi don't do it by itself
 
