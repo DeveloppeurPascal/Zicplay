@@ -140,8 +140,7 @@ begin
     if FNeedAPlaylistRefresh then
       fPlaylist.RefreshSongsList(true)
     else
-      TMessageManager.DefaultManager.SendMessage(Self,
-        TPlaylistupdatedMessage.Create(fPlaylist));
+      TPlaylistupdatedMessage.Broadcast(fPlaylist);
   end;
 
   close;

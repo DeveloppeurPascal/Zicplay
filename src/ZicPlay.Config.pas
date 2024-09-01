@@ -370,8 +370,7 @@ end;
 procedure TPlaylistsList.Add(APlaylist: TPlaylist);
 begin
   inherited Add(APlaylist);
-  TMessageManager.DefaultManager.SendMessage(Self,
-    TNewPlaylistMessage.Create(APlaylist));
+  TNewPlaylistMessage.Broadcast(APlaylist);
 end;
 
 procedure TPlaylistsList.SortByName;

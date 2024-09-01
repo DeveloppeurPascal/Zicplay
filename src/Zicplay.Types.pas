@@ -454,6 +454,8 @@ type
   /// The song could be "nil" if no song is available after previous one.
   /// </summary>
   TNowPlayingMessage = class(TMessage<TSong>)
+  public
+    class procedure Broadcast(const ASong: TSong);
   end;
 
   /// <summary>
@@ -461,6 +463,8 @@ type
   /// to the configuration.
   /// </summary>
   TNewPlaylistMessage = class(TMessage<TPlaylist>)
+  public
+    class procedure Broadcast(const APlaylist: TPlaylist);
   end;
 
   /// <summary>
@@ -468,6 +472,8 @@ type
   /// changed (settings of the playlist and its connector)
   /// </summary>
   TPlaylistUpdatedMessage = class(TMessage<TPlaylist>)
+  public
+    class procedure Broadcast(const APlaylist: TPlaylist);
   end;
 
 implementation
@@ -865,7 +871,8 @@ begin
     exit;
 
   if not tfile.Exists(FileName) then
-    raise exception.Create('No cache for this playlist !');
+    abort; // Force a refresh, but don't show it to the user
+  // raise exception.Create('No cache for this playlist !');
 
   clear;
   Stream := TFileStream.Create(FileName, fmOpenRead);
@@ -900,8 +907,7 @@ begin
       if not AForceReload then
         try
           LoadSongsList;
-          TMessageManager.DefaultManager.SendMessage(self,
-            TPlaylistUpdatedMessage.Create(self));
+          TPlaylistUpdatedMessage.Broadcast(self);
         except
           AForceReload := true;
         end;
@@ -912,8 +918,7 @@ begin
           begin
             UpdateAsAMirrorOf(APlaylist);
             Save;
-            TMessageManager.DefaultManager.SendMessage(self,
-              TPlaylistUpdatedMessage.Create(self));
+            TPlaylistUpdatedMessage.Broadcast(self);
           end);
     end).Start;
 end;
@@ -1380,6 +1385,51 @@ end;
 procedure TConnector.SetupDialog;
 begin
   tdialogservice.ShowMessage(GetName);
+end;
+
+{ TNowPlayingMessage }
+
+class procedure TNowPlayingMessage.Broadcast(const ASong: TSong);
+var
+  LSong: TSong;
+begin
+  LSong := ASong;
+  tthread.queue(nil,
+    procedure
+    begin
+      TMessageManager.DefaultManager.SendMessage(nil,
+        TNowPlayingMessage.Create(LSong));
+    end);
+end;
+
+{ TNewPlaylistMessage }
+
+class procedure TNewPlaylistMessage.Broadcast(const APlaylist: TPlaylist);
+var
+  LPlaylist: TPlaylist;
+begin
+  LPlaylist := APlaylist;
+  tthread.queue(nil,
+    procedure
+    begin
+      TMessageManager.DefaultManager.SendMessage(nil,
+        TNewPlaylistMessage.Create(LPlaylist));
+    end);
+end;
+
+{ TPlaylistUpdatedMessage }
+
+class procedure TPlaylistUpdatedMessage.Broadcast(const APlaylist: TPlaylist);
+var
+  LPlaylist: TPlaylist;
+begin
+  LPlaylist := APlaylist;
+  tthread.queue(nil,
+    procedure
+    begin
+      TMessageManager.DefaultManager.SendMessage(nil,
+        TPlaylistUpdatedMessage.Create(LPlaylist));
+    end);
 end;
 
 initialization

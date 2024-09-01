@@ -193,6 +193,17 @@ begin
               // TODO : get song duration
               Song := GetNewSong(Playlist, ID3v1.Title, ID3v1.Artist,
                 ID3v1.Album, ID3v1.Year, ID3v1.Genre, -1)
+            else if tdirectory.Exists
+              (tpath.Combine([tpath.GetDirectoryName(Files[i]), '..', '..',
+              '..', 'Music'])) then
+              Song := GetNewSong(Playlist,
+                tpath.GetFileNameWithoutExtension(Files[i]),
+                tpath.GetFileNameWithoutExtension
+                (tpath.GetFullPath(tpath.Combine(tpath.GetDirectoryName(Files[i]
+                ), '..'))), tpath.GetFileNameWithoutExtension
+                (tpath.GetFullPath(tpath.GetDirectoryName(Files[i]))),
+                FormatDateTime('yyyy-mm-dd', tfile.GetCreationTime(Files[i])),
+                'unknown', -1)
             else
               Song := GetNewSong(Playlist,
                 tpath.GetFileNameWithoutExtension(Files[i]), 'unknown',
@@ -235,19 +246,17 @@ end;
 procedure TZicPlayConnectorFileSystem.PlaylistSetupDialog(AParams: TJSONObject;
 AOnChangedProc: TProc);
 var
-  LFolder: string;
-  LInSubFolders: Boolean;
+  Folder: string;
+  InSubFolders: Boolean;
 begin
-  LoadParamsFromPlaylist(AParams, LFolder, LInSubFolders);
-  TfrmPlaylistSetupDialog.Execute(LFolder, LInSubFolders,
-    procedure(AFolder: string; AInSubFolders: Boolean)
+  LoadParamsFromPlaylist(AParams, Folder, InSubFolders);
+  TfrmPlaylistSetupDialog.Execute(Folder, InSubFolders,
+    procedure(const AFolder: string; const AInSubFolders: Boolean)
     begin
       SaveParamsToPlaylist(AFolder, AInSubFolders, AParams);
-      if (LFolder <> AFolder) or (LInSubFolders <> AInSubFolders) then
-      begin
-        if assigned(AOnChangedProc) then
-          AOnChangedProc;
-      end;
+      if ((AFolder <> Folder) or (AInSubFolders <> InSubFolders)) and
+        assigned(AOnChangedProc) then
+        AOnChangedProc;
     end);
 end;
 

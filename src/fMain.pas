@@ -550,7 +550,7 @@ begin
             end);
         inc(i);
       end;
-    end)//.start;
+    end) // .start;
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -707,8 +707,7 @@ begin
     exit;
 
   Playlist.enabled := cb.IsChecked;
-  TMessageManager.DefaultManager.SendMessage(self,
-    TPlaylistUpdatedMessage.Create(Playlist));
+  TPlaylistUpdatedMessage.Broadcast(Playlist);
 end;
 
 procedure TfrmMain.PlaylistMenuClick(Sender: TObject);
@@ -966,8 +965,7 @@ begin
       // TODO : restart the music, don't continue where it has been stopped
       MusicPlayer.Volume := TZPConfig.Current.Volume;
     end;
-    TMessageManager.DefaultManager.SendMessage(self,
-      TNowPlayingMessage.Create(FPlayedSong));
+    TNowPlayingMessage.Broadcast(FPlayedSong);
   end;
 end;
 

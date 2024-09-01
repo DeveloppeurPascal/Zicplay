@@ -21,8 +21,8 @@ uses
   Olf.FMX.SelectDirectory;
 
 type
-  TPlaylistSetupDialogProc = reference to procedure(AFolder: string;
-    AInSubFolders: Boolean);
+  TPlaylistSetupDialogProc = reference to procedure(const AFolder: string;
+    const AInSubFolders: Boolean);
 
   TfrmPlaylistSetupDialog = class(TForm)
     lblFolder: TLabel;
@@ -146,24 +146,41 @@ var
   f: TfrmPlaylistSetupDialog;
 begin
   f := TfrmPlaylistSetupDialog.Create(nil);
-  f.onCloseProc := ACallback;
-  f.SearchFolder := AFolder;
-  f.SearchInSubFolders := AInSubFolders;
+  try
+    f.onCloseProc := ACallback;
+    f.SearchFolder := AFolder;
+    f.SearchInSubFolders := AInSubFolders;
+    f.tag := -1;
 {$IF Defined(ANDROID) or Defined(IOS)}
-  f.show;
+    f.show;
 {$ELSE}
-  f.showmodal;
+    f.ShowModal;
 {$ENDIF}
+  finally
+{$IF Defined(ANDROID) or Defined(IOS)}
+{$ELSE}
+    f.free;
+{$ENDIF}
+  end;
 end;
 
 procedure TfrmPlaylistSetupDialog.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-  tthread.ForceQueue(nil,
-    procedure
-    begin
-      self.Free;
-    end);
+{$IF Defined(ANDROID) or Defined(IOS)}
+  if tag = -1 then
+  begin
+    tag := 0;
+    tthread.ForceQueue(nil,
+      procedure
+      begin
+        self.free;
+      end);
+  end
+  else
+    ShowMessage('2');
+  // TODO : sur macOS le close était appelé 2 fois avec la fenêtre en ShowModal, qu'en est-il des mobiles ?
+{$ENDIF}
 end;
 
 procedure TfrmPlaylistSetupDialog.SetonCloseProc(const Value
