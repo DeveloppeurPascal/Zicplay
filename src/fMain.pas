@@ -776,7 +776,13 @@ begin
         raise exception.Create('Next song found out of range in random mode.');
       Song := CurrentSongsList.GetSongAt(num);
       if not assigned(Song) then
-        raise exception.Create('No song found in random mode.');
+        raise exception.Create('No song found in random mode.')
+      else if (Song = PlayedSong) then
+      begin
+        Song := GetNextSong;
+        if not assigned(Song) then
+          Song := CurrentSongsList.GetSongAt(0);
+      end;
     end;
   end
   else
