@@ -131,11 +131,12 @@ const
   /// <summary>
   /// Name of the default style used when the user choose the custom mode.
   /// </summary>
-  CDefaultStyleCustom = 'polar light';
+  CDefaultStyleCustom = 'default';
   /// <summary>
   /// Default style mode to use in the program.
   /// </summary>
-  CDefaultStyleMode = TStyleMode.System;
+  CDefaultStyleMode = TStyleMode.Custom;
+  // TODO : thèmes désactivés à cause de https://embt.atlassian.net/servicedesk/customer/portal/1/RSS-1675
 
 {$IF Defined(RELEASE)}
 
