@@ -144,10 +144,8 @@ object frmPlaylistSetupDialog: TfrmPlaylistSetupDialog
       OnClick = btnCancelClick
     end
   end
-  object OpenDialog1: TOpenDialog
-    Filter = 'MP3 file|*.mp3'
-    Options = [ofPathMustExist, ofEnableSizing, ofDontAddToRecent]
-    Title = 'Choose your songs folder'
+  object OlfSelectDirectoryDialog1: TOlfSelectDirectoryDialog
+    Root = ''
     Left = 304
     Top = 224
   end

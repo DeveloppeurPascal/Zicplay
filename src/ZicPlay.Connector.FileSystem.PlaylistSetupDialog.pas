@@ -17,7 +17,8 @@ uses
   FMX.StdCtrls,
   FMX.Edit,
   FMX.Controls.Presentation,
-  System.Messaging;
+  System.Messaging,
+  Olf.FMX.SelectDirectory;
 
 type
   TPlaylistSetupDialogProc = reference to procedure(AFolder: string;
@@ -33,7 +34,7 @@ type
     GridPanelLayout1: TGridPanelLayout;
     btnOk: TButton;
     btnCancel: TButton;
-    OpenDialog1: TOpenDialog;
+    OlfSelectDirectoryDialog1: TOlfSelectDirectoryDialog;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnCancelClick(Sender: TObject);
     procedure btnOkClick(Sender: TObject);
@@ -82,13 +83,14 @@ end;
 
 procedure TfrmPlaylistSetupDialog.btnFolderChoiceClick(Sender: TObject);
 begin
-  OpenDialog1.FileName := '';
   if edtSearchFolder.Text.Trim.IsEmpty then
-    OpenDialog1.InitialDir := tpath.GetDocumentsPath
+    OlfSelectDirectoryDialog1.Directory := tpath.GetDocumentsPath
   else
-    OpenDialog1.InitialDir := edtSearchFolder.Text;
-  if OpenDialog1.Execute then
-    edtSearchFolder.Text := tpath.GetDirectoryName(OpenDialog1.FileName);
+    OlfSelectDirectoryDialog1.Directory := edtSearchFolder.Text;
+  if OlfSelectDirectoryDialog1.Execute and
+    (not OlfSelectDirectoryDialog1.Directory.IsEmpty) and
+    tdirectory.Exists(OlfSelectDirectoryDialog1.Directory) then
+    edtSearchFolder.Text := OlfSelectDirectoryDialog1.Directory;
 end;
 
 procedure TfrmPlaylistSetupDialog.btnOkClick(Sender: TObject);
@@ -101,7 +103,7 @@ begin
     edtSearchFolder.SetFocus;
     raise exception.Create('Please give a path.');
   end;
-  if not TDirectory.Exists(path) then
+  if not tdirectory.Exists(path) then
   begin
     edtSearchFolder.SetFocus;
     raise exception.Create('This directory doesn''t exist !');
