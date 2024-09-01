@@ -157,8 +157,9 @@ uses
   System.IOUtils,
   System.Messaging,
   u_urlOpen,
-  ZicPlay.Config,
-  fPlaylist, uDMAboutBox;
+  Zicplay.Config,
+  fPlaylist,
+  uDMAboutBox;
 
 procedure TfrmMain.AboutDialogURLClick(const AURL: string);
 begin
@@ -944,12 +945,13 @@ begin
         if assigned(msg.Value) then
         begin
           lblSongPlayed.Text := 'Playing : ' + msg.Value.Title;
-          TAboutBox.Current.OlfAboutDialog1.MainFormCaptionPrefix:=msg.Value.Title;
+          TAboutBox.Current.OlfAboutDialog1.MainFormCaptionPrefix :=
+            msg.Value.Title;
         end
         else
         begin
           lblSongPlayed.Text := '';
-          TAboutBox.Current.OlfAboutDialog1.MainFormCaptionPrefix:='';
+          TAboutBox.Current.OlfAboutDialog1.MainFormCaptionPrefix := '';
         end;
         UpdatePlayPauseButton;
       end;
@@ -1120,7 +1122,8 @@ begin
       PlayNextSong(cbPlayNextRandom.IsChecked);
   end
   else if cbPlayIntro.IsChecked and
-    (MusicPlayer.CurrentTimeInSeconds > TZPConfig.Current.PlayIntroDuration) then
+    (MusicPlayer.CurrentTimeInSeconds > TZPConfig.Current.PlayIntroDuration)
+  then
     MusicPlayer.Stop;
 end;
 
