@@ -551,7 +551,7 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uDMAboutBoxLogoStorrage.pas">
+        <DCCReference Include="uDMAboutBoxLogoStorrage.pas">
             <Form>dmAboutBoxLogo</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
@@ -568,10 +568,10 @@
         </DCCReference>
         <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uStyleManager.pas"/>
         <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uTranslate.pas"/>
-        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uTxtAboutDescription.pas"/>
-        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uTxtAboutLicense.pas"/>
+        <DCCReference Include="uTxtAboutDescription.pas"/>
+        <DCCReference Include="uTxtAboutLicense.pas"/>
         <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\_MainFormAncestor.pas"/>
-        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uConsts.pas"/>
+        <DCCReference Include="uConsts.pas"/>
         <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uConfig.pas"/>
         <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.CryptDecrypt.pas"/>
         <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.Language.pas"/>
@@ -624,17 +624,15 @@
                 <DeployFile LocalName="$(BDS)\bin\delphi_PROJECTICNS.icns" Configuration="Debug" Class="ProjectOSXResource"/>
                 <DeployFile LocalName="$(BDS)\bin\delphi_PROJECTICNS.icns" Configuration="Release" Class="ProjectOSXResource"/>
                 <DeployFile LocalName="$(ProjectName).Artwork\macOS\AppIcon.icns" Configuration="Debug" Class="ProjectOSXResource"/>
+                <DeployFile LocalName="$(ProjectName).Artwork\macOS\AppIcon.icns" Configuration="Release" Class="ProjectOSXResource"/>
                 <DeployFile LocalName="$(ProjectName).Artwork\macOS\AppIcon.icns" Configuration="Release" Class="ProjectOSXResource">
                     <Platform Name="OSXARM64">
                         <RemoteName>Zicplay.icns</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(ProjectName).Artwork\macOS\AppIcon.icns" Configuration="Release" Class="ProjectOSXResource"/>
-                <DeployFile LocalName="..\assets\icons\zicplay-150x150.png" Configuration="Debug" Class="UWP_DelphiLogo150"/>
                 <DeployFile LocalName="..\assets\icons\zicplay-150x150.png" Configuration="Debug" Class="UWP_DelphiLogo150"/>
                 <DeployFile LocalName="..\assets\icons\zicplay-150x150.png" Configuration="Release" Class="UWP_DelphiLogo150"/>
-                <DeployFile LocalName="..\assets\icons\zicplay-44x44.png" Configuration="Debug" Class="UWP_DelphiLogo44"/>
                 <DeployFile LocalName="..\assets\icons\zicplay-44x44.png" Configuration="Debug" Class="UWP_DelphiLogo44"/>
                 <DeployFile LocalName="..\assets\icons\zicplay-44x44.png" Configuration="Release" Class="UWP_DelphiLogo44"/>
                 <DeployFile LocalName="OSXARM64\Debug\Zicplay.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements"/>
