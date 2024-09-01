@@ -309,12 +309,15 @@ end;
 procedure TfrmMain.cbRepeatAllChange(Sender: TObject);
 begin
   TZPConfig.Current.PlayRepeatAll := cbRepeatAll.IsChecked;
-  UpdatePlayPauseButton;
+  if cbRepeatAll.IsChecked and cbRepeatCurrentSong.IsChecked then
+    cbRepeatCurrentSong.IsChecked := false;
 end;
 
 procedure TfrmMain.cbRepeatCurrentSongChange(Sender: TObject);
 begin
   TZPConfig.Current.PlayRepeatOne := cbRepeatCurrentSong.IsChecked;
+  if cbRepeatAll.IsChecked and cbRepeatCurrentSong.IsChecked then
+    cbRepeatAll.IsChecked := false;
 end;
 
 procedure TfrmMain.cbSortListChange(Sender: TObject);
