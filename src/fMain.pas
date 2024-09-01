@@ -181,7 +181,8 @@ uses
   uDMAboutBox,
   uConsts,
   uTranslate,
-  uConfig;
+  uConfig,
+  uStyleManager;
 
 procedure TfrmMain.AboutDialogURLClick(const AURL: string);
 begin
@@ -216,6 +217,16 @@ begin
   mnuHelpAbout.parent := mnuMacOS;
 {$ENDIF}
   RefreshMenuItemsVisibility(MainMenu1);
+
+{$IFDEF MACOS}
+  TThread.ForceQueue(nil,
+    procedure
+    begin
+      TProjectStyle.Current.EnableDefaultStyle;
+    end);
+{$ELSE}
+  TProjectStyle.Current.EnableDefaultStyle;
+{$ENDIF}
 end;
 
 procedure TfrmMain.btnNextClick(Sender: TObject);
@@ -320,7 +331,7 @@ begin
 end;
 
 procedure TfrmMain.edtSearchKeyDown(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkreturn then
     SearchEditButton1Click(self)
@@ -467,7 +478,7 @@ begin
   SubscribeToNewPlaylistMessage;
   SubscribeToPlaylistUpdatedMessage;
 
-  tthread.ForceQueue(nil,
+  TThread.ForceQueue(nil,
     procedure
     begin
       tparallel.For(0, TZPConfig.Current.Playlists.Count - 1,
@@ -479,7 +490,7 @@ begin
 
   SubscribeToNowPlayingMessage;
 
-  tthread.CreateAnonymousThread(
+  TThread.CreateAnonymousThread(
     procedure
     var
       i: integer;
@@ -493,7 +504,7 @@ begin
       // TODO : optimize this code : don't loop undefinitly on the same list if nothing has changed
       // TODO : add a parameter to allow or not this feature (disable it in platforms not compatible like macOS)
       i := 0;
-      while (not tthread.CheckTerminated) do
+      while (not TThread.CheckTerminated) do
       begin
         sleep(200 + random(500));
 
@@ -507,7 +518,7 @@ begin
           continue;
         end;
         if (Song.Duration < 0) then
-          tthread.Synchronize(nil,
+          TThread.Synchronize(nil,
             procedure
             var
               MediaPlayer: TMediaPlayer;
@@ -1076,7 +1087,7 @@ begin
           AItem.ButtonText := 'Play';
           // access violation on Mac after Unsubscribe
           // => using ForceQueue may fix the bug
-          tthread.ForceQueue(nil,
+          TThread.ForceQueue(nil,
             procedure
             begin
               TMessageManager.DefaultManager.Unsubscribe(TNowPlayingMessage,
