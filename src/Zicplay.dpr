@@ -19,7 +19,8 @@ uses
   Olf.RTL.Streams in '..\lib-externes\librairies\src\Olf.RTL.Streams.pas',
   Olf.RTL.DateAndTime in '..\lib-externes\librairies\src\Olf.RTL.DateAndTime.pas',
   ID3v1 in '..\lib-externes\Audio-Tools-Library\MP3-IDtags-Reader\ID3v1.pas',
-  ID3v2 in '..\lib-externes\Audio-Tools-Library\MP3-IDtags-Reader\ID3v2.pas';
+  ID3v2 in '..\lib-externes\Audio-Tools-Library\MP3-IDtags-Reader\ID3v2.pas',
+  Olf.RTL.Maths.Conversions in '..\lib-externes\librairies\src\Olf.RTL.Maths.Conversions.pas';
 
 {$R *.res}
 
