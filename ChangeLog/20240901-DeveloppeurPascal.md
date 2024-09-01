@@ -40,3 +40,11 @@
 * fixed : test du type de chemin avant de le considérer comme un dossier lors du parcourt d'une arborescence avec les connecteurs "ma musique" ou "système de fichier" (certains fichiers sont vus comme des dossiers sur macOS et certains faux dossiers sont vus comme un dossier sous Windows)
 * fixed : le champs de saisie du dossier lié à une playlist de type "file system" n'était pas modifiable lorsqu'un chemin avait été sélectionné par le bouton associé au champ
 * fixed : le thème Polar écrase les TagXXX des éléments de menu. Il a été désactivé pour pouvoir à nouveau afficher les fenêtres de paramétrage des connecteurs ou des listes de lecture sous Windows. (comme le thème ne s'appliquait pas sous macOS le problème n'appraissait pas) - cf https://embt.atlassian.net/servicedesk/customer/portal/1/RSS-1675
+
+* les cases "repeat all" et "repeat once" sont maintenant exclusives : l'activation de l'une désactivera l'autre
+* fixed : le choix aléatoire des morceaux s'arrétait parfois quand la sélection se faisait sur le morceau actuel (qui n'était pas rejoué). Désormais on passe au suivant dans la liste ou au premier s'il n'y en a pas après.
+
+* publication de la version 1.3 - 20240901 pour Windows et macOS
+
+* ajout d'une installeur pour Windows en 32&64 bits
+* mise à jour des commentaires d'entête des fichiers sources
