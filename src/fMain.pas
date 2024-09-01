@@ -26,10 +26,10 @@ uses
   Zicplay.Types,
   FMX.Edit,
   FMX.ListBox,
-  uDMIcons,
   FMX.MultiView,
   FMX.Layouts,
-  Gamolf.FMX.MusicLoop;
+  Gamolf.FMX.MusicLoop,
+  System.Messaging;
 
 type
   TfrmMain = class(TForm)
@@ -106,6 +106,8 @@ type
     procedure mvPlaylistsShown(Sender: TObject);
     procedure mvPlaylistsHidden(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: WideChar;
+      Shift: TShiftState);
   private
     FPlayedSong: TSong;
     FCurrentSongsList: TPlaylist;
@@ -114,7 +116,6 @@ type
     MusicPlayer: TMusicLoop;
     procedure SetPlayedSong(const Value: TSong);
     procedure SetCurrentSongsList(const Value: TPlaylist);
-    { Déclarations privées }
     procedure RefreshListView;
     procedure RefreshListItem(Item: TListViewItem; Song: TSong);
     procedure SetCurrentSongsListNotFiltered(const Value: TPlaylist);
@@ -133,13 +134,21 @@ type
     procedure PlayPreviousSong;
     procedure FilterSongsList;
     procedure SortSongsList;
+  protected
+    procedure DoTranslateTexts(const Sender: TObject; const Msg: TMessage);
+    procedure DoShow; override;
+    procedure DoHide; override;
   public
-    { Déclarations publiques }
     property PlayedSong: TSong read FPlayedSong write SetPlayedSong;
     property CurrentSongsList: TPlaylist read FCurrentSongsList
       write SetCurrentSongsList;
     property CurrentSongsListNotFiltered: TPlaylist
       read FCurrentSongsListNotFiltered write SetCurrentSongsListNotFiltered;
+    /// <summary>
+    /// This method is called each time a global translation broadcast is sent
+    /// with current language as argument.
+    /// </summary>
+    procedure TranslateTexts(const Language: string); virtual;
   end;
 
 var
@@ -155,11 +164,13 @@ uses
   FMX.DialogService,
   System.JSON,
   System.IOUtils,
-  System.Messaging,
   u_urlOpen,
   Zicplay.Config,
   fPlaylist,
-  uDMAboutBox;
+  uDMAboutBox,
+  uConsts,
+  uTranslate,
+  uConfig;
 
 procedure TfrmMain.AboutDialogURLClick(const AURL: string);
 begin
@@ -263,13 +274,37 @@ begin
   end;
 end;
 
+procedure TfrmMain.DoHide;
+begin
+  inherited;
+  TMessageManager.DefaultManager.Unsubscribe(TTranslateTextsMessage,
+    DoTranslateTexts, true);
+end;
+
+procedure TfrmMain.DoShow;
+begin
+  inherited;
+  TranslateTexts(tconfig.Current.Language);
+  TMessageManager.DefaultManager.SubscribeToMessage(TTranslateTextsMessage,
+    DoTranslateTexts);
+end;
+
+procedure TfrmMain.DoTranslateTexts(const Sender: TObject; const Msg: TMessage);
+begin
+  if not assigned(self) then
+    exit;
+
+  if assigned(Msg) and (Msg is TTranslateTextsMessage) then
+    TranslateTexts((Msg as TTranslateTextsMessage).Language);
+end;
+
 procedure TfrmMain.edtSearchKeyDown(Sender: TObject; var Key: Word;
   var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkreturn then
-    SearchEditButton1Click(Self)
+    SearchEditButton1Click(self)
   else if Key = vkEscape then
-    ClearEditButton1Click(Self);
+    ClearEditButton1Click(self);
 end;
 
 procedure TfrmMain.FilterSongsList;
@@ -377,11 +412,11 @@ begin
       begin
         if not mnuTools.Visible then
           mnuTools.Visible := true;
-        mnuConnectors := TMenuItem.Create(Self);
+        mnuConnectors := TMenuItem.Create(self);
         mnuConnectors.Parent := mnuTools;
         mnuConnectors.Text := 'Connectors'; // TODO : à traduire
       end;
-      mnu := TMenuItem.Create(Self);
+      mnu := TMenuItem.Create(self);
       mnu.Parent := mnuConnectors;
       mnu.Text := Connector.getName;
       mnu.OnClick := ConnectorMenuClick;
@@ -397,14 +432,14 @@ begin
   mnuPlaylistSeparator.Visible := (TZPConfig.Current.Playlists.Count > 0);
   for i := 0 to TZPConfig.Current.Playlists.Count - 1 do
   begin
-    mnu := TMenuItem.Create(Self);
+    mnu := TMenuItem.Create(self);
     mnu.Parent := mnuPlaylist;
     mnu.Text := TZPConfig.Current.Playlists[i].Text;
     mnu.IsChecked := TZPConfig.Current.Playlists[i].enabled;
     mnu.OnClick := PlaylistMenuClick;
     mnu.TagObject := TZPConfig.Current.Playlists[i];
 
-    cb := TCheckBox.Create(Self);
+    cb := TCheckBox.Create(self);
     cb.Parent := mvPlaylistsArea;
     cb.Align := talignlayout.Top;
     cb.Text := TZPConfig.Current.Playlists[i].Text;
@@ -498,6 +533,16 @@ procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
   MusicPlayer.Free;
   CurrentSongsListNotFiltered.Free;
+end;
+
+procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
+var KeyChar: WideChar; Shift: TShiftState);
+begin
+  if CShowAboutBoxWithF1 and (KeyChar = #0) and (Key = vkF1) then
+  begin
+    Key := 0;
+    TAboutBox.Current.ShowModal;
+  end;
 end;
 
 procedure TfrmMain.FormResize(Sender: TObject);
@@ -638,7 +683,7 @@ begin
     exit;
 
   Playlist.enabled := cb.IsChecked;
-  TMessageManager.DefaultManager.SendMessage(Self,
+  TMessageManager.DefaultManager.SendMessage(self,
     TPlaylistUpdatedMessage.Create(Playlist));
 end;
 
@@ -862,7 +907,7 @@ begin
       // TODO : restart the music, don't continue where it has been stopped
       MusicPlayer.Volume := TZPConfig.Current.Volume;
     end;
-    TMessageManager.DefaultManager.SendMessage(Self,
+    TMessageManager.DefaultManager.SendMessage(self,
       TNowPlayingMessage.Create(FPlayedSong));
   end;
 end;
@@ -896,25 +941,25 @@ begin
   TMessageManager.DefaultManager.SubscribeToMessage(TNewPlaylistMessage,
     procedure(const Sender: TObject; const M: TMessage)
     var
-      msg: TNewPlaylistMessage;
+      Msg: TNewPlaylistMessage;
       mnu: TMenuItem;
       cb: TCheckBox;
       Playlist: TPlaylist;
     begin
       if (M is TNewPlaylistMessage) then
       begin
-        msg := M as TNewPlaylistMessage;
-        if assigned(msg.Value) then
+        Msg := M as TNewPlaylistMessage;
+        if assigned(Msg.Value) then
         begin
-          Playlist := msg.Value;
+          Playlist := Msg.Value;
           mnuPlaylistSeparator.Visible := true;
-          mnu := TMenuItem.Create(Self);
+          mnu := TMenuItem.Create(self);
           mnu.Parent := mnuPlaylist;
           mnu.Text := Playlist.Text;
           mnu.OnClick := PlaylistMenuClick;
           mnu.TagObject := Playlist;
 
-          cb := TCheckBox.Create(Self);
+          cb := TCheckBox.Create(self);
           cb.Parent := mvPlaylistsArea;
           cb.Align := talignlayout.Top;
           cb.Text := Playlist.Text;
@@ -937,16 +982,16 @@ begin
   TMessageManager.DefaultManager.SubscribeToMessage(TNowPlayingMessage,
     procedure(const Sender: TObject; const M: TMessage)
     var
-      msg: TNowPlayingMessage;
+      Msg: TNowPlayingMessage;
     begin
       if (M is TNowPlayingMessage) then
       begin
-        msg := M as TNowPlayingMessage;
-        if assigned(msg.Value) then
+        Msg := M as TNowPlayingMessage;
+        if assigned(Msg.Value) then
         begin
-          lblSongPlayed.Text := 'Playing : ' + msg.Value.Title;
+          lblSongPlayed.Text := 'Playing : ' + Msg.Value.Title;
           TAboutBox.Current.OlfAboutDialog1.MainFormCaptionPrefix :=
-            msg.Value.Title;
+            Msg.Value.Title;
         end
         else
         begin
@@ -964,17 +1009,17 @@ begin
     (TNowPlayingMessage,
     procedure(const Sender: TObject; const M: TMessage)
     var
-      msg: TNowPlayingMessage;
+      Msg: TNowPlayingMessage;
     begin
       if (M is TNowPlayingMessage) then
       begin
-        msg := M as TNowPlayingMessage;
+        Msg := M as TNowPlayingMessage;
         // refresh current item in the TListView
         if assigned(AItem) and assigned(AItem.TagObject) and
           (AItem.TagObject is TSong) then
           RefreshListItem(AItem, AItem.TagObject as TSong);
         // update item's button text
-        if msg.Value = AItem.TagObject then
+        if Msg.Value = AItem.TagObject then
           AItem.ButtonText := 'Stop'
         else
         begin
@@ -998,7 +1043,7 @@ begin
   TMessageManager.DefaultManager.SubscribeToMessage(TPlaylistUpdatedMessage,
     procedure(const Sender: TObject; const M: TMessage)
     var
-      msg: TPlaylistUpdatedMessage;
+      Msg: TPlaylistUpdatedMessage;
       mnu: TMenuItem;
       cb: TCheckBox;
       i: integer;
@@ -1008,10 +1053,10 @@ begin
     begin
       if (M is TPlaylistUpdatedMessage) then
       begin
-        msg := M as TPlaylistUpdatedMessage;
-        if assigned(msg.Value) then
+        Msg := M as TPlaylistUpdatedMessage;
+        if assigned(Msg.Value) then
         begin
-          Playlist := msg.Value;
+          Playlist := Msg.Value;
 
           if (mnuPlaylist.itemsCount > 0) then
             for i := 0 to mnuPlaylist.itemsCount - 1 do
@@ -1127,6 +1172,11 @@ begin
     MusicPlayer.Stop;
 end;
 
+procedure TfrmMain.TranslateTexts(const Language: string);
+begin
+  // TODO : add texts translation here !
+end;
+
 procedure TfrmMain.UpdatePlayPauseButton;
 var
   Song: TSong;
@@ -1146,12 +1196,7 @@ end;
 
 initialization
 
-{$IFDEF DEBUG}
-// ReportMemoryLeaksOnShutdown := true;
-{$ENDIF}
-  TDialogService.PreferredMode := TDialogService.TPreferredMode.Sync;
+TDialogService.PreferredMode := TDialogService.TPreferredMode.Sync;
 randomize;
-
-globalusemetal := true;
 
 end.

@@ -11,6 +11,7 @@ object frmMain: TfrmMain
   OnCreate = FormCreate
   OnClose = FormClose
   OnDestroy = FormDestroy
+  OnKeyDown = FormKeyDown
   OnResize = FormResize
   DesignerMasterStyle = 0
   object StatusBar1: TStatusBar
