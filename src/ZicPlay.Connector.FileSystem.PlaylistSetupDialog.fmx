@@ -40,6 +40,7 @@ object frmPlaylistSetupDialog: TfrmPlaylistSetupDialog
         Size.PlatformDefault = False
         TabOrder = 0
         Text = '..'
+        TextSettings.Trimming = None
         OnClick = btnFolderChoiceClick
       end
     end
@@ -124,6 +125,7 @@ object frmPlaylistSetupDialog: TfrmPlaylistSetupDialog
       Size.PlatformDefault = False
       TabOrder = 0
       Text = 'Ok'
+      TextSettings.Trimming = None
       OnClick = btnOkClick
     end
     object btnCancel: TButton
@@ -138,6 +140,7 @@ object frmPlaylistSetupDialog: TfrmPlaylistSetupDialog
       Size.PlatformDefault = False
       TabOrder = 1
       Text = 'Cancel'
+      TextSettings.Trimming = None
       OnClick = btnCancelClick
     end
   end

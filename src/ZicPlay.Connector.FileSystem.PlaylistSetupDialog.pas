@@ -16,7 +16,8 @@ uses
   FMX.Layouts,
   FMX.StdCtrls,
   FMX.Edit,
-  FMX.Controls.Presentation;
+  FMX.Controls.Presentation,
+  System.Messaging;
 
 type
   TPlaylistSetupDialogProc = reference to procedure(AFolder: string;
@@ -44,9 +45,11 @@ type
     procedure SetonCloseProc(const Value: TPlaylistSetupDialogProc);
     procedure SetSearchFolder(const Value: string);
     procedure SetSearchInSubFolders(const Value: Boolean);
-    { Déclarations privées }
+  protected
+    procedure DoTranslateTexts(const Sender: TObject; const Msg: TMessage);
+    procedure DoShow; override;
+    procedure DoHide; override;
   public
-    { Déclarations publiques }
     property onCloseProc: TPlaylistSetupDialogProc read FonCloseProc
       write SetonCloseProc;
     property SearchFolder: string read FSearchFolder write SetSearchFolder;
@@ -54,6 +57,11 @@ type
       write SetSearchInSubFolders;
     class procedure Execute(AFolder: string; AInSubFolders: Boolean;
       ACallback: TPlaylistSetupDialogProc);
+    /// <summary>
+    /// This method is called each time a global translation broadcast is sent
+    /// with current language as argument.
+    /// </summary>
+    procedure TranslateTexts(const Language: string); virtual;
   end;
 
 implementation
@@ -61,7 +69,9 @@ implementation
 {$R *.fmx}
 
 uses
-  System.IOUtils;
+  System.IOUtils,
+  uTranslate,
+  uConfig;
 
 { TfrmPlaylistSetupDialog }
 
@@ -101,6 +111,31 @@ begin
   if assigned(onCloseProc) then
     onCloseProc(FSearchFolder, FSearchInSubFolders);
   Close;
+end;
+
+procedure TfrmPlaylistSetupDialog.DoHide;
+begin
+  inherited;
+  TMessageManager.DefaultManager.Unsubscribe(TTranslateTextsMessage,
+    DoTranslateTexts, true);
+end;
+
+procedure TfrmPlaylistSetupDialog.DoShow;
+begin
+  inherited;
+  TranslateTexts(tconfig.Current.Language);
+  TMessageManager.DefaultManager.SubscribeToMessage(TTranslateTextsMessage,
+    DoTranslateTexts);
+end;
+
+procedure TfrmPlaylistSetupDialog.DoTranslateTexts(const Sender: TObject;
+  const Msg: TMessage);
+begin
+  if not assigned(self) then
+    exit;
+
+  if assigned(Msg) and (Msg is TTranslateTextsMessage) then
+    TranslateTexts((Msg as TTranslateTextsMessage).Language);
 end;
 
 class procedure TfrmPlaylistSetupDialog.Execute(AFolder: string;
@@ -145,6 +180,11 @@ procedure TfrmPlaylistSetupDialog.SetSearchInSubFolders(const Value: Boolean);
 begin
   FSearchInSubFolders := Value;
   swInSubFolders.IsChecked := FSearchInSubFolders;
+end;
+
+procedure TfrmPlaylistSetupDialog.TranslateTexts(const Language: string);
+begin
+  // TODO : add texts translation here !
 end;
 
 end.
