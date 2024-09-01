@@ -36,7 +36,6 @@ type
     MainMenu1: TMainMenu;
     StatusBar1: TStatusBar;
     ToolBar1: TToolBar;
-    AboutDialog: TOlfAboutDialog;
     MacSystemMenu: TMenuItem;
     mnuFile: TMenuItem;
     mnuHelp: TMenuItem;
@@ -109,7 +108,6 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     FPlayedSong: TSong;
-    FDefaultCaption: string;
     FCurrentSongsList: TPlaylist;
     FCurrentSongsListNotFiltered: TPlaylist;
     FStopTimer: integer;
@@ -159,8 +157,8 @@ uses
   System.IOUtils,
   System.Messaging,
   u_urlOpen,
-  uConfig,
-  fPlaylist;
+  ZicPlay.Config,
+  fPlaylist, uDMAboutBox;
 
 procedure TfrmMain.AboutDialogURLClick(const AURL: string);
 begin
@@ -172,7 +170,7 @@ end;
 
 procedure TfrmMain.actAboutExecute(Sender: TObject);
 begin
-  AboutDialog.Execute;
+  TAboutBox.Current.ShowModal;
 end;
 
 procedure TfrmMain.actExitExecute(Sender: TObject);
@@ -220,23 +218,23 @@ end;
 
 procedure TfrmMain.cbPlayIntroChange(Sender: TObject);
 begin
-  TConfig.Current.PlayIntro := cbPlayIntro.IsChecked;
+  TZPConfig.Current.PlayIntro := cbPlayIntro.IsChecked;
 end;
 
 procedure TfrmMain.cbPlayNextRandomChange(Sender: TObject);
 begin
-  TConfig.Current.PlayNextRandom := cbPlayNextRandom.IsChecked;
+  TZPConfig.Current.PlayNextRandom := cbPlayNextRandom.IsChecked;
 end;
 
 procedure TfrmMain.cbRepeatAllChange(Sender: TObject);
 begin
-  TConfig.Current.PlayRepeatAll := cbRepeatAll.IsChecked;
+  TZPConfig.Current.PlayRepeatAll := cbRepeatAll.IsChecked;
   UpdatePlayPauseButton;
 end;
 
 procedure TfrmMain.cbRepeatCurrentSongChange(Sender: TObject);
 begin
-  TConfig.Current.PlayRepeatOne := cbRepeatCurrentSong.IsChecked;
+  TZPConfig.Current.PlayRepeatOne := cbRepeatCurrentSong.IsChecked;
 end;
 
 procedure TfrmMain.cbSortListChange(Sender: TObject);
@@ -247,7 +245,7 @@ end;
 procedure TfrmMain.ClearEditButton1Click(Sender: TObject);
 begin
   edtSearch.Text := '';
-  TConfig.Current.FilterText := '';
+  TZPConfig.Current.FilterText := '';
   RefreshListView;
 end;
 
@@ -315,14 +313,14 @@ procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   // The uConfig.Finalization is not executed on Mac (and won't be on iOS/Android)
   // Saving the settings here will fix the problem.
-  if TConfig.Current.hasConfigChanged then
-    TConfig.Current.SaveTofile;
+  if TZPConfig.Current.hasConfigChanged then
+    TZPConfig.Current.SaveTofile;
 
-  tparallel.For(0, TConfig.Current.Playlists.Count - 1,
+  tparallel.For(0, TZPConfig.Current.Playlists.Count - 1,
     procedure(i: integer)
     begin
-      if TConfig.Current.Playlists[i].hasChanged then
-        TConfig.Current.Playlists[i].Save;
+      if TZPConfig.Current.Playlists[i].hasChanged then
+        TZPConfig.Current.Playlists[i].Save;
     end);
 end;
 
@@ -334,28 +332,22 @@ var
   Connector: IConnector;
   cb: TCheckBox;
 begin
-  TConfig.Current.LoadFromFile;
+  TZPConfig.Current.LoadFromFile;
 
   MusicPlayer := TMusicLoop.Create;
 
-{$IFDEF DEBUG}
-  caption := '[DEBUG] ' + AboutDialog.Titre + ' v' + AboutDialog.VersionNumero;
-{$ELSE}
-  caption := AboutDialog.Titre + ' v' + AboutDialog.VersionNumero;
-{$ENDIF}
-  FDefaultCaption := caption;
   lblSongPlayed.Text := '';
   lblNbSongs.Text := '';
 
-  edtSearch.Text := TConfig.Current.FilterText;
-  cbSortList.ItemIndex := TConfig.Current.SortType;
-  tbVolume.Value := TConfig.Current.Volume;
-  MusicPlayer.Volume := TConfig.Current.Volume;
+  edtSearch.Text := TZPConfig.Current.FilterText;
+  cbSortList.ItemIndex := TZPConfig.Current.SortType;
+  tbVolume.Value := TZPConfig.Current.Volume;
+  MusicPlayer.Volume := TZPConfig.Current.Volume;
   // TODO : changing the musicloop volume does nothing until the first song is played
-  cbRepeatAll.IsChecked := TConfig.Current.PlayRepeatAll;
-  cbRepeatCurrentSong.IsChecked := TConfig.Current.PlayRepeatOne;
-  cbPlayIntro.IsChecked := TConfig.Current.PlayIntro;
-  cbPlayNextRandom.IsChecked := TConfig.Current.PlayNextRandom;
+  cbRepeatAll.IsChecked := TZPConfig.Current.PlayRepeatAll;
+  cbRepeatCurrentSong.IsChecked := TZPConfig.Current.PlayRepeatOne;
+  cbPlayIntro.IsChecked := TZPConfig.Current.PlayIntro;
+  cbPlayNextRandom.IsChecked := TZPConfig.Current.PlayNextRandom;
 
   FCurrentSongsList := nil;
   CurrentSongsListNotFiltered := TPlaylist.Create;
@@ -396,28 +388,28 @@ begin
     end;
   end;
 
-  if TConfig.Current.mvPlaylistsVisible then
+  if TZPConfig.Current.mvPlaylistsVisible then
     mvPlaylists.ShowMaster
   else
     mvPlaylists.HideMaster;
 
-  mnuPlaylistSeparator.Visible := (TConfig.Current.Playlists.Count > 0);
-  for i := 0 to TConfig.Current.Playlists.Count - 1 do
+  mnuPlaylistSeparator.Visible := (TZPConfig.Current.Playlists.Count > 0);
+  for i := 0 to TZPConfig.Current.Playlists.Count - 1 do
   begin
     mnu := TMenuItem.Create(Self);
     mnu.Parent := mnuPlaylist;
-    mnu.Text := TConfig.Current.Playlists[i].Text;
-    mnu.IsChecked := TConfig.Current.Playlists[i].enabled;
+    mnu.Text := TZPConfig.Current.Playlists[i].Text;
+    mnu.IsChecked := TZPConfig.Current.Playlists[i].enabled;
     mnu.OnClick := PlaylistMenuClick;
-    mnu.TagObject := TConfig.Current.Playlists[i];
+    mnu.TagObject := TZPConfig.Current.Playlists[i];
 
     cb := TCheckBox.Create(Self);
     cb.Parent := mvPlaylistsArea;
     cb.Align := talignlayout.Top;
-    cb.Text := TConfig.Current.Playlists[i].Text;
-    cb.IsChecked := TConfig.Current.Playlists[i].enabled;
+    cb.Text := TZPConfig.Current.Playlists[i].Text;
+    cb.IsChecked := TZPConfig.Current.Playlists[i].enabled;
     cb.OnChange := PlaylistEnableChange;
-    cb.TagObject := TConfig.Current.Playlists[i];
+    cb.TagObject := TZPConfig.Current.Playlists[i];
     cb.Margins.Top := 10;
     cb.Margins.right := 10;
     cb.Margins.Bottom := 10;
@@ -429,10 +421,10 @@ begin
   tthread.ForceQueue(nil,
     procedure
     begin
-      tparallel.For(0, TConfig.Current.Playlists.Count - 1,
+      tparallel.For(0, TZPConfig.Current.Playlists.Count - 1,
         procedure(i: integer)
         begin
-          TConfig.Current.Playlists[i].RefreshSongsList;
+          TZPConfig.Current.Playlists[i].RefreshSongsList;
         end);
     end);
 
@@ -621,12 +613,12 @@ end;
 
 procedure TfrmMain.mvPlaylistsHidden(Sender: TObject);
 begin
-  TConfig.Current.mvPlaylistsVisible := false;
+  TZPConfig.Current.mvPlaylistsVisible := false;
 end;
 
 procedure TfrmMain.mvPlaylistsShown(Sender: TObject);
 begin
-  TConfig.Current.mvPlaylistsVisible := true;
+  TZPConfig.Current.mvPlaylistsVisible := true;
 end;
 
 procedure TfrmMain.PlaylistEnableChange(Sender: TObject);
@@ -814,7 +806,7 @@ end;
 
 procedure TfrmMain.SearchEditButton1Click(Sender: TObject);
 begin
-  TConfig.Current.FilterText := edtSearch.Text;
+  TZPConfig.Current.FilterText := edtSearch.Text;
   RefreshListView;
 end;
 
@@ -867,7 +859,7 @@ begin
       // else
       // MusicPlayer.Play;
       // TODO : restart the music, don't continue where it has been stopped
-      MusicPlayer.Volume := TConfig.Current.Volume;
+      MusicPlayer.Volume := TZPConfig.Current.Volume;
     end;
     TMessageManager.DefaultManager.SendMessage(Self,
       TNowPlayingMessage.Create(FPlayedSong));
@@ -895,7 +887,7 @@ begin
   else
     raise exception.Create('I don''t know how to sort this list !');
   end;
-  TConfig.Current.SortType := cbSortList.ItemIndex;
+  TZPConfig.Current.SortType := cbSortList.ItemIndex;
 end;
 
 procedure TfrmMain.SubscribeToNewPlaylistMessage;
@@ -952,12 +944,12 @@ begin
         if assigned(msg.Value) then
         begin
           lblSongPlayed.Text := 'Playing : ' + msg.Value.Title;
-          caption := FDefaultCaption + ' - ' + msg.Value.Title;
+          TAboutBox.Current.OlfAboutDialog1.MainFormCaptionPrefix:=msg.Value.Title;
         end
         else
         begin
           lblSongPlayed.Text := '';
-          caption := FDefaultCaption;
+          TAboutBox.Current.OlfAboutDialog1.MainFormCaptionPrefix:='';
         end;
         UpdatePlayPauseButton;
       end;
@@ -1100,7 +1092,7 @@ var
 begin
   Volume := trunc(tbVolume.Value);
   MusicPlayer.Volume := Volume;
-  TConfig.Current.Volume := Volume;
+  TZPConfig.Current.Volume := Volume;
 end;
 
 procedure TfrmMain.timerIsSongFinishedTimer(Sender: TObject);
@@ -1128,7 +1120,7 @@ begin
       PlayNextSong(cbPlayNextRandom.IsChecked);
   end
   else if cbPlayIntro.IsChecked and
-    (MusicPlayer.CurrentTimeInSeconds > TConfig.Current.PlayIntroDuration) then
+    (MusicPlayer.CurrentTimeInSeconds > TZPConfig.Current.PlayIntroDuration) then
     MusicPlayer.Stop;
 end;
 

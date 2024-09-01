@@ -85,6 +85,7 @@ object frmPlaylist: TfrmPlaylist
         Size.PlatformDefault = False
         TabOrder = 0
         Text = '...'
+        TextSettings.Trimming = None
         OnClick = btnConnectorSelectClick
       end
     end
@@ -101,6 +102,7 @@ object frmPlaylist: TfrmPlaylist
       Size.PlatformDefault = False
       TabOrder = 4
       Text = 'Set&up'
+      TextSettings.Trimming = None
       OnClick = btnConnectorSetupClick
     end
     object cbEnabled: TCheckBox
@@ -159,6 +161,7 @@ object frmPlaylist: TfrmPlaylist
       Size.PlatformDefault = False
       TabOrder = 0
       Text = '&Save'
+      TextSettings.Trimming = None
       OnClick = btnSaveClick
     end
     object btnCancel: TButton
@@ -173,6 +176,7 @@ object frmPlaylist: TfrmPlaylist
       Size.PlatformDefault = False
       TabOrder = 1
       Text = 'Ca&ncel'
+      TextSettings.Trimming = None
       OnClick = btnCancelClick
     end
   end

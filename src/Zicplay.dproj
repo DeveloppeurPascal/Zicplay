@@ -401,8 +401,8 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Build>1</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.1;InternalName=;LegalCopyright=2023 Patrick Prémartin;LegalTrademarks=;OriginalFilename=;ProgramID=fr.olfsoftware.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0;Comments=</VerInfo_Keys>
+        <VerInfo_Build>2</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.2;InternalName=;LegalCopyright=2023 Patrick Prémartin;LegalTrademarks=;OriginalFilename=;ProgramID=fr.olfsoftware.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0;Comments=</VerInfo_Keys>
         <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <Icns_MainIcns>$(ProjectName).Artwork\Windows\AppIcon.icns</Icns_MainIcns>
@@ -519,7 +519,7 @@
             <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="ZicPlay.Connector.MyMusic.pas"/>
-        <DCCReference Include="uConfig.pas"/>
+        <DCCReference Include="ZicPlay.Config.pas"/>
         <DCCReference Include="fPlaylist.pas">
             <Form>frmPlaylist</Form>
             <FormType>fmx</FormType>
@@ -528,11 +528,56 @@
             <Form>frmSelectConnector</Form>
             <FormType>fmx</FormType>
         </DCCReference>
-        <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.Streams.pas"/>
         <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.DateAndTime.pas"/>
         <DCCReference Include="..\lib-externes\Audio-Tools-Library\MP3-IDtags-Reader\ID3v1.pas"/>
         <DCCReference Include="..\lib-externes\Audio-Tools-Library\MP3-IDtags-Reader\ID3v2.pas"/>
         <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.Maths.Conversions.pas"/>
+        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\_StyleContainerAncestor.pas">
+            <Form>__StyleContainerAncestor</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\_TFormAncestor.pas">
+            <Form>__TFormAncestor</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
+        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\_TFrameAncestor.pas">
+            <Form>__TFrameAncestor</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uDMAboutBox.pas">
+            <Form>AboutBox</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uDMAboutBoxLogoStorrage.pas">
+            <Form>dmAboutBoxLogo</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uStyleDarkByDefault.pas">
+            <Form>StyleDarkByDefault</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uStyleLightByDefault.pas">
+            <Form>StyleLightByDefault</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uStyleManager.pas"/>
+        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uTranslate.pas"/>
+        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uTxtAboutDescription.pas"/>
+        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uTxtAboutLicense.pas"/>
+        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\_MainFormAncestor.pas"/>
+        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uConsts.pas"/>
+        <DCCReference Include="..\lib-externes\FMX-Tools-Starter-Kit\src\uConfig.pas"/>
+        <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.CryptDecrypt.pas"/>
+        <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.Language.pas"/>
+        <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.Params.pas"/>
+        <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.Streams.pas"/>
+        <DCCReference Include="..\lib-externes\librairies\src\Olf.RTL.SystemAppearance.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -612,7 +657,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\Zicplay.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="Win32\Debug\Zicplay.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>Zicplay.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Win64\Release\AppxManifest.xml" Configuration="Release" Class="ProjectUWPManifest"/>
                 <DeployFile LocalName="Win64\Release\Zicplay.exe" Configuration="Release" Class="ProjectOutput"/>
                 <DeployClass Name="AdditionalDebugSymbols">

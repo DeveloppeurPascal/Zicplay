@@ -477,7 +477,7 @@ uses
   fmx.DialogService,
   System.DateUtils,
   System.Generics.Defaults,
-  uConfig,
+zicplay.Config,
   Olf.RTL.Streams,
   Olf.RTL.DateAndTime;
 
@@ -779,7 +779,7 @@ begin
       if CharInSet(LGuid.Chars[i], ['0' .. '9', 'A' .. 'Z', 'a' .. 'z']) then
         FUniqID := FUniqID + LGuid.Chars[i];
     end;
-    tconfig.Current.hasConfigChanged := true;
+    tzpconfig.Current.hasConfigChanged := true;
   end;
   result := FUniqID;
 end;
@@ -859,7 +859,7 @@ var
   i: integer;
   CacheVersion: word;
 begin
-  FileName := tconfig.GetDefaultConfigFilePath(UniqID + '.songs');
+  FileName := TZPConfig.GetDefaultConfigFilePath(UniqID + '.songs');
 
   if FileName.IsEmpty then
     exit;
@@ -933,7 +933,7 @@ var
   CacheVersion: word;
   List: TList<TSong>;
 begin
-  FileName := tconfig.GetDefaultConfigFilePath(UniqID + '.songs');
+  FileName := TZPConfig.GetDefaultConfigFilePath(UniqID + '.songs');
 
   if FileName.IsEmpty then
     exit;
@@ -990,7 +990,7 @@ begin
   finally
     UnlockList;
   end;
-  tconfig.Current.hasConfigChanged := true;
+  TZPConfig.Current.hasConfigChanged := true;
 end;
 
 procedure TPlaylist.SetConnectorParams(const Value: TJSONObject);
@@ -1003,7 +1003,7 @@ begin
   finally
     UnlockList;
   end;
-  tconfig.Current.hasConfigChanged := true;
+  TZPConfig.Current.hasConfigChanged := true;
 end;
 
 procedure TPlaylist.SetEnabled(const Value: boolean);
@@ -1016,7 +1016,7 @@ begin
   finally
     UnlockList;
   end;
-  tconfig.Current.hasConfigChanged := true;
+  tzpconfig.Current.hasConfigChanged := true;
 end;
 
 procedure TPlaylist.SethasChanged(const Value: boolean);
@@ -1041,7 +1041,7 @@ begin
   finally
     UnlockList;
   end;
-  tconfig.Current.hasConfigChanged := true;
+  TZPConfig.Current.hasConfigChanged := true;
 end;
 
 procedure TPlaylist.SortByAlbum;

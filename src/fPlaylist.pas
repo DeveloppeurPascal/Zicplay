@@ -63,7 +63,7 @@ implementation
 
 uses
   System.Messaging,
-  uConfig,
+  ZicPlay.Config,
   fSelectConnector;
 
 procedure TfrmPlaylist.btnCancelClick(Sender: TObject);
@@ -124,9 +124,9 @@ begin
       (fPlaylistParams.ToJSON) as TJSONObject;
 
     if InsertMode then
-      TConfig.Current.Playlists.Add(fPlaylist);
+      TzpConfig.Current.Playlists.Add(fPlaylist);
 
-    TConfig.Current.SaveTofile;
+    TzpConfig.Current.SaveTofile;
 
     if FNeedAPlaylistRefresh then
       fPlaylist.RefreshSongsList(true)

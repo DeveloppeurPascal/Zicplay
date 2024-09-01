@@ -73,6 +73,7 @@ object frmMain: TfrmMain
         Size.PlatformDefault = False
         TabOrder = 0
         Text = 'Playlists'
+        TextSettings.Trimming = None
       end
       object edtSearch: TEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
@@ -90,8 +91,10 @@ object frmMain: TfrmMain
         Size.PlatformDefault = False
         OnKeyDown = edtSearchKeyDown
         object SearchEditButton1: TSearchEditButton
+          Touch.InteractiveGestures = [LongTap]
           CanFocus = False
           Cursor = crArrow
+          TextSettings.Trimming = None
           Size.Width = 28.000000000000000000
           Size.Height = 44.000000000000000000
           Size.PlatformDefault = False
@@ -99,8 +102,10 @@ object frmMain: TfrmMain
           OnClick = SearchEditButton1Click
         end
         object ClearEditButton1: TClearEditButton
+          Touch.InteractiveGestures = [LongTap]
           CanFocus = False
           Cursor = crArrow
+          TextSettings.Trimming = None
           Position.X = 28.000000000000000000
           Size.Width = 28.000000000000000000
           Size.Height = 44.000000000000000000
@@ -150,6 +155,7 @@ object frmMain: TfrmMain
           Size.PlatformDefault = False
           TabOrder = 4
           Text = 'Next'
+          TextSettings.Trimming = None
           OnClick = btnNextClick
         end
         object btnStop: TButton
@@ -165,6 +171,7 @@ object frmMain: TfrmMain
           Size.PlatformDefault = False
           TabOrder = 3
           Text = 'Stop'
+          TextSettings.Trimming = None
           OnClick = btnStopClick
         end
         object btnPause: TButton
@@ -181,6 +188,7 @@ object frmMain: TfrmMain
           Size.PlatformDefault = False
           TabOrder = 2
           Text = 'Pause'
+          TextSettings.Trimming = None
           OnClick = btnPauseClick
         end
         object btnPlay: TButton
@@ -196,6 +204,7 @@ object frmMain: TfrmMain
           Size.PlatformDefault = False
           TabOrder = 1
           Text = 'Play'
+          TextSettings.Trimming = None
           OnClick = btnPlayClick
         end
         object btnPrevious: TButton
@@ -211,6 +220,7 @@ object frmMain: TfrmMain
           Size.PlatformDefault = False
           TabOrder = 0
           Text = 'Previous'
+          TextSettings.Trimming = None
           OnClick = btnPreviousClick
         end
       end
@@ -348,7 +358,6 @@ object frmMain: TfrmMain
       Text = '&File'
       object mnuExit: TMenuItem
         Action = actExit
-        Enabled = True
         Locked = True
         ImageIndex = -1
       end
@@ -369,7 +378,6 @@ object frmMain: TfrmMain
       Text = '&Tools'
       object mnuOptions: TMenuItem
         Action = actOptions
-        Enabled = True
         Locked = True
         ImageIndex = -1
       end
@@ -378,26 +386,10 @@ object frmMain: TfrmMain
       Text = '&Help'
       object mnuAbout: TMenuItem
         Action = actAbout
-        Enabled = True
         Locked = True
         ImageIndex = -1
       end
     end
-  end
-  object AboutDialog: TOlfAboutDialog
-    Titre = 'Zicplay'
-    VersionNumero = '1.2'
-    VersionDate = '20231104'
-    MultiResBitmap = <
-      item
-      end>
-    Images = DMIcons.AboutBox
-    ImageIndex = 0
-    URL = 'https://zicplay.olfsoftware.fr'
-    onURLClick = AboutDialogURLClick
-    Langue = EN
-    Left = 552
-    Top = 72
   end
   object ListView1: TListView
     ItemAppearanceClassName = 'TImageListItemBottomDetailRightButtonAppearance'
