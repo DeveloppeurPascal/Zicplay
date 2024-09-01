@@ -38,6 +38,7 @@ Ce projet utilise des dépendances sous forme de sous modules. Ils seront absent
 
 * [DeveloppeurPascal/AboutDialog-Delphi-Component](https://github.com/DeveloppeurPascal/AboutDialog-Delphi-Component) doit être installé dans le sous dossier ./lib-externes/AboutDialog-Delphi-Component
 * [DeveloppeurPascal/Audio-Tools-Library](https://github.com/DeveloppeurPascal/Audio-Tools-Library) doit être installé dans le sous dossier ./lib-externes/Audio-Tools-Library
+* [DeveloppeurPascal/Delphi-FMXExtend-Library](https://github.com/DeveloppeurPascal/Delphi-FMXExtend-Library) doit être installé dans le sous dossier ./lib-externes/Delphi-FMXExtend-Library
 * [DeveloppeurPascal/Delphi-Game-Engine](https://github.com/DeveloppeurPascal/Delphi-Game-Engine) doit être installé dans le sous dossier ./lib-externes/Delphi-Game-Engine
 * [DeveloppeurPascal/FMX-Tools-Starter-Kit](https://github.com/DeveloppeurPascal/FMX-Tools-Starter-Kit) doit être installé dans le sous dossier ./lib-externes/FMX-Tools-Starter-Kit
 * [DeveloppeurPascal/librairies](https://github.com/DeveloppeurPascal/librairies) doit être installé dans le sous dossier ./lib-externes/librairies
