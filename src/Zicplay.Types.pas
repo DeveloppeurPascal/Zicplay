@@ -967,7 +967,7 @@ end;
 
 procedure TPlaylist.SaveSongsList;
 var
-  FileName: string;
+  Folder, FileName: string;
   Stream: TFileStream;
   nb: TSongsCounter;
   i: integer;
@@ -981,6 +981,10 @@ begin
 
   List := LockList;
   try
+    Folder := tpath.GetDirectoryName(FileName);
+    if not tdirectory.Exists(Folder) then
+      tdirectory.CreateDirectory(Folder);
+
     Stream := TFileStream.Create(FileName, fmOpenwrite + fmcreate);
     try
       CacheVersion := CCacheVersion;

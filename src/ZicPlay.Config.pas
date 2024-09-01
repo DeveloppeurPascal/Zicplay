@@ -256,6 +256,7 @@ end;
 procedure TZPConfig.SaveTofile(AFilename: string);
 var
   Stream: TFileStream;
+  Folder: string;
 begin
   AFilename := AFilename.Trim;
 
@@ -264,6 +265,10 @@ begin
 
   if AFilename.IsEmpty then
     raise exception.Create('No filename to save the config.');
+
+  Folder := tpath.GetDirectoryName(AFilename);
+  if not tdirectory.Exists(Folder) then
+    tdirectory.CreateDirectory(Folder);
 
   Stream := TFileStream.Create(AFilename, fmcreate + fmOpenWrite);
   try
