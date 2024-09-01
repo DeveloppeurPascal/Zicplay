@@ -18,7 +18,8 @@ uses
   FMX.Controls.Presentation,
   FMX.Layouts,
   System.JSON,
-  Zicplay.Types;
+  Zicplay.Types,
+  System.Messaging;
 
 type
   TfrmPlaylist = class(TForm)
@@ -47,14 +48,21 @@ type
     procedure SetPlaylistConnector(const Value: IConnector);
     procedure SetPlaylistName(const Value: string);
     procedure SetPlaylist(const Value: tplaylist);
-    { Déclarations privées }
+  protected
+    procedure DoTranslateTexts(const Sender: TObject; const Msg: TMessage);
+    procedure DoShow; override;
+    procedure DoHide; override;
   public
-    { Déclarations publiques }
     property PlaylistName: string write SetPlaylistName;
     property PlaylistConnector: IConnector write SetPlaylistConnector;
     property Playlist: tplaylist write SetPlaylist;
     class procedure Execute(APlaylist: tplaylist);
     destructor Destroy; override;
+    /// <summary>
+    /// This method is called each time a global translation broadcast is sent
+    /// with current language as argument.
+    /// </summary>
+    procedure TranslateTexts(const Language: string); virtual;
   end;
 
 implementation
@@ -62,9 +70,10 @@ implementation
 {$R *.fmx}
 
 uses
-  System.Messaging,
-  ZicPlay.Config,
-  fSelectConnector;
+  Zicplay.Config,
+  fSelectConnector,
+  uTranslate,
+  uConfig;
 
 procedure TfrmPlaylist.btnCancelClick(Sender: TObject);
 begin
@@ -144,6 +153,31 @@ begin
   inherited;
 end;
 
+procedure TfrmPlaylist.DoHide;
+begin
+  inherited;
+  TMessageManager.DefaultManager.Unsubscribe(TTranslateTextsMessage,
+    DoTranslateTexts, true);
+end;
+
+procedure TfrmPlaylist.DoShow;
+begin
+  inherited;
+  TranslateTexts(tconfig.Current.Language);
+  TMessageManager.DefaultManager.SubscribeToMessage(TTranslateTextsMessage,
+    DoTranslateTexts);
+end;
+
+procedure TfrmPlaylist.DoTranslateTexts(const Sender: TObject;
+const Msg: TMessage);
+begin
+  if not assigned(Self) then
+    exit;
+
+  if assigned(Msg) and (Msg is TTranslateTextsMessage) then
+    TranslateTexts((Msg as TTranslateTextsMessage).Language);
+end;
+
 class procedure TfrmPlaylist.Execute(APlaylist: tplaylist);
 var
   f: TfrmPlaylist;
@@ -216,6 +250,11 @@ end;
 procedure TfrmPlaylist.SetPlaylistName(const Value: string);
 begin
   edtPlaylistName.Text := Value;
+end;
+
+procedure TfrmPlaylist.TranslateTexts(const Language: string);
+begin
+  // TODO : add texts translation here !
 end;
 
 end.
