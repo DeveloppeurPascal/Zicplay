@@ -36,17 +36,17 @@ type
     MainMenu1: TMainMenu;
     StatusBar1: TStatusBar;
     ToolBar1: TToolBar;
-    MacSystemMenu: TMenuItem;
+    mnuMacOS: TMenuItem;
     mnuFile: TMenuItem;
     mnuHelp: TMenuItem;
-    mnuAbout: TMenuItem;
-    mnuExit: TMenuItem;
+    mnuHelpAbout: TMenuItem;
+    mnuFileQuit: TMenuItem;
     mnuTools: TMenuItem;
-    mnuOptions: TMenuItem;
+    mnuToolsOptions: TMenuItem;
     ActionList1: TActionList;
     actAbout: TAction;
-    actExit: TAction;
-    actOptions: TAction;
+    actQuit: TAction;
+    actToolsOptions: TAction;
     ListView1: TListView;
     lblSongPlayed: TLabel;
     cbSortList: TComboBox;
@@ -78,8 +78,8 @@ type
     lblNbSongs: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure actAboutExecute(Sender: TObject);
-    procedure actExitExecute(Sender: TObject);
-    procedure actOptionsExecute(Sender: TObject);
+    procedure actQuitExecute(Sender: TObject);
+    procedure actToolsOptionsExecute(Sender: TObject);
     procedure ListView1ButtonClick(const Sender: TObject;
       const AItem: TListItem; const AObject: TListItemSimpleControl);
     procedure cbSortListChange(Sender: TObject);
@@ -138,6 +138,16 @@ type
     procedure DoTranslateTexts(const Sender: TObject; const Msg: TMessage);
     procedure DoShow; override;
     procedure DoHide; override;
+    /// <summary>
+    /// Show/hide TMainMenu items depending on there sub menus items visibility
+    /// </summary>
+    procedure RefreshMenuItemsVisibility(const Menu: TMainMenu);
+      overload; virtual;
+    /// <summary>
+    /// Show/hide a TMenuItem depending on its sub menus items visibility
+    /// </summary>
+    function RefreshMenuItemsVisibility(const MenuItem: TMenuItem;
+      const FirstLevel: boolean): boolean; overload; virtual;
   public
     property PlayedSong: TSong read FPlayedSong write SetPlayedSong;
     property CurrentSongsList: TPlaylist read FCurrentSongsList
@@ -149,6 +159,7 @@ type
     /// with current language as argument.
     /// </summary>
     procedure TranslateTexts(const Language: string); virtual;
+    procedure AfterConstruction; override;
   end;
 
 var
@@ -185,16 +196,26 @@ begin
   TAboutBox.Current.ShowModal;
 end;
 
-procedure TfrmMain.actExitExecute(Sender: TObject);
+procedure TfrmMain.actQuitExecute(Sender: TObject);
 begin
   Close;
 end;
 
-procedure TfrmMain.actOptionsExecute(Sender: TObject);
+procedure TfrmMain.actToolsOptionsExecute(Sender: TObject);
 begin
   showmessage('No option dialog in this release.');
   // TODO : à compléter
 {$MESSAGE warn 'todo'}
+end;
+
+procedure TfrmMain.AfterConstruction;
+begin
+  inherited;
+{$IFDEF MACOS}
+  mnuFileQuit.Visible := false;
+  mnuHelpAbout.parent := mnuMacOS;
+{$ENDIF}
+  RefreshMenuItemsVisibility(MainMenu1);
 end;
 
 procedure TfrmMain.btnNextClick(Sender: TObject);
@@ -390,16 +411,10 @@ begin
 
 {$IF Defined(ANDROID) or Defined(IOS)}
   MainMenu1.Visible := false;
-{$ELSEIF Defined(MACOS) and not Defined(IOS)}
-  mnuExit.Visible := false; // already exists for Mac
-  mnuFile.Visible := false; // empty => no display
-  mnuOptions.Parent := MacSystemMenu;
-  mnuOptions.Text := 'Preferences'; // TODO : translate text
-  mnuTools.Visible := false; // empty => no display
-{$ELSE}
-  MacSystemMenu.Visible := false;
 {$ENDIF}
-  //
+  mnuToolsOptions.Visible := false;
+  // TODO : à réactiver lorsque l'option sera disponible
+
   mnuConnectors := nil;
   ConnectorsList := TConnectorsList.Current;
   ConnectorsList.Sort;
@@ -410,14 +425,12 @@ begin
     begin
       if not assigned(mnuConnectors) then
       begin
-        if not mnuTools.Visible then
-          mnuTools.Visible := true;
         mnuConnectors := TMenuItem.Create(self);
-        mnuConnectors.Parent := mnuTools;
+        mnuConnectors.parent := mnuTools;
         mnuConnectors.Text := 'Connectors'; // TODO : à traduire
       end;
       mnu := TMenuItem.Create(self);
-      mnu.Parent := mnuConnectors;
+      mnu.parent := mnuConnectors;
       mnu.Text := Connector.getName;
       mnu.OnClick := ConnectorMenuClick;
       mnu.Tagstring := Connector.getUniqID;
@@ -433,14 +446,14 @@ begin
   for i := 0 to TZPConfig.Current.Playlists.Count - 1 do
   begin
     mnu := TMenuItem.Create(self);
-    mnu.Parent := mnuPlaylist;
+    mnu.parent := mnuPlaylist;
     mnu.Text := TZPConfig.Current.Playlists[i].Text;
     mnu.IsChecked := TZPConfig.Current.Playlists[i].enabled;
     mnu.OnClick := PlaylistMenuClick;
     mnu.TagObject := TZPConfig.Current.Playlists[i];
 
     cb := TCheckBox.Create(self);
-    cb.Parent := mvPlaylistsArea;
+    cb.parent := mvPlaylistsArea;
     cb.Align := talignlayout.Top;
     cb.Text := TZPConfig.Current.Playlists[i].Text;
     cb.IsChecked := TZPConfig.Current.Playlists[i].enabled;
@@ -477,7 +490,7 @@ begin
       // duration not initialized for macOS before playing the file
       // it works on Windows for refresh the list in background
 
-      // TODO : optimize this code : don't loop undefinitly on the same list is nothing has changed
+      // TODO : optimize this code : don't loop undefinitly on the same list if nothing has changed
       // TODO : add a parameter to allow or not this feature (disable it in platforms not compatible like macOS)
       i := 0;
       while (not tthread.CheckTerminated) do
@@ -850,6 +863,41 @@ begin
   UpdatePlayPauseButton;
 end;
 
+procedure TfrmMain.RefreshMenuItemsVisibility(const Menu: TMainMenu);
+var
+  i: integer;
+begin
+  if assigned(Menu) and (Menu.ItemsCount > 0) then
+    for i := 0 to Menu.ItemsCount - 1 do
+      if (Menu.Items[i] is TMenuItem) then
+        (Menu.Items[i] as TMenuItem).Visible :=
+          RefreshMenuItemsVisibility((Menu.Items[i] as TMenuItem), true);
+end;
+
+function TfrmMain.RefreshMenuItemsVisibility(const MenuItem: TMenuItem;
+const FirstLevel: boolean): boolean;
+var
+  i: integer;
+begin
+  if assigned(MenuItem) then
+  begin
+    if (MenuItem.ItemsCount > 0) then
+    begin
+      result := false;
+      for i := 0 to MenuItem.ItemsCount - 1 do
+      begin
+        MenuItem.Items[i].Visible := MenuItem.Items[i].Visible and
+          RefreshMenuItemsVisibility(MenuItem.Items[i], false);
+        result := result or MenuItem.Items[i].Visible;
+      end;
+    end
+    else
+      result := not FirstLevel;
+  end
+  else
+    result := false;
+end;
+
 procedure TfrmMain.SearchEditButton1Click(Sender: TObject);
 begin
   TZPConfig.Current.FilterText := edtSearch.Text;
@@ -954,13 +1002,15 @@ begin
           Playlist := Msg.Value;
           mnuPlaylistSeparator.Visible := true;
           mnu := TMenuItem.Create(self);
-          mnu.Parent := mnuPlaylist;
+          mnu.parent := mnuPlaylist;
           mnu.Text := Playlist.Text;
           mnu.OnClick := PlaylistMenuClick;
           mnu.TagObject := Playlist;
 
+          RefreshMenuItemsVisibility(MainMenu1);
+
           cb := TCheckBox.Create(self);
-          cb.Parent := mvPlaylistsArea;
+          cb.parent := mvPlaylistsArea;
           cb.Align := talignlayout.Top;
           cb.Text := Playlist.Text;
           cb.IsChecked := Playlist.enabled;
@@ -1058,8 +1108,8 @@ begin
         begin
           Playlist := Msg.Value;
 
-          if (mnuPlaylist.itemsCount > 0) then
-            for i := 0 to mnuPlaylist.itemsCount - 1 do
+          if (mnuPlaylist.ItemsCount > 0) then
+            for i := 0 to mnuPlaylist.ItemsCount - 1 do
               if (mnuPlaylist.Items[i] is TMenuItem) then
               begin
                 mnu := mnuPlaylist.Items[i] as TMenuItem;

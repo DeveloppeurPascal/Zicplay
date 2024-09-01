@@ -352,13 +352,13 @@ object frmMain: TfrmMain
   object MainMenu1: TMainMenu
     Left = 312
     Top = 208
-    object MacSystemMenu: TMenuItem
+    object mnuMacOS: TMenuItem
       Text = 'mnuMacSystem'
     end
     object mnuFile: TMenuItem
       Text = '&File'
-      object mnuExit: TMenuItem
-        Action = actExit
+      object mnuFileQuit: TMenuItem
+        Action = actQuit
         Locked = True
         ImageIndex = -1
       end
@@ -377,15 +377,15 @@ object frmMain: TfrmMain
     end
     object mnuTools: TMenuItem
       Text = '&Tools'
-      object mnuOptions: TMenuItem
-        Action = actOptions
+      object mnuToolsOptions: TMenuItem
+        Action = actToolsOptions
         Locked = True
         ImageIndex = -1
       end
     end
     object mnuHelp: TMenuItem
       Text = '&Help'
-      object mnuAbout: TMenuItem
+      object mnuHelpAbout: TMenuItem
         Action = actAbout
         Locked = True
         ImageIndex = -1
@@ -439,13 +439,13 @@ object frmMain: TfrmMain
       Text = '&About'
       OnExecute = actAboutExecute
     end
-    object actExit: TAction
+    object actQuit: TAction
       Text = '&Quit'
-      OnExecute = actExitExecute
+      OnExecute = actQuitExecute
     end
-    object actOptions: TAction
+    object actToolsOptions: TAction
       Text = '&Options'
-      OnExecute = actOptionsExecute
+      OnExecute = actToolsOptionsExecute
     end
   end
 end
