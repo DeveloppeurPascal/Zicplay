@@ -68,6 +68,7 @@ object frmSelectConnector: TfrmSelectConnector
       Size.PlatformDefault = False
       TabOrder = 0
       Text = '&Ok'
+      TextSettings.Trimming = None
       OnClick = btnOkClick
     end
     object btnCancel: TButton
@@ -82,6 +83,7 @@ object frmSelectConnector: TfrmSelectConnector
       Size.PlatformDefault = False
       TabOrder = 1
       Text = 'Ca&ncel'
+      TextSettings.Trimming = None
       OnClick = btnCancelClick
     end
   end

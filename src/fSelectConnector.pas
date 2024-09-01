@@ -20,7 +20,8 @@ uses
   FMX.Controls.Presentation,
   FMX.StdCtrls,
   FMX.Layouts,
-  Zicplay.Types;
+  Zicplay.Types,
+  System.Messaging;
 
 type
   TonSelectedConnectorProc = reference to procedure(AConnector: IConnector);
@@ -37,17 +38,28 @@ type
   private
     FonSelectedConnectorProc: TonSelectedConnectorProc;
     procedure SetonSelectedConnectorProc(const Value: TonSelectedConnectorProc);
-    { Déclarations privées }
+  protected
+    procedure DoTranslateTexts(const Sender: TObject; const Msg: TMessage);
+    procedure DoShow; override;
+    procedure DoHide; override;
   public
-    { Déclarations publiques }
     property onSelectedConnectorProc: TonSelectedConnectorProc
       read FonSelectedConnectorProc write SetonSelectedConnectorProc;
     class procedure Execute(ASelectedConnectorProc: TonSelectedConnectorProc);
+    /// <summary>
+    /// This method is called each time a global translation broadcast is sent
+    /// with current language as argument.
+    /// </summary>
+    procedure TranslateTexts(const Language: string); virtual;
   end;
 
 implementation
 
 {$R *.fmx}
+
+uses
+  uTranslate,
+  uConfig;
 
 procedure TfrmSelectConnector.btnCancelClick(Sender: TObject);
 begin
@@ -64,6 +76,31 @@ begin
       (ListView1.selected.tagstring));
 
   close;
+end;
+
+procedure TfrmSelectConnector.DoHide;
+begin
+  inherited;
+  TMessageManager.DefaultManager.Unsubscribe(TTranslateTextsMessage,
+    DoTranslateTexts, true);
+end;
+
+procedure TfrmSelectConnector.DoShow;
+begin
+  inherited;
+  TranslateTexts(tconfig.current.Language);
+  TMessageManager.DefaultManager.SubscribeToMessage(TTranslateTextsMessage,
+    DoTranslateTexts);
+end;
+
+procedure TfrmSelectConnector.DoTranslateTexts(const Sender: TObject;
+  const Msg: TMessage);
+begin
+  if not assigned(self) then
+    exit;
+
+  if assigned(Msg) and (Msg is TTranslateTextsMessage) then
+    TranslateTexts((Msg as TTranslateTextsMessage).Language);
 end;
 
 class procedure TfrmSelectConnector.Execute(ASelectedConnectorProc
@@ -115,6 +152,11 @@ procedure TfrmSelectConnector.SetonSelectedConnectorProc
   (const Value: TonSelectedConnectorProc);
 begin
   FonSelectedConnectorProc := Value;
+end;
+
+procedure TfrmSelectConnector.TranslateTexts(const Language: string);
+begin
+  // TODO : add texts translation here !
 end;
 
 end.
