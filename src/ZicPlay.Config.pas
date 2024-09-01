@@ -6,7 +6,7 @@ uses
   system.Generics.Collections,
   system.Classes,
   system.Messaging,
-  Zicplay.Types;
+  ZicPlay.Types;
 
 type
   TPlaylistsList = class(TList<TPlaylist>)
@@ -72,8 +72,8 @@ type
     procedure SaveToStream(AStream: TStream);
     procedure LoadFromFile(AFilename: string = '');
     procedure SaveTofile(AFilename: string = '');
-    class function GetDefaultConfigFilePath(AConfigFileName
-      : string = ''): string;
+    class function GetDefaultConfigFilePath: string;
+    class function GetDefaultFilePath(const AFilename: string): string;
   end;
 
 implementation
@@ -83,35 +83,31 @@ uses
   system.JSON,
   system.IOUtils,
   system.SysUtils,
-  Olf.RTL.Streams;
+  Olf.RTL.Streams,
+  uConfig;
 
-class function TZPConfig.GetDefaultConfigFilePath(AConfigFileName
-  : string): string;
+class function TZPConfig.GetDefaultConfigFilePath: string;
 var
-  filename: string;
-  folder: string;
-  app_name: string;
+  Suffixe, OldFilePath: string;
 begin
-  app_name := TPath.GetFileNameWithoutExtension(paramstr(0));
-
-{$IF Defined(DEBUG)}
-  filename := app_name + '-debug.par';
-  folder := TPath.combine(TPath.combine(TPath.GetDocumentsPath,
-    'OlfSoftware-DEBUG'), app_name + '-debug');
-{$ELSE if Defined(RELEASE)}
-  filename := app_name + '.par';
-  folder := TPath.combine(TPath.combine(TPath.GetHomePath, 'OlfSoftware'),
-    app_name);
+{$IFDEF DEBUG}
+  Suffixe := '-debug';
 {$ELSE}
-{$MESSAGE FATAL 'setup problem'}
+  Suffixe := '';
 {$ENDIF}
-  if not tdirectory.Exists(folder) then
-    tdirectory.CreateDirectory(folder);
+  result := GetDefaultFilePath('zp' + Suffixe + '.dat');
+  if not tfile.Exists(result) then
+  begin
+    OldFilePath := GetDefaultFilePath('Zicplay' + Suffixe + '.par');
+    if tfile.Exists(OldFilePath) then
+      tfile.Move(OldFilePath, result);
+  end;
+end;
 
-  if (AConfigFileName.IsEmpty) then
-    result := TPath.combine(folder, filename)
-  else
-    result := TPath.combine(folder, AConfigFileName);
+class function TZPConfig.GetDefaultFilePath(const AFilename: string): string;
+begin
+  result := tpath.combine(tpath.GetDirectoryName(tconfig.Current.GetPath),
+    AFilename);
 end;
 
 { TZicPlayConfig }

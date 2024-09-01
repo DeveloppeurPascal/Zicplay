@@ -477,7 +477,7 @@ uses
   fmx.DialogService,
   System.DateUtils,
   System.Generics.Defaults,
-zicplay.Config,
+  Zicplay.Config,
   Olf.RTL.Streams,
   Olf.RTL.DateAndTime;
 
@@ -859,7 +859,7 @@ var
   i: integer;
   CacheVersion: word;
 begin
-  FileName := TZPConfig.GetDefaultConfigFilePath(UniqID + '.songs');
+  FileName := tzpconfig.GetDefaultFilePath(UniqID + '.songs');
 
   if FileName.IsEmpty then
     exit;
@@ -933,7 +933,7 @@ var
   CacheVersion: word;
   List: TList<TSong>;
 begin
-  FileName := TZPConfig.GetDefaultConfigFilePath(UniqID + '.songs');
+  FileName := tzpconfig.GetDefaultFilePath(UniqID + '.songs');
 
   if FileName.IsEmpty then
     exit;
@@ -990,7 +990,7 @@ begin
   finally
     UnlockList;
   end;
-  TZPConfig.Current.hasConfigChanged := true;
+  tzpconfig.Current.hasConfigChanged := true;
 end;
 
 procedure TPlaylist.SetConnectorParams(const Value: TJSONObject);
@@ -1003,7 +1003,7 @@ begin
   finally
     UnlockList;
   end;
-  TZPConfig.Current.hasConfigChanged := true;
+  tzpconfig.Current.hasConfigChanged := true;
 end;
 
 procedure TPlaylist.SetEnabled(const Value: boolean);
@@ -1041,7 +1041,7 @@ begin
   finally
     UnlockList;
   end;
-  TZPConfig.Current.hasConfigChanged := true;
+  tzpconfig.Current.hasConfigChanged := true;
 end;
 
 procedure TPlaylist.SortByAlbum;
