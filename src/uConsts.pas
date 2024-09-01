@@ -119,15 +119,15 @@ const
   /// <summary>
   /// Name of the default style used when the user choose the light mode.
   /// </summary>
-  CDefaultStyleLight = 'light';
+  CDefaultStyleLight = 'polar light';
   /// <summary>
   /// Name of the default style used when the user choose the dark mode.
   /// </summary>
-  CDefaultStyleDark = 'dark';
+  CDefaultStyleDark = 'polar dark';
   /// <summary>
   /// Name of the default style used when the user choose the custom mode.
   /// </summary>
-  CDefaultStyleCustom = 'light';
+  CDefaultStyleCustom = 'polar light';
   /// <summary>
   /// Default style mode to use in the program.
   /// </summary>
