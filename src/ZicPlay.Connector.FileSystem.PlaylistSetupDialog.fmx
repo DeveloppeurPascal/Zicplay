@@ -26,21 +26,18 @@ object frmPlaylistSetupDialog: TfrmPlaylistSetupDialog
       Position.Y = 37.000000000000000000
       Margins.Left = 10.000000000000000000
       Margins.Top = 5.000000000000000000
-      Margins.Right = 68.000000000000000000
+      Margins.Right = 10.000000000000000000
       Margins.Bottom = 10.000000000000000000
-      Size.Width = 562.000000000000000000
+      Size.Width = 620.000000000000000000
       Size.Height = 32.000000000000000000
       Size.PlatformDefault = False
-      object btnFolderChoice: TButton
-        Align = Right
-        Margins.Right = -58.000000000000000000
-        Position.X = 572.000000000000000000
-        Size.Width = 48.000000000000000000
-        Size.Height = 32.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 0
-        Text = '..'
+      object btnFolderChoice: TEditButton
+        Touch.InteractiveGestures = [LongTap]
+        CanFocus = False
+        Cursor = crArrow
         TextSettings.Trimming = None
+        TabOrder = 0
+        Text = '...'
         OnClick = btnFolderChoiceClick
       end
     end

@@ -66,11 +66,11 @@ type
     lblInSubFolders: TLabel;
     VertScrollBox1: TVertScrollBox;
     swInSubFolders: TSwitch;
-    btnFolderChoice: TButton;
     GridPanelLayout1: TGridPanelLayout;
     btnOk: TButton;
     btnCancel: TButton;
     OlfSelectDirectoryDialog1: TOlfSelectDirectoryDialog;
+    btnFolderChoice: TEditButton;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnCancelClick(Sender: TObject);
     procedure btnOkClick(Sender: TObject);
