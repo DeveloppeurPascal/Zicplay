@@ -26,7 +26,7 @@ You can download and redistribute it free of charge, provided you do not modify 
 
 If you use this software regularly and are satisfied with it, you are invited to purchase an end-user license. Purchasing a license will give you access to software updates, as well as enabling optional features.
 
-[Buy a license](https://olfsoftware.lemonsqueezy.com/buy/d1fa571f-ba26-458c-bce6-d5946c4cbffd)
+[Buy a license](https://store.olfsoftware.fr/en/general-public-software-c-1/zicplay-p-21)
 
 You can also [visit the software website](https://zicplay.olfsoftware.fr/) to find out more about how it works, access videos and articles, find out about the different versions available and their features, contact user support...
 

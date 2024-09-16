@@ -26,7 +26,7 @@ Vous pouvez le télécharger et le rediffuser gratuitement à condition de ne pa
 
 Si vous utilisez régulièrement ce logiciel et en êtes satisfait vous êtes invité à en acheter une licence d'utilisateur final. L'achat d'une licence vous donnera accès aux mises à jour du logiciel en plus d'activer d'évenuelles fonctionnalités optionnelles.
 
-[Acheter une licence](https://olfsoftware.lemonsqueezy.com/buy/d1fa571f-ba26-458c-bce6-d5946c4cbffd)
+[Acheter une licence](https://store.olfsoftware.fr/logiciels-grand-public-c-1/zicplay-p-21)
 
 Vous pouvez aussi [consulter le site du logiciel](https://zicplay.olfsoftware.fr/) pour en savoir plus sur son fonctionnement, accéder à des vidéos et articles, connaître les différentes versions disponibles et leurs fonctionnalités, contacter le support utilisateurs...
 
