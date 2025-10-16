@@ -1,38 +1,38 @@
-﻿/// <summary>
-/// ***************************************************************************
-///
-/// ZicPlay
-///
-/// Copyright 2023-2024 Patrick Prémartin under AGPL 3.0 license.
-///
-/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-/// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-/// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-/// DEALINGS IN THE SOFTWARE.
-///
-/// ***************************************************************************
-///
-/// ZicPlay is a MP3 player based on playlists from multiple sources.
-///
-/// ***************************************************************************
-///
-/// Author(s) :
-/// Patrick PREMARTIN
-///
-/// Site :
-/// https://zicplay.olfsoftware.fr/
-///
-/// Project site :
-/// https://github.com/DeveloppeurPascal/Zicplay
-///
-/// ***************************************************************************
-/// File last update : 2024-09-01T15:23:46.000+02:00
-/// Signature : 82112411350a975ccd6f2d3c949c40220dee52c5
-/// ***************************************************************************
-/// </summary>
+﻿(* C2PP
+  ***************************************************************************
+
+  ZicPlay
+
+  Copyright 2023-2025 Patrick Prémartin under AGPL 3.0 license.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+  DEALINGS IN THE SOFTWARE.
+
+  ***************************************************************************
+
+  ZicPlay is a MP3 player based on playlists from multiple sources.
+
+  ***************************************************************************
+
+  Author(s) :
+  Patrick PREMARTIN
+
+  Site :
+  https://zicplay.olfsoftware.fr/
+
+  Project site :
+  https://github.com/DeveloppeurPascal/Zicplay
+
+  ***************************************************************************
+  File last update : 2025-10-16T10:43:26.219+02:00
+  Signature : dd0a66631785d263622e76102ef13008f4a42a15
+  ***************************************************************************
+*)
 
 unit fPlaylist;
 
