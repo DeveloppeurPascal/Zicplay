@@ -1,0 +1,1674 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD>
+<BODY>
+    <OBJECT type="text/site properties">
+      <param name="Window Styles" value="0x800227">
+    </OBJECT>
+    <UL>      <LI> <OBJECT type="text/sitemap">
+          <param name="Name" value="Zicplay">
+          <param name="Local" value="Zicplay.html">
+          </OBJECT>
+          <UL>
+              <LI> <OBJECT type="text/sitemap">
+                  <param name="Name" value="ZicPlay.Config">
+                  <param name="Local" value="ZicPlay.Config.html">
+                  </OBJECT>
+                  <UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Classes">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TPlaylistsList">
+                                  <param name="Local" value="ZicPlay.Config.TPlaylistsList.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Add">
+                                                  <param name="Local" value="ZicPlay.Config.TPlaylistsList.Add.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SortByName">
+                                                  <param name="Local" value="ZicPlay.Config.TPlaylistsList.SortByName.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TZPConfig">
+                                  <param name="Local" value="ZicPlay.Config.TZPConfig.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Constructors">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Create">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.Create.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Destroy">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.Destroy.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Properties">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="ConfigFilename">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.ConfigFilename.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Current">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.Current.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="FilterText">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.FilterText.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="PlayIntro">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.PlayIntro.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="PlayIntroDuration">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.PlayIntroDuration.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="PlayNextRandom">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.PlayNextRandom.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="PlayRepeatAll">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.PlayRepeatAll.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="PlayRepeatOne">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.PlayRepeatOne.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Playlists">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.Playlists.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SortType">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.SortType.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Volume">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.Volume.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="hasConfigChanged">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.hasConfigChanged.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mvPlaylistsVisible">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.mvPlaylistsVisible.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetDefaultConfigFilePath">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.GetDefaultConfigFilePath.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetDefaultFilePath">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.GetDefaultFilePath.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="LoadFromFile">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.LoadFromFile.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="LoadFromStream">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.LoadFromStream.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SaveToStream">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.SaveToStream.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SaveTofile">
+                                                  <param name="Local" value="ZicPlay.Config.TZPConfig.SaveTofile.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                          </UL>
+                  </UL>
+              <LI> <OBJECT type="text/sitemap">
+                  <param name="Name" value="ZicPlay.Connector.FileSystem">
+                  <param name="Local" value="ZicPlay.Connector.FileSystem.html">
+                  </OBJECT>
+                  <UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Classes">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TZicPlayConnectorFileSystem">
+                                  <param name="Local" value="ZicPlay.Connector.FileSystem.TZicPlayConnectorFileSystem.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetName">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.TZicPlayConnectorFileSystem.GetName.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetPlaylist">
+                                                  </OBJECT>
+                                                  <UL>
+                                                      <LI> <OBJECT type="text/sitemap">
+                                                          <param name="Name" value="GetPlaylist(TJSONObject,TZicPlayGetPlaylistProc)">
+                                                          <param name="Local" value="ZicPlay.Connector.FileSystem.TZicPlayConnectorFileSystem.GetPlaylist(TJSONObject,TZicPlayGetPlaylistProc).html">
+                                                          </OBJECT>
+                                                      <LI> <OBJECT type="text/sitemap">
+                                                          <param name="Name" value="GetPlaylist(string,Boolean,TZicPlayGetPlaylistProc)">
+                                                          <param name="Local" value="ZicPlay.Connector.FileSystem.TZicPlayConnectorFileSystem.GetPlaylist(string,Boolean,TZicPlayGetPlaylistProc).html">
+                                                          </OBJECT>
+                                                  </UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetUniqID">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.TZicPlayConnectorFileSystem.GetUniqID.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="LoadParamsFromPlaylist">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.TZicPlayConnectorFileSystem.LoadParamsFromPlaylist.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="PlaylistSetupDialog">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.TZicPlayConnectorFileSystem.PlaylistSetupDialog.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SaveParamsToPlaylist">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.TZicPlayConnectorFileSystem.SaveParamsToPlaylist.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="hasPlaylistSetupDialog">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.TZicPlayConnectorFileSystem.hasPlaylistSetupDialog.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                          </UL>
+                  </UL>
+              <LI> <OBJECT type="text/sitemap">
+                  <param name="Name" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog">
+                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.html">
+                  </OBJECT>
+                  <UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Classes">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TfrmPlaylistSetupDialog">
+                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Properties">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SearchFolder">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.SearchFolder.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SearchInSubFolders">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.SearchInSubFolders.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="onCloseProc">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.onCloseProc.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="DoHide">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.DoHide.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="DoShow">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.DoShow.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="DoTranslateTexts">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.DoTranslateTexts.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Execute">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.Execute.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="FormClose">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.FormClose.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="TranslateTexts">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.TranslateTexts.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnCancelClick">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.btnCancelClick.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnFolderChoiceClick">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.btnFolderChoiceClick.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnOkClick">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.btnOkClick.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Fields">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GridPanelLayout1">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.GridPanelLayout1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="OlfSelectDirectoryDialog1">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.OlfSelectDirectoryDialog1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="VertScrollBox1">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.VertScrollBox1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnCancel">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.btnCancel.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnFolderChoice">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.btnFolderChoice.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnOk">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.btnOk.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="edtSearchFolder">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.edtSearchFolder.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="lblFolder">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.lblFolder.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="lblInSubFolders">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.lblInSubFolders.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="swInSubFolders">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TfrmPlaylistSetupDialog.swInSubFolders.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                          </UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Delegates">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TPlaylistSetupDialogProc">
+                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TPlaylistSetupDialogProc.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Invoke">
+                                                  <param name="Local" value="ZicPlay.Connector.FileSystem.PlaylistSetupDialog.TPlaylistSetupDialogProc.Invoke.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                          </UL>
+                  </UL>
+              <LI> <OBJECT type="text/sitemap">
+                  <param name="Name" value="ZicPlay.Connector.MyMusic">
+                  <param name="Local" value="ZicPlay.Connector.MyMusic.html">
+                  </OBJECT>
+                  <UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Classes">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TZicPlayConnectorMyMusic">
+                                  <param name="Local" value="ZicPlay.Connector.MyMusic.TZicPlayConnectorMyMusic.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetName">
+                                                  <param name="Local" value="ZicPlay.Connector.MyMusic.TZicPlayConnectorMyMusic.GetName.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetUniqID">
+                                                  <param name="Local" value="ZicPlay.Connector.MyMusic.TZicPlayConnectorMyMusic.GetUniqID.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="LoadParamsFromPlaylist">
+                                                  <param name="Local" value="ZicPlay.Connector.MyMusic.TZicPlayConnectorMyMusic.LoadParamsFromPlaylist.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SaveParamsToPlaylist">
+                                                  <param name="Local" value="ZicPlay.Connector.MyMusic.TZicPlayConnectorMyMusic.SaveParamsToPlaylist.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="hasPlaylistSetupDialog">
+                                                  <param name="Local" value="ZicPlay.Connector.MyMusic.TZicPlayConnectorMyMusic.hasPlaylistSetupDialog.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                          </UL>
+                  </UL>
+              <LI> <OBJECT type="text/sitemap">
+                  <param name="Name" value="Zicplay.Types">
+                  <param name="Local" value="Zicplay.Types.html">
+                  </OBJECT>
+                  <UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Classes">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TConnector">
+                                  <param name="Local" value="Zicplay.Types.TConnector.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Constructors">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Create">
+                                                  <param name="Local" value="Zicplay.Types.TConnector.Create.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Destroy">
+                                                  <param name="Local" value="Zicplay.Types.TConnector.Destroy.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Properties">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Current">
+                                                  <param name="Local" value="Zicplay.Types.TConnector.Current.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetName">
+                                                  <param name="Local" value="Zicplay.Types.TConnector.GetName.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetPlaylist">
+                                                  <param name="Local" value="Zicplay.Types.TConnector.GetPlaylist.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetUniqID">
+                                                  <param name="Local" value="Zicplay.Types.TConnector.GetUniqID.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="LoadFromStream">
+                                                  <param name="Local" value="Zicplay.Types.TConnector.LoadFromStream.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="PlaylistSetupDialog">
+                                                  <param name="Local" value="Zicplay.Types.TConnector.PlaylistSetupDialog.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SaveToStream">
+                                                  <param name="Local" value="Zicplay.Types.TConnector.SaveToStream.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SetupDialog">
+                                                  <param name="Local" value="Zicplay.Types.TConnector.SetupDialog.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="hasPlaylistSetupDialog">
+                                                  <param name="Local" value="Zicplay.Types.TConnector.hasPlaylistSetupDialog.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="hasSetupDialog">
+                                                  <param name="Local" value="Zicplay.Types.TConnector.hasSetupDialog.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TConnectorsList">
+                                  <param name="Local" value="Zicplay.Types.TConnectorsList.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Count">
+                                                  <param name="Local" value="Zicplay.Types.TConnectorsList.Count.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Current">
+                                                  <param name="Local" value="Zicplay.Types.TConnectorsList.Current.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetConnectorAt">
+                                                  <param name="Local" value="Zicplay.Types.TConnectorsList.GetConnectorAt.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetConnectorFromUID">
+                                                  <param name="Local" value="Zicplay.Types.TConnectorsList.GetConnectorFromUID.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Register">
+                                                  <param name="Local" value="Zicplay.Types.TConnectorsList.Register.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Sort">
+                                                  <param name="Local" value="Zicplay.Types.TConnectorsList.Sort.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TNewPlaylistMessage">
+                                  <param name="Local" value="Zicplay.Types.TNewPlaylistMessage.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Broadcast">
+                                                  <param name="Local" value="Zicplay.Types.TNewPlaylistMessage.Broadcast.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TNowPlayingMessage">
+                                  <param name="Local" value="Zicplay.Types.TNowPlayingMessage.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Broadcast">
+                                                  <param name="Local" value="Zicplay.Types.TNowPlayingMessage.Broadcast.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TPlaylist">
+                                  <param name="Local" value="Zicplay.Types.TPlaylist.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Constructors">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Create">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.Create.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Destroy">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.Destroy.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Properties">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Connector">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.Connector.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="ConnectorParams">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.ConnectorParams.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Count">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.Count.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Enabled">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.Enabled.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Text">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.Text.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="UniqID">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.UniqID.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="hasChanged">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.hasChanged.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Delete">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.Delete.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetSongAt">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.GetSongAt.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="HasSong">
+                                                  </OBJECT>
+                                                  <UL>
+                                                      <LI> <OBJECT type="text/sitemap">
+                                                          <param name="Name" value="HasSong(string)">
+                                                          <param name="Local" value="Zicplay.Types.TPlaylist.HasSong(string).html">
+                                                          </OBJECT>
+                                                      <LI> <OBJECT type="text/sitemap">
+                                                          <param name="Name" value="HasSong(TSong)">
+                                                          <param name="Local" value="Zicplay.Types.TPlaylist.HasSong(TSong).html">
+                                                          </OBJECT>
+                                                  </UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="LoadFromStream">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.LoadFromStream.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="LoadSongsList">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.LoadSongsList.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="RefreshSongsList">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.RefreshSongsList.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Save">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.Save.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SaveSongsList">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.SaveSongsList.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SaveToStream">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.SaveToStream.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SortByAlbum">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.SortByAlbum.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SortByArtist">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.SortByArtist.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SortByCategoryAlbum">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.SortByCategoryAlbum.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SortByCategoryTitle">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.SortByCategoryTitle.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SortByTitle">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.SortByTitle.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SortByUniqID">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.SortByUniqID.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="UpdateAsAMirrorOf">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylist.UpdateAsAMirrorOf.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TPlaylistUpdatedMessage">
+                                  <param name="Local" value="Zicplay.Types.TPlaylistUpdatedMessage.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Broadcast">
+                                                  <param name="Local" value="Zicplay.Types.TPlaylistUpdatedMessage.Broadcast.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TSong">
+                                  <param name="Local" value="Zicplay.Types.TSong.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Constructors">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Create">
+                                                  <param name="Local" value="Zicplay.Types.TSong.Create.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Properties">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Album">
+                                                  <param name="Local" value="Zicplay.Types.TSong.Album.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="AlbumLowerCase">
+                                                  <param name="Local" value="Zicplay.Types.TSong.AlbumLowerCase.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Artist">
+                                                  <param name="Local" value="Zicplay.Types.TSong.Artist.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="ArtistLowerCase">
+                                                  <param name="Local" value="Zicplay.Types.TSong.ArtistLowerCase.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Category">
+                                                  <param name="Local" value="Zicplay.Types.TSong.Category.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="CategoryLowerCase">
+                                                  <param name="Local" value="Zicplay.Types.TSong.CategoryLowerCase.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Duration">
+                                                  <param name="Local" value="Zicplay.Types.TSong.Duration.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="DurationAsTime">
+                                                  <param name="Local" value="Zicplay.Types.TSong.DurationAsTime.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="FileName">
+                                                  <param name="Local" value="Zicplay.Types.TSong.FileName.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Order">
+                                                  <param name="Local" value="Zicplay.Types.TSong.Order.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Playlist">
+                                                  <param name="Local" value="Zicplay.Types.TSong.Playlist.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="PublishedDate">
+                                                  <param name="Local" value="Zicplay.Types.TSong.PublishedDate.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="PublishedYear">
+                                                  <param name="Local" value="Zicplay.Types.TSong.PublishedYear.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Title">
+                                                  <param name="Local" value="Zicplay.Types.TSong.Title.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="TitleLowerCase">
+                                                  <param name="Local" value="Zicplay.Types.TSong.TitleLowerCase.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="UniqID">
+                                                  <param name="Local" value="Zicplay.Types.TSong.UniqID.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="onGetFilename">
+                                                  <param name="Local" value="Zicplay.Types.TSong.onGetFilename.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="LoadFromStream">
+                                                  <param name="Local" value="Zicplay.Types.TSong.LoadFromStream.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SaveToStream">
+                                                  <param name="Local" value="Zicplay.Types.TSong.SaveToStream.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Fields">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="FIsLoading">
+                                                  <param name="Local" value="Zicplay.Types.TSong.FIsLoading.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                          </UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Interfaces">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="IConnector">
+                                  <param name="Local" value="Zicplay.Types.IConnector.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetName">
+                                                  <param name="Local" value="Zicplay.Types.IConnector.GetName.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetPlaylist">
+                                                  <param name="Local" value="Zicplay.Types.IConnector.GetPlaylist.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GetUniqID">
+                                                  <param name="Local" value="Zicplay.Types.IConnector.GetUniqID.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="LoadFromStream">
+                                                  <param name="Local" value="Zicplay.Types.IConnector.LoadFromStream.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="PlaylistSetupDialog">
+                                                  <param name="Local" value="Zicplay.Types.IConnector.PlaylistSetupDialog.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SaveToStream">
+                                                  <param name="Local" value="Zicplay.Types.IConnector.SaveToStream.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SetupDialog">
+                                                  <param name="Local" value="Zicplay.Types.IConnector.SetupDialog.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="hasPlaylistSetupDialog">
+                                                  <param name="Local" value="Zicplay.Types.IConnector.hasPlaylistSetupDialog.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="hasSetupDialog">
+                                                  <param name="Local" value="Zicplay.Types.IConnector.hasSetupDialog.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                          </UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Delegates">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TSongFileNameEvent">
+                                  <param name="Local" value="Zicplay.Types.TSongFileNameEvent.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TZicPlayGetPlaylistProc">
+                                  <param name="Local" value="Zicplay.Types.TZicPlayGetPlaylistProc.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Invoke">
+                                                  <param name="Local" value="Zicplay.Types.TZicPlayGetPlaylistProc.Invoke.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                          </UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Types">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TPlaylistsCounter">
+                                  <param name="Local" value="Zicplay.Types.TPlaylistsCounter.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TSongsCounter">
+                                  <param name="Local" value="Zicplay.Types.TSongsCounter.html">
+                                  </OBJECT>
+                          </UL>
+                  </UL>
+              <LI> <OBJECT type="text/sitemap">
+                  <param name="Name" value="fMain">
+                  <param name="Local" value="fMain.html">
+                  </OBJECT>
+                  <UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Classes">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TfrmMain">
+                                  <param name="Local" value="fMain.TfrmMain.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Properties">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="CurrentSongsList">
+                                                  <param name="Local" value="fMain.TfrmMain.CurrentSongsList.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="CurrentSongsListNotFiltered">
+                                                  <param name="Local" value="fMain.TfrmMain.CurrentSongsListNotFiltered.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="PlayedSong">
+                                                  <param name="Local" value="fMain.TfrmMain.PlayedSong.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="AboutDialogURLClick">
+                                                  <param name="Local" value="fMain.TfrmMain.AboutDialogURLClick.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="AfterConstruction">
+                                                  <param name="Local" value="fMain.TfrmMain.AfterConstruction.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="ClearEditButton1Click">
+                                                  <param name="Local" value="fMain.TfrmMain.ClearEditButton1Click.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="DoHide">
+                                                  <param name="Local" value="fMain.TfrmMain.DoHide.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="DoShow">
+                                                  <param name="Local" value="fMain.TfrmMain.DoShow.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="DoTranslateTexts">
+                                                  <param name="Local" value="fMain.TfrmMain.DoTranslateTexts.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="FormClose">
+                                                  <param name="Local" value="fMain.TfrmMain.FormClose.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="FormCreate">
+                                                  <param name="Local" value="fMain.TfrmMain.FormCreate.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="FormDestroy">
+                                                  <param name="Local" value="fMain.TfrmMain.FormDestroy.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="FormKeyDown">
+                                                  <param name="Local" value="fMain.TfrmMain.FormKeyDown.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="FormResize">
+                                                  <param name="Local" value="fMain.TfrmMain.FormResize.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="ListView1ButtonClick">
+                                                  <param name="Local" value="fMain.TfrmMain.ListView1ButtonClick.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="ListView1Change">
+                                                  <param name="Local" value="fMain.TfrmMain.ListView1Change.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="RefreshMenuItemsVisibility">
+                                                  </OBJECT>
+                                                  <UL>
+                                                      <LI> <OBJECT type="text/sitemap">
+                                                          <param name="Name" value="RefreshMenuItemsVisibility(TMenuItem,boolean)">
+                                                          <param name="Local" value="fMain.TfrmMain.RefreshMenuItemsVisibility(TMenuItem,boolean).html">
+                                                          </OBJECT>
+                                                      <LI> <OBJECT type="text/sitemap">
+                                                          <param name="Name" value="RefreshMenuItemsVisibility(TMainMenu)">
+                                                          <param name="Local" value="fMain.TfrmMain.RefreshMenuItemsVisibility(TMainMenu).html">
+                                                          </OBJECT>
+                                                  </UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SearchEditButton1Click">
+                                                  <param name="Local" value="fMain.TfrmMain.SearchEditButton1Click.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="TranslateTexts">
+                                                  <param name="Local" value="fMain.TfrmMain.TranslateTexts.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="actAboutExecute">
+                                                  <param name="Local" value="fMain.TfrmMain.actAboutExecute.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="actQuitExecute">
+                                                  <param name="Local" value="fMain.TfrmMain.actQuitExecute.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="actToolsOptionsExecute">
+                                                  <param name="Local" value="fMain.TfrmMain.actToolsOptionsExecute.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnNextClick">
+                                                  <param name="Local" value="fMain.TfrmMain.btnNextClick.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnPauseClick">
+                                                  <param name="Local" value="fMain.TfrmMain.btnPauseClick.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnPlayClick">
+                                                  <param name="Local" value="fMain.TfrmMain.btnPlayClick.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnPreviousClick">
+                                                  <param name="Local" value="fMain.TfrmMain.btnPreviousClick.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnStopClick">
+                                                  <param name="Local" value="fMain.TfrmMain.btnStopClick.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="cbPlayIntroChange">
+                                                  <param name="Local" value="fMain.TfrmMain.cbPlayIntroChange.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="cbPlayNextRandomChange">
+                                                  <param name="Local" value="fMain.TfrmMain.cbPlayNextRandomChange.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="cbRepeatAllChange">
+                                                  <param name="Local" value="fMain.TfrmMain.cbRepeatAllChange.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="cbRepeatCurrentSongChange">
+                                                  <param name="Local" value="fMain.TfrmMain.cbRepeatCurrentSongChange.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="cbSortListChange">
+                                                  <param name="Local" value="fMain.TfrmMain.cbSortListChange.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="edtSearchKeyDown">
+                                                  <param name="Local" value="fMain.TfrmMain.edtSearchKeyDown.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mnuPlaylistCreateClick">
+                                                  <param name="Local" value="fMain.TfrmMain.mnuPlaylistCreateClick.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mvPlaylistsHidden">
+                                                  <param name="Local" value="fMain.TfrmMain.mvPlaylistsHidden.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mvPlaylistsShown">
+                                                  <param name="Local" value="fMain.TfrmMain.mvPlaylistsShown.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="tbVolumeTracking">
+                                                  <param name="Local" value="fMain.TfrmMain.tbVolumeTracking.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="timerIsSongFinishedTimer">
+                                                  <param name="Local" value="fMain.TfrmMain.timerIsSongFinishedTimer.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Fields">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="ActionList1">
+                                                  <param name="Local" value="fMain.TfrmMain.ActionList1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="ClearEditButton1">
+                                                  <param name="Local" value="fMain.TfrmMain.ClearEditButton1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="FlowLayout1">
+                                                  <param name="Local" value="fMain.TfrmMain.FlowLayout1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GridPanelLayout1">
+                                                  <param name="Local" value="fMain.TfrmMain.GridPanelLayout1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="ListView1">
+                                                  <param name="Local" value="fMain.TfrmMain.ListView1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="MainMenu1">
+                                                  <param name="Local" value="fMain.TfrmMain.MainMenu1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="SearchEditButton1">
+                                                  <param name="Local" value="fMain.TfrmMain.SearchEditButton1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="StatusBar1">
+                                                  <param name="Local" value="fMain.TfrmMain.StatusBar1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="ToolBar1">
+                                                  <param name="Local" value="fMain.TfrmMain.ToolBar1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="actAbout">
+                                                  <param name="Local" value="fMain.TfrmMain.actAbout.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="actQuit">
+                                                  <param name="Local" value="fMain.TfrmMain.actQuit.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="actToolsOptions">
+                                                  <param name="Local" value="fMain.TfrmMain.actToolsOptions.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnNext">
+                                                  <param name="Local" value="fMain.TfrmMain.btnNext.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnPause">
+                                                  <param name="Local" value="fMain.TfrmMain.btnPause.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnPlay">
+                                                  <param name="Local" value="fMain.TfrmMain.btnPlay.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnPlaylists">
+                                                  <param name="Local" value="fMain.TfrmMain.btnPlaylists.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnPrevious">
+                                                  <param name="Local" value="fMain.TfrmMain.btnPrevious.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnStop">
+                                                  <param name="Local" value="fMain.TfrmMain.btnStop.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="cbPlayIntro">
+                                                  <param name="Local" value="fMain.TfrmMain.cbPlayIntro.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="cbPlayNextRandom">
+                                                  <param name="Local" value="fMain.TfrmMain.cbPlayNextRandom.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="cbRepeatAll">
+                                                  <param name="Local" value="fMain.TfrmMain.cbRepeatAll.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="cbRepeatCurrentSong">
+                                                  <param name="Local" value="fMain.TfrmMain.cbRepeatCurrentSong.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="cbSortList">
+                                                  <param name="Local" value="fMain.TfrmMain.cbSortList.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="edtSearch">
+                                                  <param name="Local" value="fMain.TfrmMain.edtSearch.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="lPlayPauseButtons">
+                                                  <param name="Local" value="fMain.TfrmMain.lPlayPauseButtons.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="lVolume">
+                                                  <param name="Local" value="fMain.TfrmMain.lVolume.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="lblNbSongs">
+                                                  <param name="Local" value="fMain.TfrmMain.lblNbSongs.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="lblSongPlayed">
+                                                  <param name="Local" value="fMain.TfrmMain.lblSongPlayed.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="lblVolume">
+                                                  <param name="Local" value="fMain.TfrmMain.lblVolume.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mnuFile">
+                                                  <param name="Local" value="fMain.TfrmMain.mnuFile.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mnuFileQuit">
+                                                  <param name="Local" value="fMain.TfrmMain.mnuFileQuit.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mnuHelp">
+                                                  <param name="Local" value="fMain.TfrmMain.mnuHelp.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mnuHelpAbout">
+                                                  <param name="Local" value="fMain.TfrmMain.mnuHelpAbout.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mnuMacOS">
+                                                  <param name="Local" value="fMain.TfrmMain.mnuMacOS.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mnuPlaylist">
+                                                  <param name="Local" value="fMain.TfrmMain.mnuPlaylist.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mnuPlaylistCreate">
+                                                  <param name="Local" value="fMain.TfrmMain.mnuPlaylistCreate.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mnuPlaylistSeparator">
+                                                  <param name="Local" value="fMain.TfrmMain.mnuPlaylistSeparator.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mnuTools">
+                                                  <param name="Local" value="fMain.TfrmMain.mnuTools.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mnuToolsOptions">
+                                                  <param name="Local" value="fMain.TfrmMain.mnuToolsOptions.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mvPlaylists">
+                                                  <param name="Local" value="fMain.TfrmMain.mvPlaylists.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="mvPlaylistsArea">
+                                                  <param name="Local" value="fMain.TfrmMain.mvPlaylistsArea.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="tbVolume">
+                                                  <param name="Local" value="fMain.TfrmMain.tbVolume.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="timerIsSongFinished">
+                                                  <param name="Local" value="fMain.TfrmMain.timerIsSongFinished.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                          </UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Variables">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="frmMain">
+                                  <param name="Local" value="fMain.frmMain.html">
+                                  </OBJECT>
+                          </UL>
+                  </UL>
+              <LI> <OBJECT type="text/sitemap">
+                  <param name="Name" value="fPlaylist">
+                  <param name="Local" value="fPlaylist.html">
+                  </OBJECT>
+                  <UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Classes">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TfrmPlaylist">
+                                  <param name="Local" value="fPlaylist.TfrmPlaylist.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Constructors">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Destroy">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.Destroy.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Properties">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Playlist">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.Playlist.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="PlaylistConnector">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.PlaylistConnector.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="PlaylistName">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.PlaylistName.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="DoHide">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.DoHide.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="DoShow">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.DoShow.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="DoTranslateTexts">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.DoTranslateTexts.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Execute">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.Execute.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="FormClose">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.FormClose.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="FormCreate">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.FormCreate.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="TranslateTexts">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.TranslateTexts.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnCancelClick">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.btnCancelClick.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnConnectorSelectClick">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.btnConnectorSelectClick.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnConnectorSetupClick">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.btnConnectorSetupClick.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnSaveClick">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.btnSaveClick.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Fields">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GridPanelLayout1">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.GridPanelLayout1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="VertScrollBox1">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.VertScrollBox1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnCancel">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.btnCancel.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnConnectorSelect">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.btnConnectorSelect.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnConnectorSetup">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.btnConnectorSetup.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnSave">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.btnSave.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="cbEnabled">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.cbEnabled.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="edtConnector">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.edtConnector.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="edtPlaylistName">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.edtPlaylistName.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="lblConnector">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.lblConnector.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="lblPlaylistName">
+                                                  <param name="Local" value="fPlaylist.TfrmPlaylist.lblPlaylistName.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                          </UL>
+                  </UL>
+              <LI> <OBJECT type="text/sitemap">
+                  <param name="Name" value="fSelectConnector">
+                  <param name="Local" value="fSelectConnector.html">
+                  </OBJECT>
+                  <UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Classes">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TfrmSelectConnector">
+                                  <param name="Local" value="fSelectConnector.TfrmSelectConnector.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Properties">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="onSelectedConnectorProc">
+                                                  <param name="Local" value="fSelectConnector.TfrmSelectConnector.onSelectedConnectorProc.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="DoHide">
+                                                  <param name="Local" value="fSelectConnector.TfrmSelectConnector.DoHide.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="DoShow">
+                                                  <param name="Local" value="fSelectConnector.TfrmSelectConnector.DoShow.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="DoTranslateTexts">
+                                                  <param name="Local" value="fSelectConnector.TfrmSelectConnector.DoTranslateTexts.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Execute">
+                                                  <param name="Local" value="fSelectConnector.TfrmSelectConnector.Execute.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="FormClose">
+                                                  <param name="Local" value="fSelectConnector.TfrmSelectConnector.FormClose.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="FormCreate">
+                                                  <param name="Local" value="fSelectConnector.TfrmSelectConnector.FormCreate.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="TranslateTexts">
+                                                  <param name="Local" value="fSelectConnector.TfrmSelectConnector.TranslateTexts.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnCancelClick">
+                                                  <param name="Local" value="fSelectConnector.TfrmSelectConnector.btnCancelClick.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnOkClick">
+                                                  <param name="Local" value="fSelectConnector.TfrmSelectConnector.btnOkClick.html">
+                                                  </OBJECT>
+                                          </UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Fields">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="GridPanelLayout1">
+                                                  <param name="Local" value="fSelectConnector.TfrmSelectConnector.GridPanelLayout1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="ListView1">
+                                                  <param name="Local" value="fSelectConnector.TfrmSelectConnector.ListView1.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnCancel">
+                                                  <param name="Local" value="fSelectConnector.TfrmSelectConnector.btnCancel.html">
+                                                  </OBJECT>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="btnOk">
+                                                  <param name="Local" value="fSelectConnector.TfrmSelectConnector.btnOk.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                          </UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Delegates">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TonSelectedConnectorProc">
+                                  <param name="Local" value="fSelectConnector.TonSelectedConnectorProc.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Methods">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="Invoke">
+                                                  <param name="Local" value="fSelectConnector.TonSelectedConnectorProc.Invoke.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                          </UL>
+                  </UL>
+              <LI> <OBJECT type="text/sitemap">
+                  <param name="Name" value="uConsts">
+                  <param name="Local" value="uConsts.html">
+                  </OBJECT>
+                  <UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Enumerations">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TStyleMode">
+                                  <param name="Local" value="uConsts.TStyleMode.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Light">
+                                          <param name="Local" value="uConsts.TStyleMode.Light.html">
+                                          </OBJECT>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Dark">
+                                          <param name="Local" value="uConsts.TStyleMode.Dark.html">
+                                          </OBJECT>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="System">
+                                          <param name="Local" value="uConsts.TStyleMode.System.html">
+                                          </OBJECT>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Custom">
+                                          <param name="Local" value="uConsts.TStyleMode.Custom.html">
+                                          </OBJECT>
+                                  </UL>
+                          </UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Variables">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="GConfigXORKey">
+                                  <param name="Local" value="uConsts.GConfigXORKey.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="GDocumentsXORKey">
+                                  <param name="Local" value="uConsts.GDocumentsXORKey.html">
+                                  </OBJECT>
+                          </UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Constants">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="CAboutCopyright">
+                                  <param name="Local" value="uConsts.CAboutCopyright.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="CAboutTitle">
+                                  <param name="Local" value="uConsts.CAboutTitle.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="CAboutURL">
+                                  <param name="Local" value="uConsts.CAboutURL.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="CAboutVersionDate">
+                                  <param name="Local" value="uConsts.CAboutVersionDate.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="CAboutVersionNumber">
+                                  <param name="Local" value="uConsts.CAboutVersionNumber.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="CDefaultLanguage">
+                                  <param name="Local" value="uConsts.CDefaultLanguage.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="CDefaultStyleCustom">
+                                  <param name="Local" value="uConsts.CDefaultStyleCustom.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="CDefaultStyleDark">
+                                  <param name="Local" value="uConsts.CDefaultStyleDark.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="CDefaultStyleLight">
+                                  <param name="Local" value="uConsts.CDefaultStyleLight.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="CDefaultStyleMode">
+                                  <param name="Local" value="uConsts.CDefaultStyleMode.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="CEditorFolderName">
+                                  <param name="Local" value="uConsts.CEditorFolderName.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="CProjectFolderName">
+                                  <param name="Local" value="uConsts.CProjectFolderName.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="CProjectGUID">
+                                  <param name="Local" value="uConsts.CProjectGUID.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="CShowAboutBoxWithF1">
+                                  <param name="Local" value="uConsts.CShowAboutBoxWithF1.html">
+                                  </OBJECT>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="CSupportURL">
+                                  <param name="Local" value="uConsts.CSupportURL.html">
+                                  </OBJECT>
+                          </UL>
+                  </UL>
+              <LI> <OBJECT type="text/sitemap">
+                  <param name="Name" value="uDMAboutBoxLogoStorrage">
+                  <param name="Local" value="uDMAboutBoxLogoStorrage.html">
+                  </OBJECT>
+                  <UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Classes">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="TdmAboutBoxLogo">
+                                  <param name="Local" value="uDMAboutBoxLogoStorrage.TdmAboutBoxLogo.html">
+                                  </OBJECT>
+                                  <UL>
+                                      <LI> <OBJECT type="text/sitemap">
+                                          <param name="Name" value="Fields">
+                                          </OBJECT>
+                                          <UL>
+                                              <LI> <OBJECT type="text/sitemap">
+                                                  <param name="Name" value="imgLogo">
+                                                  <param name="Local" value="uDMAboutBoxLogoStorrage.TdmAboutBoxLogo.imgLogo.html">
+                                                  </OBJECT>
+                                          </UL>
+                                  </UL>
+                          </UL>
+                  </UL>
+              <LI> <OBJECT type="text/sitemap">
+                  <param name="Name" value="uTxtAboutDescription">
+                  <param name="Local" value="uTxtAboutDescription.html">
+                  </OBJECT>
+                  <UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Routines">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="GetTxtAboutDescription">
+                                  <param name="Local" value="uTxtAboutDescription.GetTxtAboutDescription.html">
+                                  </OBJECT>
+                          </UL>
+                  </UL>
+              <LI> <OBJECT type="text/sitemap">
+                  <param name="Name" value="uTxtAboutLicense">
+                  <param name="Local" value="uTxtAboutLicense.html">
+                  </OBJECT>
+                  <UL>
+                      <LI> <OBJECT type="text/sitemap">
+                          <param name="Name" value="Routines">
+                          </OBJECT>
+                          <UL>
+                              <LI> <OBJECT type="text/sitemap">
+                                  <param name="Name" value="GetTxtAboutLicense">
+                                  <param name="Local" value="uTxtAboutLicense.GetTxtAboutLicense.html">
+                                  </OBJECT>
+                          </UL>
+                  </UL>
+          </UL>
+    </UL>
+</BODY>
+</HTML>
